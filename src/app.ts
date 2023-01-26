@@ -3,6 +3,7 @@ import { engine } from "./engine";
 import * as PIXI from 'pixi.js';
 import { Board } from "./Board";
 import { Button } from "./Button";
+import { Deck } from "./Deck";
 
 const initForm = document.querySelector('form');
 const initSection = document.getElementById('init');
@@ -19,6 +20,23 @@ const app = new PIXI.Application({
 showBoard();
 
 document.getElementById("board").appendChild(app.view as HTMLCanvasElement);
+
+// Load assets
+PIXI.Assets.addBundle('images', {
+    cards: '/assets/cards.jpg',
+    // logo: '/assets/logo.png'
+});
+
+PIXI.Assets.loadBundle('images').then(e => init(e));
+
+function init(e) {
+    const deck = new Deck(e);
+    (window as any).deck = deck;
+
+
+    app.stage.addChild(deck.get('KH'));
+}
+
 
 const board = new Board(137, 208);
 
@@ -77,3 +95,4 @@ function addGameTitle() {
     title.position.set(10, 10);
     board.addChild(title);
 }
+(window as any).app = app;
