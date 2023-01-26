@@ -1,6 +1,7 @@
 import { Connection } from "./Connection";
 import { engine } from "./engine";
 import * as PIXI from 'pixi.js';
+import { Board } from "./Board";
 
 const initForm = document.querySelector('form');
 const initSection = document.getElementById('init');
@@ -9,7 +10,7 @@ const gameSection = document.getElementById('game');
 let connection = null;
 
 const app = new PIXI.Application({
-    width: 800,
+    width: 1140,
     height: 600,
     background: "#005000",
 });
@@ -18,6 +19,10 @@ const app = new PIXI.Application({
 showBoard();
 
 document.getElementById("board").appendChild(app.view as HTMLCanvasElement);
+
+const board = new Board(137, 208);
+
+app.stage.addChild(board);
 
 /*
 
