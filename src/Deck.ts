@@ -31,15 +31,10 @@ export class Deck {
                 const x = cardSheet.startX + (rankIndex * (cardSize.w + cardSheet.marginX));
                 const y = cardSheet.startY + (suiteIndex * (cardSize.h + cardSheet.marginY));
 
-                // Texture
-                const texture = new PIXI.Texture(this.assets.cards.baseTexture, new PIXI.Rectangle(x, y, cardSize.w, cardSize.h));
-
-                const card = new Card(texture);
+                const card = new Card(this.assets.cards, x, y, this.assets.logo);
                 this.cards[`${rank}${suite}`] = card;
             }
         }
-
-        // console.log(this.cards);
     }
 
     public get(card: string) {

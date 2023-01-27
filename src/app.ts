@@ -24,7 +24,7 @@ document.getElementById("board").appendChild(app.view as HTMLCanvasElement);
 // Load assets
 PIXI.Assets.addBundle('images', {
     cards: '/assets/cards.jpg',
-    // logo: '/assets/logo.png'
+    logo: '/assets/logo.svg'
 });
 
 PIXI.Assets.loadBundle('images').then(e => init(e));
