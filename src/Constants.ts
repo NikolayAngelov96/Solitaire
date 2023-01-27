@@ -34,3 +34,9 @@ export const cardSheet = {
     marginX: 49.4,
     marginY: 37
 };
+
+export const colors = {
+    cardPlaceholder: 0x196119,
+    greenBtn: 0x28a745,
+    blueBtn: 0x17a2b8
+}
