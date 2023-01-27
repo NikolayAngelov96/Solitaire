@@ -1,14 +1,18 @@
 import { Container, Graphics, Text } from "pixi.js";
+import { Column } from "./Column";
 
 export class Board extends Container {
     private cardColor: number = 0x196119;
     private spaceBetweenCards: number = 20;
+    columns: Column[];
 
     constructor(
         private cardWidth: number,
         private cardHeight: number
     ) {
         super();
+
+        this.columns = [];
 
         this.addDeckArea();
         this.addFoundationPile();
@@ -57,14 +61,11 @@ export class Board extends Container {
 
     private addCardColumns() {
         for (let i = 0; i < 7; i++) {
-            const area = new Graphics();
-            area.beginFill(this.cardColor);
-            area.drawRoundedRect(0, 0, this.cardWidth, this.cardHeight, 12);
-            area.endFill();
+            const currentCol = new Column(this.cardWidth, this.cardHeight);
+            currentCol.position.set((10 + i * this.spaceBetweenCards) + (i * this.cardWidth), this.cardHeight + this.spaceBetweenCards + 50)
 
-            area.position.set((10 + i * this.spaceBetweenCards) + (i * this.cardWidth), this.cardHeight + this.spaceBetweenCards + 50)
-
-            this.addChild(area);
+            this.columns.push(currentCol);
+            this.addChild(currentCol);
         }
     }
 }
