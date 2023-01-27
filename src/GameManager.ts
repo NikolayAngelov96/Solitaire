@@ -25,7 +25,6 @@ export class GameManager {
     private setDraggingCard(card: Card) {
         this.draggingCard = card;
         this.draggingCard.dragging = true;
-        this.draggingCard.interactive = false;
         console.log('Set');
 
         this.app.stage.on('pointermove', (e) => {
@@ -36,7 +35,6 @@ export class GameManager {
 
     private clearDraggingCard() {
         this.draggingCard.dragging = false;
-        this.draggingCard.interactive = true;
         this.draggingCard = null;
         this.app.stage.off('pointermove');
         console.log('clear');

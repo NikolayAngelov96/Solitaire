@@ -34,10 +34,10 @@ export class Card extends PIXI.Container {
 
         this.pivot.x = this.width / 2;
         this.scale.set(0.334);
+        this.interactive = true;
 
         // For testing
         this.position.set(Math.random() * 1000, Math.random() * 500);
-        this.interactive = true;
     }
 
     private addBack(logoTexture: PIXI.Texture) {
@@ -96,7 +96,6 @@ export class Card extends PIXI.Container {
             paused: true
         });
 
-        this.interactive = true;
         this.on('pointerdown', () => {
             if (!flipTw.isActive()) {
                 flipTw.restart();
