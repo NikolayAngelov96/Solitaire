@@ -93,7 +93,8 @@ function showInit() {
 function addGameTitle() {
     const title = new PIXI.Text('Solitaire', {
         fill: 'white',
-        fontSize: 20
+        fontSize: 20,
+        dropShadow: true
     });
 
     title.position.set(10, 10);
