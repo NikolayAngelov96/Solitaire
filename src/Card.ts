@@ -32,22 +32,12 @@ export class Card extends PIXI.Container {
         this.mask = mask;
 
         // Back
-        const backBackground = new PIXI.Graphics();
-        backBackground.beginFill(0x07162B, 1);
-        backBackground.drawRoundedRect(0, 0, cardSize.w, cardSize.h, 36);
-        backBackground.endFill();
-
-        const backLogo = PIXI.Sprite.from(logoTexture);
-        backLogo.anchor.set(0.5);
-        backLogo.position.set(backBackground.width / 2, backBackground.height / 2);
-        backLogo.scale.set(2.2);
-
-        this.back.addChild(backBackground, backLogo);
-        this.back.renderable = false;
+        this.addBack(logoTexture);
 
         // Front
         const frontTexture = new PIXI.Texture(cardsTexture.baseTexture, new PIXI.Rectangle(x, y, cardSize.w, cardSize.h));
         this.front = PIXI.Sprite.from(frontTexture);
+        this.front.renderable = false;
 
         this.addChild(this.back, this.front, border, mask);
         this.pivot.x = this.width / 2;
@@ -57,7 +47,7 @@ export class Card extends PIXI.Container {
         this.makeFlippable();
     }
 
-    private addBack() {
+    private addBack(logoTexture: PIXI.Texture) {
         const backBackground = new PIXI.Graphics();
         backBackground.beginFill(0x07162B, 1);
         backBackground.drawRoundedRect(0, 0, cardSize.w, cardSize.h, 36);
@@ -69,7 +59,6 @@ export class Card extends PIXI.Container {
         backLogo.scale.set(2.2);
 
         this.back.addChild(backBackground, backLogo);
-        this.back.renderable = false;
     }
 
     private makeFlippable() {
