@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { Card } from './Card';
+import { Card, CardFrontsTextures } from './Card';
 import { cardSheet, cardSize, Ranks, Suites } from './Constants';
 
 export type images = 'cards' | 'logo';
@@ -13,15 +13,14 @@ export type Cards = {
 };
 
 export class Deck {
-    private cards: Cards = {};
+    public cards: Set<Card> = new Set();
+    private cardFrontsTextures: CardFrontsTextures = {};
 
     constructor(private assets: Assets) {
-        this.generateCards();
+        this.generateFrontsTextures();
     }
 
-    private generateCards() {
-        // Generate back of card
-
+    private generateFrontsTextures() {
         for (let suiteIndex = 0; suiteIndex < [...Object.values(Suites)].length; suiteIndex++) {
             const suite = Object.values(Suites)[suiteIndex];
 
@@ -31,14 +30,15 @@ export class Deck {
                 const x = cardSheet.startX + (rankIndex * (cardSize.w + cardSheet.marginX));
                 const y = cardSheet.startY + (suiteIndex * (cardSize.h + cardSheet.marginY));
 
-                const card = new Card(this.assets.cards, x, y, this.assets.logo);
-                this.cards[`${rank}${suite}`] = card;
+                const frontTexture = new PIXI.Texture(this.assets.cards.baseTexture, new PIXI.Rectangle(x, y, cardSize.w, cardSize.h));
+                this.cardFrontsTextures[`${rank}${suite}`] = frontTexture;
             }
         }
     }
 
-    public get(card: string) {
-        console.log(this.cards);
-        return this.cards[card];
+    public getCard() {
+        const card = new Card(this.cardFrontsTextures, this.assets.logo);
+        this.cards.add(card);
+        return card;
     }
 }

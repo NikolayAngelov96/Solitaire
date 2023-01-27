@@ -3,7 +3,7 @@ import { engine } from "./engine";
 import * as PIXI from 'pixi.js';
 import { Board } from "./Board";
 import { Button } from "./Button";
-import { Deck } from "./Deck";
+import { Assets, Deck } from "./Deck";
 
 const initForm = document.querySelector('form');
 const initSection = document.getElementById('init');
@@ -27,14 +27,18 @@ PIXI.Assets.addBundle('images', {
     logo: '/assets/logo.svg'
 });
 
-PIXI.Assets.loadBundle('images').then(e => init(e));
+PIXI.Assets.loadBundle('images',
+    (p) => {
+        console.log(`Progress: ${p * 100}%`);
+    })
+    .then(res => init(res));
 
-function init(e) {
-    const deck = new Deck(e);
-    (window as any).deck = deck;
+function init(assets: Assets) {
+    const deck = new Deck(assets);
 
-
-    app.stage.addChild(deck.get('KH'));
+    const card = deck.getCard();
+    card.setFront('KH');
+    app.stage.addChild(card);
 }
 
 

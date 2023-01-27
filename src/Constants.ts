@@ -21,6 +21,8 @@ export enum Ranks {
     KING = 'K',
 }
 
+// export type CardsIds = 'AS' | '1S' | '2S' ...
+
 export const cardSize = {
     w: 409,
     h: 623
