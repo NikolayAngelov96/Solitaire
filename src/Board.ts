@@ -1,5 +1,6 @@
 import { Container, Graphics, Text } from "pixi.js";
 import { Column } from "./Column";
+import { Foundation } from "./Foundation";
 
 export class Board extends Container {
     private cardColor: number = 0x196119;
@@ -48,14 +49,10 @@ export class Board extends Container {
     private addFoundationPile() {
 
         for (let i = 0; i < 4; i++) {
-            const area = new Graphics();
-            area.beginFill(this.cardColor);
-            area.drawRoundedRect(0, 0, this.cardWidth, this.cardHeight, 12);
-            area.endFill();
+            const currentFoundation = new Foundation(this.cardWidth, this.cardHeight);
+            currentFoundation.position.set((this.cardWidth * 3 + 70 + i * this.spaceBetweenCards) + (i * this.cardWidth), 50)
 
-            area.position.set((this.cardWidth * 3 + 70 + i * this.spaceBetweenCards) + (i * this.cardWidth), 50)
-
-            this.addChild(area);
+            this.addChild(currentFoundation);
         }
     }
 
