@@ -14,6 +14,9 @@ export class Card extends PIXI.Container {
     public suite: Suites;
     public rank: Ranks;
     public power: number;
+    private oldGlobalPosition: PIXI.Point;
+    private pointerOffsetFromCardPivot = new PIXI.Point(0, 0);
+    public dragging = true;
 
     constructor(private cardFrontsTextures: CardFrontsTextures, logoTexture: PIXI.Texture) {
         super();
@@ -27,12 +30,14 @@ export class Card extends PIXI.Container {
         this.addBorder();
         this.addMask();
         this.makeFlippable();
+        this.makeDraggable();
 
         this.pivot.x = this.width / 2;
         this.scale.set(0.334);
 
         // For testing
-        this.position.set(100, 100);
+        this.position.set(Math.random() * 1000, Math.random() * 500);
+        this.interactive = true;
     }
 
     private addBack(logoTexture: PIXI.Texture) {
@@ -92,10 +97,27 @@ export class Card extends PIXI.Container {
         });
 
         this.interactive = true;
-        this.on('pointertap', () => {
+        this.on('pointerdown', () => {
             if (!flipTw.isActive()) {
                 flipTw.restart();
             }
         });
+    }
+
+    private makeDraggable() {
+        this.on('pointerdown', (e) => {
+            console.log('Card click');
+            this.oldGlobalPosition = (e.target as PIXI.Container).getGlobalPosition();
+            this.pointerOffsetFromCardPivot.x = e.globalX - this.oldGlobalPosition.x;
+            this.pointerOffsetFromCardPivot.y = e.globalY - this.oldGlobalPosition.y;
+        });
+
+    }
+
+    public move(e: PIXI.FederatedPointerEvent) {
+        if (this.dragging) {
+            this.x = e.globalX - this.pointerOffsetFromCardPivot.x;
+            this.y = e.globalY - this.pointerOffsetFromCardPivot.y;
+        }
     }
 }

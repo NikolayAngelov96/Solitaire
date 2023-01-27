@@ -4,10 +4,10 @@
 
 ## Card.ts
 
-1. Initiate with unknown front
-2. Setter for the front
+1. Initiate with unknown front - done
+2. Setter for the front - done
 3. goTo(pile) method to move to a pile
-4. dragging functionality
+4. dragging functionality - done
 
 ## GameManager.ts
 

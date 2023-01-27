@@ -4,6 +4,8 @@ import * as PIXI from 'pixi.js';
 import { Board } from "./Board";
 import { Button } from "./Button";
 import { Assets, Deck } from "./Deck";
+import { GameManager } from "./GameManager";
+import { Card } from "./Card";
 
 const initForm = document.querySelector('form');
 const initSection = document.getElementById('init');
@@ -16,6 +18,15 @@ const app = new PIXI.Application({
     height: 670,
     background: "#005000",
 });
+
+// Background to track mouse movement
+const background = new PIXI.Graphics();
+background.beginFill(0x005000);
+background.drawRect(0, 0, 1140, 670);
+background.endFill();
+app.stage.addChild(background);
+app.stage.interactive = true;
+
 
 showBoard();
 
@@ -34,11 +45,23 @@ PIXI.Assets.loadBundle('images',
     .then(res => init(res));
 
 function init(assets: Assets) {
+    const gameManager = new GameManager(app);
     const deck = new Deck(assets);
 
     const card = deck.getCard();
     card.setFront('KH');
-    app.stage.addChild(card);
+
+    const card2 = deck.getCard();
+    card2.setFront('AH');
+    card.addChild(card2);
+
+
+
+    // const card3 = deck.getCard();
+    // card3.setFront('JH');
+    // const card4 = deck.getCard();
+    // card4.setFront('QH');
+    app.stage.addChild(card, card2);
 }
 
 
