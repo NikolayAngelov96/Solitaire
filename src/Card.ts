@@ -1,5 +1,10 @@
+import gsap from 'gsap';
 import * as PIXI from 'pixi.js';
+import { PixiPlugin } from 'gsap/PixiPlugin';
 import { cardSize, Ranks, Suites } from './Constants';
+
+gsap.registerPlugin(PixiPlugin);
+PixiPlugin.registerPIXI(PIXI);
 
 export class Card extends PIXI.Container {
     private front: PIXI.Sprite;
@@ -45,13 +50,29 @@ export class Card extends PIXI.Container {
         this.back.renderable = false;
 
         this.addChild(this.back, this.front, border, mask);
+        this.pivot.x = this.width / 2;
         this.scale.set(0.334);
 
+        this.position.set(100, 100);
+
         // Toggle front and back
+        const flipTw = gsap.to(this, {
+            pixi: { scaleX: 0 },
+            duration: 0.3,
+            yoyo: true,
+            repeat: 1,
+            onRepeat: () => {
+                this.front.renderable = !this.front.renderable;
+                this.back.renderable = !this.back.renderable;
+            },
+            paused: true
+        });
+
         this.interactive = true;
         this.on('pointertap', () => {
-            this.front.renderable = !this.front.renderable;
-            this.back.renderable = !this.back.renderable;
+            if (!flipTw.isActive()) {
+                flipTw.restart();
+            }
         });
     }
 }
