@@ -103,19 +103,24 @@ export class Card extends PIXI.Container {
         });
 
         // Remove later
-        this.on('pointerdown', () => {
+        this.on('pointerdowncapture', () => {
             this.flip();
         });
     }
 
     private makeDraggable() {
         this.on('pointerdown', (e) => {
-            let card = e.target as Card;
-            const { x, y } = card.getBounds();
-            card.removeFromParent();
-            card.position.set(x + card.width / 2, y);
-            this.gameManager.setDraggingCard(this);
 
+            // Save pivot offset from click position
+            this.oldGlobalPosition = (e.target as PIXI.Container).getGlobalPosition();
+            this.pointerOffsetFromCardPivot.x = e.globalX - this.oldGlobalPosition.x;
+            this.pointerOffsetFromCardPivot.y = e.globalY - this.oldGlobalPosition.y;
+
+            // Move card fom pile to stage and set global position
+            this.gameManager.setDraggingCard(this);
+            this.x = e.globalX - this.pointerOffsetFromCardPivot.x;
+            this.y = e.globalY - this.pointerOffsetFromCardPivot.y;
+            this.scale.set(0.334);
             e.stopPropagation();
         });
     }
@@ -127,7 +132,8 @@ export class Card extends PIXI.Container {
 
     public flip() {
         if (!this.flipTween.isActive()) {
-            this.flipTween.restart();
+            console.log('Flipping');
+            // this.flipTween.restart();
         }
     }
 }
