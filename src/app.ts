@@ -55,22 +55,23 @@ function init(assets: Assets) {
     const card = deck.getCard();
     card.setFront('KC');
     const card2 = deck.getCard();
-    card2.setFront('AC');
-    const card3 = deck.getCard();
-    card3.setFront('JC');
-    const card4 = deck.getCard();
-    card4.setFront('QC');
-    const card5 = deck.getCard();
-    card5.setFront('JC');
-    const card6 = deck.getCard();
-    card6.setFront('QC');
+    card2.setFront('AD');
+    // const card3 = deck.getCard();
+    // card3.setFront('JC');
+    // const card4 = deck.getCard();
+    // card4.setFront('QC');
+    // const card5 = deck.getCard();
+    // card5.setFront('JC');
+    // const card6 = deck.getCard();
+    // card6.setFront('QC');
 
-    board.columns[1].addCard(card);
-    board.columns[1].addCard(card2);
-    board.columns[1].addCard(card3);
-    board.columns[2].addCard(card4);
-    board.columns[2].addCard(card5);
-    board.columns[2].addCard(card6);
+    board.columns[5].addCard(card);
+    board.columns[6].addCard(card2);
+    // board.columns[1].addCard(card2);
+    // board.columns[1].addCard(card3);
+    // board.columns[2].addCard(card4);
+    // board.columns[2].addCard(card5);
+    // board.columns[2].addCard(card6);
 }
 
 

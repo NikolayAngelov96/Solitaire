@@ -2,6 +2,7 @@ import { Container, Graphics, Text } from "pixi.js";
 import { Column } from "./Column";
 import { Foundation } from "./Foundation";
 import { GameManager } from "./GameManager";
+import { Suites } from './Constants';
 
 export class Board extends Container {
     private cardColor: number = 0x196119;
@@ -50,9 +51,9 @@ export class Board extends Container {
     }
 
     private addFoundationPile() {
-
-        for (let i = 0; i < 4; i++) {
-            const currentFoundation = new Foundation(this.cardWidth, this.cardHeight);
+        let suitesArr = [...Object.values(Suites)];
+        for (let i = 0; i < suitesArr.length; i++) {
+            const currentFoundation = new Foundation(this.cardWidth, this.cardHeight, suitesArr[i], this.gameManager);
             currentFoundation.position.set((this.cardWidth * 3 + 70 + i * this.spaceBetweenCards) + (i * this.cardWidth), 50);
 
             this.addChild(currentFoundation);
