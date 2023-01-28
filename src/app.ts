@@ -50,23 +50,20 @@ function init(assets: Assets) {
 
     const card = deck.getCard();
     card.setFront('KC');
-    const card2 = deck.getCard();
-    card2.setFront('AC');
-    card.addChild(card2);
-    const card3 = deck.getCard();
-    card3.setFront('JC');
-    const card4 = deck.getCard();
-    card4.setFront('QC');
-    app.stage.addChild(card, card2, card3, card4);
+    // const card2 = deck.getCard();
+    // card2.setFront('AC');
+    // card.addChild(card2);
+    // const card3 = deck.getCard();
+    // card3.setFront('JC');
+    // const card4 = deck.getCard();
+    // card4.setFront('QC');
+    // app.stage.addChild(card, card2, card3, card4);
+
+    board.columns[1].addCard(card);
 }
 
 
 const board = new Board(137, 208);
-
-
-addGameTitle();
-
-
 
 const disconnectBtn = new Button('Disconnect', 100, 10, 85, 25, 0x28a745);
 
@@ -107,16 +104,5 @@ function showBoard() {
 function showInit() {
     initSection.style.display = 'block';
     gameSection.style.display = 'none';
-}
-
-function addGameTitle() {
-    const title = new PIXI.Text('Solitaire', {
-        fill: 'white',
-        fontSize: 20,
-        dropShadow: true
-    });
-
-    title.position.set(10, 10);
-    board.addChild(title);
 }
 (window as any).app = app;

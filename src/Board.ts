@@ -18,6 +18,7 @@ export class Board extends Container {
         this.addDeckArea();
         this.addFoundationPile();
         this.addCardColumns();
+        this.addGameTitle();
     }
 
     private addDeckArea() {
@@ -64,5 +65,16 @@ export class Board extends Container {
             this.columns.push(currentCol);
             this.addChild(currentCol);
         }
+    }
+
+    private addGameTitle() {
+        const title = new Text('Solitaire', {
+            fill: 'white',
+            fontSize: 20,
+            dropShadow: true
+        });
+
+        title.position.set(10, 10);
+        this.addChild(title);
     }
 }
