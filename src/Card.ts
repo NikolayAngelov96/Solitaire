@@ -41,8 +41,8 @@ export class Card extends PIXI.Container {
         this.interactive = true;
 
         // For testing
-        this.position.set(Math.random() * 1000, Math.random() * 500);
         window['cards'].push(this);
+        // this.on('pointerupcapture', () => { console.log('Cap'); });
     }
 
     private addBack(logoTexture: PIXI.Texture) {
@@ -103,9 +103,10 @@ export class Card extends PIXI.Container {
         });
 
         // Remove later
-        this.on('pointerdowncapture', () => {
+        this.on('pointertap', () => {
             this.flip();
         });
+
     }
 
     private makeDraggable() {
@@ -121,7 +122,17 @@ export class Card extends PIXI.Container {
             this.x = e.globalX - this.pointerOffsetFromCardPivot.x;
             this.y = e.globalY - this.pointerOffsetFromCardPivot.y;
             this.scale.set(0.334);
+
+            this.interactive = false;
             e.stopPropagation();
+
+            this.on('globalmousemove', this.move);
+        });
+
+        this.on('pointerup', () => {
+            this.gameManager.draggingCard = null;
+            this.interactive = true;
+            this.off('globalmousemove');
         });
     }
 
@@ -132,8 +143,13 @@ export class Card extends PIXI.Container {
 
     public flip() {
         if (!this.flipTween.isActive()) {
-            console.log('Flipping');
-            // this.flipTween.restart();
+            // console.log('Flipping');
+            this.flipTween.restart();
         }
+    }
+
+    public goBack() {
+        this.interactive = true;
+        this.off('globalmousemove');
     }
 }

@@ -24,8 +24,9 @@ const background = new PIXI.Graphics();
 background.beginFill(0x005000);
 background.drawRect(0, 0, 1140, 670);
 background.endFill();
+background.interactive = true;
+
 app.stage.addChild(background);
-app.stage.interactive = true;
 
 
 showBoard();
@@ -45,8 +46,11 @@ PIXI.Assets.loadBundle('images',
     .then(res => init(res));
 
 function init(assets: Assets) {
-    const gameManager = new GameManager(app);
+    const gameManager = new GameManager(app, background);
     const deck = new Deck(assets, gameManager);
+    const board = new Board(137, 208, gameManager);
+    board.addChild(disconnectBtn, hintBtn);
+    app.stage.addChild(board);
 
     const card = deck.getCard();
     card.setFront('KC');
@@ -56,16 +60,20 @@ function init(assets: Assets) {
     card3.setFront('JC');
     const card4 = deck.getCard();
     card4.setFront('QC');
-    // app.stage.addChild(card, card2, card3, card4);
+    const card5 = deck.getCard();
+    card5.setFront('JC');
+    const card6 = deck.getCard();
+    card6.setFront('QC');
 
     board.columns[1].addCard(card);
     board.columns[1].addCard(card2);
     board.columns[1].addCard(card3);
-    board.columns[1].addCard(card4);
+    board.columns[2].addCard(card4);
+    board.columns[2].addCard(card5);
+    board.columns[2].addCard(card6);
 }
 
 
-const board = new Board(137, 208);
 
 const disconnectBtn = new Button('Disconnect', 100, 10, 85, 25, 0x28a745);
 
@@ -78,9 +86,7 @@ const hintBtn = new Button('Hint', 200, 10, 85, 25, 0x17a2b8);
 hintBtn.attachEventListener('pointerdown', () => alert('This is very usefull hint'));
 
 
-board.addChild(disconnectBtn, hintBtn);
 
-app.stage.addChild(board);
 
 /*
 

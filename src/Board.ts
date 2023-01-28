@@ -1,6 +1,7 @@
 import { Container, Graphics, Text } from "pixi.js";
 import { Column } from "./Column";
 import { Foundation } from "./Foundation";
+import { GameManager } from "./GameManager";
 
 export class Board extends Container {
     private cardColor: number = 0x196119;
@@ -9,7 +10,8 @@ export class Board extends Container {
 
     constructor(
         private cardWidth: number,
-        private cardHeight: number
+        private cardHeight: number,
+        private gameManager: GameManager
     ) {
         super();
 
@@ -30,7 +32,7 @@ export class Board extends Container {
         const flippedPile = new Graphics();
         flippedPile.beginFill(this.cardColor);
         flippedPile.drawRoundedRect(0, 0, this.cardWidth, this.cardHeight, 12);
-        flippedPile.position.set(this.cardWidth + this.spaceBetweenCards + 10, 50)
+        flippedPile.position.set(this.cardWidth + this.spaceBetweenCards + 10, 50);
         flippedPile.endFill();
 
         const text = new Text("Press SPACE \n To Flip", {
@@ -51,7 +53,7 @@ export class Board extends Container {
 
         for (let i = 0; i < 4; i++) {
             const currentFoundation = new Foundation(this.cardWidth, this.cardHeight);
-            currentFoundation.position.set((this.cardWidth * 3 + 70 + i * this.spaceBetweenCards) + (i * this.cardWidth), 50)
+            currentFoundation.position.set((this.cardWidth * 3 + 70 + i * this.spaceBetweenCards) + (i * this.cardWidth), 50);
 
             this.addChild(currentFoundation);
         }
@@ -59,8 +61,8 @@ export class Board extends Container {
 
     private addCardColumns() {
         for (let i = 0; i < 7; i++) {
-            const currentCol = new Column(this.cardWidth, this.cardHeight);
-            currentCol.position.set((10 + i * this.spaceBetweenCards) + (i * this.cardWidth), this.cardHeight + this.spaceBetweenCards + 50)
+            const currentCol = new Column(this.cardWidth, this.cardHeight, this.gameManager);
+            currentCol.position.set((10 + i * this.spaceBetweenCards) + (i * this.cardWidth), this.cardHeight + this.spaceBetweenCards + 50);
 
             this.columns.push(currentCol);
             this.addChild(currentCol);
