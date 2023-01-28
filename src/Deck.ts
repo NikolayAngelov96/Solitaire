@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { Card, CardFrontsTextures } from './Card';
 import { cardSheet, cardSize, Ranks, Suites } from './Constants';
+import { GameManager } from './GameManager';
 
 export type images = 'cards' | 'logo';
 
@@ -16,7 +17,7 @@ export class Deck {
     public cards: Set<Card> = new Set();
     private cardFrontsTextures: CardFrontsTextures = {};
 
-    constructor(private assets: Assets) {
+    constructor(private assets: Assets, private gameManager: GameManager) {
         this.generateFrontsTextures();
     }
 
@@ -37,7 +38,7 @@ export class Deck {
     }
 
     public getCard() {
-        const card = new Card(this.cardFrontsTextures, this.assets.logo);
+        const card = new Card(this.cardFrontsTextures, this.assets.logo, this.gameManager);
         this.cards.add(card);
         return card;
     }

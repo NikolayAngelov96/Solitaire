@@ -46,22 +46,18 @@ PIXI.Assets.loadBundle('images',
 
 function init(assets: Assets) {
     const gameManager = new GameManager(app);
-    const deck = new Deck(assets);
+    const deck = new Deck(assets, gameManager);
 
     const card = deck.getCard();
-    card.setFront('KH');
-
+    card.setFront('KC');
     const card2 = deck.getCard();
-    card2.setFront('AH');
+    card2.setFront('AC');
     card.addChild(card2);
-
-
-
-    // const card3 = deck.getCard();
-    // card3.setFront('JH');
-    // const card4 = deck.getCard();
-    // card4.setFront('QH');
-    app.stage.addChild(card, card2);
+    const card3 = deck.getCard();
+    card3.setFront('JC');
+    const card4 = deck.getCard();
+    card4.setFront('QC');
+    app.stage.addChild(card, card2, card3, card4);
 }
 
 
