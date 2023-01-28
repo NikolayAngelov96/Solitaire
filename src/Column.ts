@@ -39,8 +39,7 @@ export class Column extends CardArea {
         card.position.set(0 + card.width / 2, 0);
 
         if (card.parent instanceof Card) {
-            card.scale.set(1);
-            card.position.set(0 + card.width / 2, 70);
+            card.position.set(0 + card.width / 2, 35);
         }
     }
 

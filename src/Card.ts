@@ -37,7 +37,7 @@ export class Card extends PIXI.Container {
         this.makeDraggable();
 
         this.pivot.x = this.width / 2;
-        this.scale.set(0.334);
+        // this.scale.set(0.334);
         this.interactive = true;
 
         // For testing
@@ -48,13 +48,13 @@ export class Card extends PIXI.Container {
     private addBack(logoTexture: PIXI.Texture) {
         const backBackground = new PIXI.Graphics();
         backBackground.beginFill(0x07162B, 1);
-        backBackground.drawRoundedRect(0, 0, cardSize.w, cardSize.h, 36);
+        backBackground.drawRoundedRect(0, 0, cardSize.w, cardSize.h, 16);
         backBackground.endFill();
 
         const backLogo = PIXI.Sprite.from(logoTexture);
         backLogo.anchor.set(0.5);
         backLogo.position.set(backBackground.width / 2, backBackground.height / 2);
-        backLogo.scale.set(2.2);
+        backLogo.scale.set(0.75);
 
         this.back.addChild(backBackground, backLogo);
         this.addChild(this.back);
@@ -62,7 +62,9 @@ export class Card extends PIXI.Container {
 
     public setFront(cardId: string) {
         if (this.front.children.length == 0) {
-            this.front.addChild(PIXI.Sprite.from(this.cardFrontsTextures[cardId]));
+            const sprite = PIXI.Sprite.from(this.cardFrontsTextures[cardId]);
+            sprite.scale.set(0.334);
+            this.front.addChild(sprite);
         } else {
             throw new Error('This card already has a front.');
         }
@@ -70,9 +72,9 @@ export class Card extends PIXI.Container {
 
     private addBorder() {
         const border = new PIXI.Graphics();
-        border.lineStyle(10, 0xa6ce39);
+        border.lineStyle(4, 0xa6ce39);
         border.beginFill(0x000000, 0);
-        border.drawRoundedRect(5, 5, cardSize.w - 10, cardSize.h - 10, 28);
+        border.drawRoundedRect(2, 2, cardSize.w - 4, cardSize.h - 4, 12);
         border.endFill();
         this.addChild(border);
     }
@@ -81,7 +83,7 @@ export class Card extends PIXI.Container {
         const mask = new PIXI.Graphics();
         mask.lineStyle(1, 0x999999);
         mask.beginFill(0x000000, 1);
-        mask.drawRoundedRect(0, 0, cardSize.w, cardSize.h, 36);
+        mask.drawRoundedRect(0, 0, cardSize.w, cardSize.h, 16);
         mask.endFill();
         this.front.mask = mask;
         this.addChild(mask);
@@ -121,7 +123,6 @@ export class Card extends PIXI.Container {
             this.gameManager.setDraggingCard(this);
             this.x = e.globalX - this.pointerOffsetFromCardPivot.x;
             this.y = e.globalY - this.pointerOffsetFromCardPivot.y;
-            this.scale.set(0.334);
 
             this.interactive = false;
             e.stopPropagation();

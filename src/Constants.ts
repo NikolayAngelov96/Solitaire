@@ -23,20 +23,24 @@ export enum Ranks {
 
 // export type CardsIds = 'AS' | '1S' | '2S' ...
 
-export const cardSize = {
-    w: 409,
-    h: 623
-};
 
 export const cardSheet = {
     startX: 47.5,
     startY: 848,
+    w: 409,
+    h: 623,
     marginX: 49.4,
     marginY: 37
 };
+
+export const cardSize = {
+    w: cardSheet.w * 0.334,
+    h: cardSheet.h * 0.334
+};
+
 
 export const colors = {
     cardPlaceholder: 0x196119,
     greenBtn: 0x28a745,
     blueBtn: 0x17a2b8
-}
+};

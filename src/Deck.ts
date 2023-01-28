@@ -28,10 +28,10 @@ export class Deck {
             for (let rankIndex = 0; rankIndex < [...Object.values(Ranks)].length; rankIndex++) {
                 const rank = Object.values(Ranks)[rankIndex];
 
-                const x = cardSheet.startX + (rankIndex * (cardSize.w + cardSheet.marginX));
-                const y = cardSheet.startY + (suiteIndex * (cardSize.h + cardSheet.marginY));
+                const x = cardSheet.startX + (rankIndex * (cardSheet.w + cardSheet.marginX));
+                const y = cardSheet.startY + (suiteIndex * (cardSheet.h + cardSheet.marginY));
 
-                const frontTexture = new PIXI.Texture(this.assets.cards.baseTexture, new PIXI.Rectangle(x, y, cardSize.w, cardSize.h));
+                const frontTexture = new PIXI.Texture(this.assets.cards.baseTexture, new PIXI.Rectangle(x, y, cardSheet.w, cardSheet.h));
                 this.cardFrontsTextures[`${rank}${suite}`] = frontTexture;
             }
         }
