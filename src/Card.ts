@@ -110,11 +110,12 @@ export class Card extends PIXI.Container {
 
     private makeDraggable() {
         this.on('pointerdown', (e) => {
-            this.oldGlobalPosition = (e.target as PIXI.Container).getGlobalPosition();
-            this.pointerOffsetFromCardPivot.x = e.globalX - this.oldGlobalPosition.x;
-            this.pointerOffsetFromCardPivot.y = e.globalY - this.oldGlobalPosition.y;
-
+            let card = e.target as Card;
+            const { x, y } = card.getBounds();
+            card.removeFromParent();
+            card.position.set(x + card.width / 2, y);
             this.gameManager.setDraggingCard(this);
+
             e.stopPropagation();
         });
     }
