@@ -65,6 +65,9 @@ export class Card extends PIXI.Container {
             const sprite = PIXI.Sprite.from(this.cardFrontsTextures[cardId]);
             sprite.scale.set(0.334);
             this.front.addChild(sprite);
+
+            let suite = this.getSuiteFromId(cardId);
+            this.suite = suite;
         } else {
             throw new Error('This card already has a front.');
         }
@@ -152,5 +155,21 @@ export class Card extends PIXI.Container {
     public goBack() {
         this.interactive = true;
         this.off('globalmousemove');
+    }
+
+    private getSuiteFromId(cardId: string): Suites {
+        let letter = cardId.slice(cardId.length - 1);
+        switch (letter) {
+            case 'S':
+                return Suites.Spades;
+            case 'D':
+                return Suites.Diamonds
+            case 'H':
+                return Suites.Hearts;
+            case 'C':
+                return Suites.Clubs
+            default:
+                throw new TypeError('Not a valid suite type')
+        }
     }
 }
