@@ -83,7 +83,7 @@ export class Card extends PIXI.Container {
         mask.beginFill(0x000000, 1);
         mask.drawRoundedRect(0, 0, cardSize.w, cardSize.h, 36);
         mask.endFill();
-        this.mask = mask;
+        this.front.mask = mask;
         this.addChild(mask);
     }
 
@@ -104,7 +104,7 @@ export class Card extends PIXI.Container {
 
         // Remove later
         this.on('pointertap', () => {
-            this.flip();
+            // this.flip();
         });
 
     }
