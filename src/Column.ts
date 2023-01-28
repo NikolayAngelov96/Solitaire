@@ -2,7 +2,7 @@ import { Card } from "./Card";
 import { CardArea } from "./CardArea";
 
 export class Column extends CardArea {
-    destination: Card
+    destination: Card;
     private childrenCount: number = 0;
 
     constructor(width: number, height: number) {
@@ -15,7 +15,7 @@ export class Column extends CardArea {
             this.destination.addChild(card);
             this.destination = card;
             card.scale.set(1);
-            card.position.set(0 + this.width + 68, (this.childrenCount) * 35)
+            card.position.set(0 + this.width + 68, 70);
         } else {
             this.addChild(card);
             this.destination = card;
