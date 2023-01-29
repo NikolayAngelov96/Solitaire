@@ -3,7 +3,7 @@ import { engine } from "./engine";
 import * as PIXI from 'pixi.js';
 import { Board } from "./Board";
 import { Button } from "./Button";
-import { Assets, Deck } from "./Deck";
+import { Assets, CardFactory } from "./CardFactory";
 import { GameManager } from "./GameManager";
 import { Card } from "./Card";
 
@@ -47,22 +47,22 @@ PIXI.Assets.loadBundle('images',
 
 function init(assets: Assets) {
     const gameManager = new GameManager(app, background);
-    const deck = new Deck(assets, gameManager);
+    const cardFactory = new CardFactory(assets, gameManager);
     const board = new Board(137, 208, gameManager);
     board.addChild(disconnectBtn, hintBtn);
     app.stage.addChild(board);
 
-    const card = deck.getCard();
+    const card = cardFactory.getCard();
     card.setFront('KC');
-    const card2 = deck.getCard();
+    const card2 = cardFactory.getCard();
     card2.setFront('AD');
-    const card3 = deck.getCard();
+    const card3 = cardFactory.getCard();
     card3.setFront('JC');
-    const card4 = deck.getCard();
+    const card4 = cardFactory.getCard();
     card4.setFront('QC');
-    const card5 = deck.getCard();
+    const card5 = cardFactory.getCard();
     card5.setFront('JC');
-    const card6 = deck.getCard();
+    const card6 = cardFactory.getCard();
     card6.setFront('QC');
 
     board.columns[0].addCard(card);

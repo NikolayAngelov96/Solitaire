@@ -13,8 +13,7 @@ export type Cards = {
     [key: string]: Card;
 };
 
-export class Deck {
-    public cards: Set<Card> = new Set();
+export class CardFactory {
     private cardFrontsTextures: CardFrontsTextures = {};
 
     constructor(private assets: Assets, private gameManager: GameManager) {
@@ -39,7 +38,6 @@ export class Deck {
 
     public getCard() {
         const card = new Card(this.cardFrontsTextures, this.assets.logo, this.gameManager);
-        this.cards.add(card);
         return card;
     }
 }
