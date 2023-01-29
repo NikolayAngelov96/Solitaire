@@ -5,21 +5,17 @@ import { Board } from "./Board";
 import { Button } from "./Button";
 import { Assets, CardFactory } from "./CardFactory";
 import { GameManager } from "./GameManager";
-import { Card } from "./Card";
 import { cardSize } from "./Constants";
 import { LoadScreen } from "./LoadScreen";
-
-const initForm = document.querySelector('form');
-const initSection = document.getElementById('init');
-const gameSection = document.getElementById('game');
-
-let connection = null;
 
 const app = new PIXI.Application({
     width: 1140,
     height: 670,
     background: "#005000",
 });
+document.body.appendChild(app.view as HTMLCanvasElement);
+
+let connection = null;
 
 // Background to track mouse movement
 const background = new PIXI.Graphics();
@@ -27,16 +23,10 @@ background.beginFill(0x005000);
 background.drawRect(0, 0, 1140, 670);
 background.endFill();
 background.interactive = true;
-
 app.stage.addChild(background);
 
+// Start load screen
 const loadScreen = new LoadScreen(app);
-loadScreen.on('destroyed', () => { console.log('Destroy'); });
-
-
-showBoard();
-
-document.getElementById("board").appendChild(app.view as HTMLCanvasElement);
 
 // Load assets
 PIXI.Assets.addBundle('images', {
@@ -44,13 +34,9 @@ PIXI.Assets.addBundle('images', {
     logo: '/assets/logo.svg'
 });
 
-PIXI.Assets.loadBundle('images',
-    (p) => {
-        loadScreen.progress(p);
-    })
-    .then(res => {
-        loadScreen.on('destroyed', () => { init(res); });
-    });
+PIXI.Assets.loadBundle('images', (p) => loadScreen.progress(p))
+    .then(res => loadScreen.on('destroyed', () => init(res)));
+
 
 function init(assets: Assets) {
     const gameManager = new GameManager(app, background);
@@ -87,7 +73,6 @@ const disconnectBtn = new Button('Disconnect', 100, 10, 85, 25, 0x28a745);
 
 disconnectBtn.attachEventListener("pointerdown", () => {
     connection?.disconnect();
-    showInit();
 });
 
 const hintBtn = new Button('Hint', 200, 10, 85, 25, 0x17a2b8);
@@ -111,14 +96,3 @@ initForm.addEventListener('submit', async event => {
 });
 
 */
-
-function showBoard() {
-    initSection.style.display = 'none';
-    gameSection.style.display = 'block';
-}
-
-function showInit() {
-    initSection.style.display = 'block';
-    gameSection.style.display = 'none';
-}
-(window as any).app = app;
