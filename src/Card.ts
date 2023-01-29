@@ -153,6 +153,18 @@ export class Card extends PIXI.Container {
     }
 
     public goBack() {
+
+        gsap.to(this, {
+            pixi: {
+                x: this.oldGlobalPosition.x,
+                y: this.oldGlobalPosition.y,
+            },
+            ease: 'back'
+        })
+        this.disableEventListener();
+    }
+
+    public disableEventListener() {
         this.interactive = true;
         this.off('globalmousemove');
     }

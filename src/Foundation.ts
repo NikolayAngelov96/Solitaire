@@ -15,7 +15,8 @@ export class Foundation extends CardArea {
         this.interactive = true;
         this.on('pointerupcapture', () => {
             this.addCard(gameManager.draggingCard)
-            gameManager.draggingCard.goBack();
+            // gameManager.draggingCard.goBack();
+            gameManager.draggingCard.disableEventListener();
             gameManager.draggingCard = null;
         })
     }
@@ -24,6 +25,8 @@ export class Foundation extends CardArea {
         if (card.suite == this.suite) {
             this.addChild(card);
             card.position.set(0 + card.width / 2, 0);
+        } else {
+            card.goBack();
         }
     };
 }

@@ -10,10 +10,11 @@ export class Column extends CardArea {
     constructor(width: number, height: number, gameManager: GameManager) {
         super(width, height);
         this.interactive = true;
-        this.on('pointerupcapture', () => {
+        this.on('pointerupcapture', (e) => {
             if (gameManager.draggingCard) {
                 this.addCard(gameManager.draggingCard);
-                gameManager.draggingCard.goBack();
+                // gameManager.draggingCard.goBack();
+                gameManager.draggingCard.disableEventListener();
                 gameManager.draggingCard = null;
             }
             console.log('Column pointer Up');

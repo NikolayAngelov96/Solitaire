@@ -65,8 +65,8 @@ function init(assets: Assets) {
     // const card6 = deck.getCard();
     // card6.setFront('QC');
 
-    board.columns[5].addCard(card);
-    board.columns[6].addCard(card2);
+    board.columns[0].addCard(card);
+    board.columns[4].addCard(card2);
     // board.columns[1].addCard(card2);
     // board.columns[1].addCard(card3);
     // board.columns[2].addCard(card4);
