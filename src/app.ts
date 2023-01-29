@@ -7,6 +7,7 @@ import { Assets, CardFactory } from "./CardFactory";
 import { GameManager } from "./GameManager";
 import { Card } from "./Card";
 import { cardSize } from "./Constants";
+import { LoadScreen } from "./LoadScreen";
 
 const initForm = document.querySelector('form');
 const initSection = document.getElementById('init');
@@ -29,6 +30,9 @@ background.interactive = true;
 
 app.stage.addChild(background);
 
+const loadScreen = new LoadScreen(app);
+loadScreen.on('destroyed', () => { console.log('Destroy'); });
+
 
 showBoard();
 
@@ -42,9 +46,11 @@ PIXI.Assets.addBundle('images', {
 
 PIXI.Assets.loadBundle('images',
     (p) => {
-        console.log(`Progress: ${p * 100}%`);
+        loadScreen.progress(p);
     })
-    .then(res => init(res));
+    .then(res => {
+        loadScreen.on('destroyed', () => { init(res); });
+    });
 
 function init(assets: Assets) {
     const gameManager = new GameManager(app, background);

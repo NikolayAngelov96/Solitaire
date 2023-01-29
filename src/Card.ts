@@ -1,7 +1,7 @@
 import gsap from 'gsap';
 import * as PIXI from 'pixi.js';
 import { PixiPlugin } from 'gsap/PixiPlugin';
-import { cardSize, Ranks, Suites } from './Constants';
+import { cardSize, colors, Ranks, Suites } from './Constants';
 import { GameManager } from './GameManager';
 import { Column } from './Column';
 import { Foundation } from './Foundation';
@@ -51,7 +51,7 @@ export class Card extends PIXI.Container {
 
     private addBack(logoTexture: PIXI.Texture) {
         const backBackground = new PIXI.Graphics();
-        backBackground.beginFill(0x07162B, 1);
+        backBackground.beginFill(colors.darkBg, 1);
         backBackground.drawRoundedRect(0, 0, cardSize.w, cardSize.h, 16);
         backBackground.endFill();
 
@@ -79,7 +79,7 @@ export class Card extends PIXI.Container {
 
     private addBorder() {
         const border = new PIXI.Graphics();
-        border.lineStyle(4, 0xa6ce39);
+        border.lineStyle(4, colors.border);
         border.beginFill(0x000000, 0);
         border.drawRoundedRect(2, 2, cardSize.w - 4, cardSize.h - 4, 12);
         border.endFill();
