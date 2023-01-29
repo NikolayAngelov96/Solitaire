@@ -13,8 +13,6 @@ export class Column extends CardArea {
         this.on('pointerupcapture', (e) => {
             if (gameManager.draggingCard) {
                 gameManager.draggingCard.goTo(this);
-                // this.addCard(gameManager.draggingCard);
-                // gameManager.draggingCard.goBack();
                 gameManager.draggingCard.disableEventListener();
                 gameManager.draggingCard = null;
             }
@@ -26,10 +24,6 @@ export class Column extends CardArea {
 
     get destinationGlobalPosition() {
         const position = this.destination.getGlobalPosition();
-
-        if (this.destination instanceof Column) {
-            position.x += this.destination.width / 2;
-        }
 
         if (this.destination instanceof Card) {
             position.y += 30;
@@ -58,20 +52,4 @@ export class Column extends CardArea {
             card.position.set(0 + card.width / 2, 30);
         }
     }
-
-    // addCard(card: Card) {
-    //     if (this.destination) {
-    //         this.destination.addChild(card);
-    //         this.destination = card;
-    //         card.position.set(0 + this.width + 68, 70);
-    //         card.scale.set(1);
-    //         console.log(this.width);
-    //     } else {
-    //         this.addChild(card);
-    //         this.destination = card;
-    //         card.position.set(0 + card.width / 2, 0);
-
-    //     }
-    //     this.childrenCount++;
-    // }
 }

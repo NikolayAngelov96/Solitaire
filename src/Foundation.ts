@@ -25,9 +25,7 @@ export class Foundation extends CardArea {
     }
 
     get destinationGlobalPosition() {
-        const position = this.getGlobalPosition();
-        position.x += this.width / 2;
-        return position;
+        return this.getGlobalPosition();;
     }
 
     addCard(card: Card): void {

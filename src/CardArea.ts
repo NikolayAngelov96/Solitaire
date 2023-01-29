@@ -1,7 +1,7 @@
 import { Container, Graphics } from "pixi.js";
 import { colors } from './Constants';
 
-export class CardArea extends Container {
+export abstract class CardArea extends Container {
     protected placeholderColor: number = colors.cardPlaceholder;
 
     constructor(width: number, height: number) {
@@ -15,8 +15,7 @@ export class CardArea extends Container {
         area.beginFill(this.placeholderColor);
         area.drawRoundedRect(0, 0, width, height, 12);
         area.endFill();
-
+        this.pivot.x = width / 2;
         this.addChild(area);
     }
-
 }

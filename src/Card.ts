@@ -5,6 +5,7 @@ import { cardSize, Ranks, Suites } from './Constants';
 import { GameManager } from './GameManager';
 import { Column } from './Column';
 import { Foundation } from './Foundation';
+import { Deck } from './Deck';
 
 gsap.registerPlugin(PixiPlugin);
 PixiPlugin.registerPIXI(PIXI);
@@ -20,7 +21,7 @@ export class Card extends PIXI.Container {
     private oldGlobalPosition: PIXI.Point;
     private pointerOffsetFromCardPivot = new PIXI.Point(0, 0);
     private flipTween: gsap.core.Tween;
-    private oldSlot: Column | Foundation;
+    private oldSlot: Column | Foundation | Deck;
 
     constructor(
         private cardFrontsTextures: CardFrontsTextures,
@@ -155,7 +156,7 @@ export class Card extends PIXI.Container {
         }
     }
 
-    public goTo(slot: Column | Foundation) {
+    public goTo(slot: Column | Foundation | Deck) {
         // All logic here
         const destinationPosition = slot.destinationGlobalPosition;
 

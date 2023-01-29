@@ -3,6 +3,8 @@ import { Column } from "./Column";
 import { Foundation } from "./Foundation";
 import { GameManager } from "./GameManager";
 import { Suites } from './Constants';
+import { Deck } from "./Deck";
+import { CardFactory } from "./CardFactory";
 
 export class Board extends Container {
     private cardColor: number = 0x196119;
@@ -12,7 +14,8 @@ export class Board extends Container {
     constructor(
         private cardWidth: number,
         private cardHeight: number,
-        private gameManager: GameManager
+        private gameManager: GameManager,
+        private cardFactory: CardFactory
     ) {
         super();
 
@@ -25,10 +28,11 @@ export class Board extends Container {
     }
 
     private addDeckArea() {
-        const deck = new Graphics();
-        deck.beginFill(this.cardColor);
-        deck.drawRoundedRect(10, 50, this.cardWidth, this.cardHeight, 12);
-        deck.endFill();
+        const deck = new Deck(this.cardWidth, this.cardHeight, this.gameManager, this.cardFactory);
+        // const deck = new Graphics();
+        // deck.beginFill(this.cardColor);
+        // deck.drawRoundedRect(10, 50, this.cardWidth, this.cardHeight, 12);
+        // deck.endFill();
 
         const flippedPile = new Graphics();
         flippedPile.beginFill(this.cardColor);
@@ -54,7 +58,7 @@ export class Board extends Container {
         let suitesArr = [...Object.values(Suites)];
         for (let i = 0; i < suitesArr.length; i++) {
             const currentFoundation = new Foundation(this.cardWidth, this.cardHeight, suitesArr[i], this.gameManager);
-            currentFoundation.position.set((this.cardWidth * 3 + 70 + i * this.spaceBetweenCards) + (i * this.cardWidth), 50);
+            currentFoundation.position.set((this.cardWidth * 4 + i * this.spaceBetweenCards) + (i * this.cardWidth), 50);
 
             this.addChild(currentFoundation);
         }
@@ -63,7 +67,7 @@ export class Board extends Container {
     private addCardColumns() {
         for (let i = 0; i < 7; i++) {
             const currentCol = new Column(this.cardWidth, this.cardHeight, this.gameManager);
-            currentCol.position.set((10 + i * this.spaceBetweenCards) + (i * this.cardWidth), this.cardHeight + this.spaceBetweenCards + 50);
+            currentCol.position.set((this.cardWidth / 2) + 10 + (i * this.spaceBetweenCards) + (i * this.cardWidth), this.cardHeight + this.spaceBetweenCards + 50);
 
             this.columns.push(currentCol);
             this.addChild(currentCol);

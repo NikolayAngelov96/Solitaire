@@ -6,6 +6,7 @@ import { Button } from "./Button";
 import { Assets, CardFactory } from "./CardFactory";
 import { GameManager } from "./GameManager";
 import { Card } from "./Card";
+import { cardSize } from "./Constants";
 
 const initForm = document.querySelector('form');
 const initSection = document.getElementById('init');
@@ -48,7 +49,7 @@ PIXI.Assets.loadBundle('images',
 function init(assets: Assets) {
     const gameManager = new GameManager(app, background);
     const cardFactory = new CardFactory(assets, gameManager);
-    const board = new Board(137, 208, gameManager);
+    const board = new Board(cardSize.w, cardSize.h, gameManager, cardFactory);
     board.addChild(disconnectBtn, hintBtn);
     app.stage.addChild(board);
 
