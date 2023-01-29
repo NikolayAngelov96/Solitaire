@@ -29,16 +29,14 @@ export class Deck extends CardArea {
         for (let i = 0; i < 52; i++) {
             const card = this.cardFactory.getCard();
             card.x = card.width / 2;
+            card.slot = this;
             this.addChild(card);
         }
     };
 
     public addCard(card: Card) {
         this.addChild(card);
+        card.slot = this;
         card.position.set(0 + card.width / 2, 0);
-
-        if (card.parent instanceof Card) {
-            card.position.set(0 + card.width / 2, 30);
-        }
     }
 }

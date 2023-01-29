@@ -21,7 +21,7 @@ export class Card extends PIXI.Container {
     private oldGlobalPosition: PIXI.Point;
     private pointerOffsetFromCardPivot = new PIXI.Point(0, 0);
     private flipTween: gsap.core.Tween;
-    private oldSlot: Column | Foundation | Deck;
+    public slot: Column | Foundation | Deck;
 
     constructor(
         private cardFrontsTextures: CardFrontsTextures,
@@ -112,9 +112,9 @@ export class Card extends PIXI.Container {
         });
 
         // Remove later
-        this.on('pointertap', () => {
-            // this.flip();
-        });
+        // this.on('pointertap', () => {
+        //     this.flip();
+        // });
 
     }
 
@@ -168,7 +168,6 @@ export class Card extends PIXI.Container {
             duration: 0.2,
             onComplete: () => {
                 slot.addCard(this);
-                this.oldSlot = slot;
             }
         });
     }
@@ -180,7 +179,8 @@ export class Card extends PIXI.Container {
                 x: this.oldGlobalPosition.x,
                 y: this.oldGlobalPosition.y,
             },
-            ease: 'back'
+            ease: 'back',
+            onComplete: () => this.slot.addCard(this)
         });
         this.disableEventListener();
     }

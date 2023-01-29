@@ -46,6 +46,7 @@ export class Column extends CardArea {
 
     public addCard(card: Card) {
         this.destination.addChild(card);
+        card.slot = this;
         card.position.set(0 + card.width / 2, 0);
 
         if (card.parent instanceof Card) {
