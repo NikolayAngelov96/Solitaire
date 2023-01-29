@@ -3,6 +3,8 @@ import * as PIXI from 'pixi.js';
 import { PixiPlugin } from 'gsap/PixiPlugin';
 import { cardSize, Ranks, Suites } from './Constants';
 import { GameManager } from './GameManager';
+import { Column } from './Column';
+import { Foundation } from './Foundation';
 
 gsap.registerPlugin(PixiPlugin);
 PixiPlugin.registerPIXI(PIXI);
@@ -18,6 +20,7 @@ export class Card extends PIXI.Container {
     private oldGlobalPosition: PIXI.Point;
     private pointerOffsetFromCardPivot = new PIXI.Point(0, 0);
     private flipTween: gsap.core.Tween;
+    private oldSlot: Column | Foundation;
 
     constructor(
         private cardFrontsTextures: CardFrontsTextures,
@@ -152,6 +155,23 @@ export class Card extends PIXI.Container {
         }
     }
 
+    public goTo(slot: Column | Foundation) {
+        // All logic here
+        const destinationPosition = slot.destinationGlobalPosition;
+
+        gsap.to(this, {
+            pixi: {
+                x: destinationPosition.x,
+                y: destinationPosition.y,
+            },
+            duration: 0.2,
+            onComplete: () => {
+                slot.addCard(this);
+                this.oldSlot = slot;
+            }
+        });
+    }
+
     public goBack() {
 
         gsap.to(this, {
@@ -160,7 +180,7 @@ export class Card extends PIXI.Container {
                 y: this.oldGlobalPosition.y,
             },
             ease: 'back'
-        })
+        });
         this.disableEventListener();
     }
 
@@ -175,13 +195,13 @@ export class Card extends PIXI.Container {
             case 'S':
                 return Suites.Spades;
             case 'D':
-                return Suites.Diamonds
+                return Suites.Diamonds;
             case 'H':
                 return Suites.Hearts;
             case 'C':
-                return Suites.Clubs
+                return Suites.Clubs;
             default:
-                throw new TypeError('Not a valid suite type')
+                throw new TypeError('Not a valid suite type');
         }
     }
 }

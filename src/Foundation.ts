@@ -14,11 +14,20 @@ export class Foundation extends CardArea {
 
         this.interactive = true;
         this.on('pointerupcapture', () => {
-            this.addCard(gameManager.draggingCard)
-            // gameManager.draggingCard.goBack();
-            gameManager.draggingCard.disableEventListener();
-            gameManager.draggingCard = null;
-        })
+            if (gameManager.draggingCard) {
+                gameManager.draggingCard.goTo(this);
+                // this.addCard(gameManager.draggingCard);
+                // gameManager.draggingCard.goBack();
+                gameManager.draggingCard.disableEventListener();
+                gameManager.draggingCard = null;
+            }
+        });
+    }
+
+    get destinationGlobalPosition() {
+        const position = this.getGlobalPosition();
+        position.x += this.width / 2;
+        return position;
     }
 
     addCard(card: Card): void {
