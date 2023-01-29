@@ -9,8 +9,9 @@ export class LoadScreen extends PIXI.Container {
         super();
         this.addText();
         this.addLoadbar();
-        this.position.set(app.stage.width / 2, app.stage.height / 2);
+        this.pivot.set(this.width / 2, this.height / 2);
         app.stage.addChild(this);
+        this.position.set(app.stage.width / 2, app.stage.height / 2);
     }
 
     private addText() {
@@ -43,8 +44,8 @@ export class LoadScreen extends PIXI.Container {
         barBg.beginFill(0xFFFFFF);
         barBg.drawRoundedRect(0, 0, 500, 30, 30);
         barBg.endFill();
-        barBg.pivot.set(barBg.width / 2, barBg.height / 2);
-        barBg.y = 50;
+        barBg.pivot.set(barBg.width / 2, 0);
+        barBg.y = 30;
 
         const progressContainer = new PIXI.Container();
         barBg.addChild(progressContainer);
@@ -69,10 +70,11 @@ export class LoadScreen extends PIXI.Container {
             pixi: {
                 scaleX: n
             },
-            duration: 0.3,
+            delay: 0.3,
             onComplete: () => {
                 if (n == 1) {
-                    this.destroy();
+                    setTimeout(this.destroy.bind(this), 300);
+                    // this.destroy();
                 }
             }
         });
