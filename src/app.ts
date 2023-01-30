@@ -7,6 +7,7 @@ import { Assets, CardFactory } from "./CardFactory";
 import { GameManager } from "./GameManager";
 import { cardSize } from "./Constants";
 import { LoadScreen } from "./LoadScreen";
+import { EndScreen } from "./EndScreen";
 
 const app = new PIXI.Application({
     width: 1140,
@@ -45,6 +46,9 @@ function init(assets: Assets) {
     board.addChild(disconnectBtn, hintBtn);
     app.stage.addChild(board);
 
+    const blur = new PIXI.BlurFilter();
+    board.filters = [blur];
+
     const card = cardFactory.getCard();
     card.setFront('KC');
     const card2 = cardFactory.getCard();
@@ -65,6 +69,8 @@ function init(assets: Assets) {
     board.columns[2].addCard(card4);
     board.columns[2].addCard(card5);
     board.columns[2].addCard(card6);
+
+    const endScreen = new EndScreen(app, cardFactory);
 }
 
 
