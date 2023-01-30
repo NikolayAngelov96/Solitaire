@@ -7,6 +7,7 @@ export class Button extends Container {
         super();
 
         this._rect = this.createRect(x, y, width, height, backgroundColor);
+        this._rect.pivot.set(width / 2, height / 2);
 
         this.addLabel(label);
     }
