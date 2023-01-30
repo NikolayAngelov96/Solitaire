@@ -23,10 +23,10 @@ export class Foundation extends CardArea {
     }
 
     get destinationGlobalPosition() {
-        return this.getGlobalPosition();;
+        return this.getGlobalPosition();
     }
 
-    addCard(card: Card): void {
+    public addCard(card: Card): void {
         if (card.suite == this.suite) {
             this.addChild(card);
             card.slot = this;
@@ -34,5 +34,5 @@ export class Foundation extends CardArea {
         } else {
             card.goBack();
         }
-    };
+    }
 }

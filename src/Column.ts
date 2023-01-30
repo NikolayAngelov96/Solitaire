@@ -5,7 +5,6 @@ import { GameManager } from "./GameManager";
 window['columns'] = [];
 
 export class Column extends CardArea {
-    private childrenCount: number = 0;
 
     constructor(width: number, height: number, gameManager: GameManager) {
         super(width, height);
@@ -36,12 +35,25 @@ export class Column extends CardArea {
         return this.getDestination();
     }
 
+    get cardsCount() {
+        return this.getCardsCount();
+    }
+
     private getDestination(current: any = this) {
         if (current.children.at(-1) instanceof Card) {
             return this.getDestination(current.children.at(-1));
         }
 
         return current;
+    }
+
+    private getCardsCount(current: any = this, count = 0) {
+        if (current.children.at(-1) instanceof Card) {
+            count++;
+            return this.getCardsCount(current.children.at(-1), count);
+        }
+
+        return count;
     }
 
     public addCard(card: Card) {

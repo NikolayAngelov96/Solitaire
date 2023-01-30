@@ -2,13 +2,25 @@ import * as PIXI from "pixi.js";
 import { gsap } from 'gsap';
 import { CardFactory } from "./CardFactory";
 import { Button } from "./Button";
+import { Board } from "./Board";
 
 export class EndScreen extends PIXI.Container {
     private text: PIXI.Text;
-    private button: Button
-    constructor(private app: PIXI.Application, private cardFactory: CardFactory, hasWon: boolean, restartGameBtn: Button) {
+    private button: Button;
+    constructor(
+        private app: PIXI.Application,
+        private cardFactory: CardFactory,
+        private board: Board,
+        hasWon: boolean,
+    ) {
         super();
-        this.button = restartGameBtn;
+        this.button = new Button('New Game', app.stage.width / 2, app.stage.height / 2, 145, 38, 0x28a745);
+        this.button.attachEventListener('pointerdown', () => {
+            window.location.reload();
+        });
+
+        const blur = new PIXI.BlurFilter();
+        this.board.filters = [blur];
 
         if (hasWon) {
             this.animateWin();
@@ -27,7 +39,7 @@ export class EndScreen extends PIXI.Container {
             cards.push(this.cardFactory.getCard());
         }
 
-        this.addChild(...cards)
+        this.addChild(...cards);
 
         gsap.fromTo(cards, {
             pixi: {
@@ -44,7 +56,7 @@ export class EndScreen extends PIXI.Container {
             },
 
             onComplete: () => this.addText()
-        })
+        });
     }
 
     private addText() {
@@ -67,7 +79,7 @@ export class EndScreen extends PIXI.Container {
     private pulseAnimation() {
         const tl = gsap.timeline()
             .from(this.text, { pixi: { scale: 0, rotation: 720 }, duration: 0.8 })
-            .to(this.text, { pixi: { scale: 1.2 }, repeat: -1, yoyo: true, ease: 'sine' }, '<0.7')
+            .to(this.text, { pixi: { scale: 1.2 }, repeat: -1, yoyo: true, ease: 'sine' }, '<0.7');
 
     }
 
@@ -92,7 +104,7 @@ export class EndScreen extends PIXI.Container {
                 blur: 10
             },
             duration: 1
-        }, '<')
+        }, '<');
     }
 
     private addLosingText() {

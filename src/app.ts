@@ -42,43 +42,13 @@ PIXI.Assets.loadBundle('images', (p) => loadScreen.progress(p))
 function init(assets: Assets) {
     const gameManager = new GameManager(app, background);
     const cardFactory = new CardFactory(assets, gameManager);
-    const board = new Board(cardSize.w, cardSize.h, gameManager, cardFactory);
+    const board = new Board(gameManager, cardFactory);
     board.addChild(disconnectBtn, hintBtn);
     app.stage.addChild(board);
+    board.dealCards();
 
-
-    const card = cardFactory.getCard();
-    card.setFront('KC');
-    const card2 = cardFactory.getCard();
-    card2.setFront('AD');
-    const card3 = cardFactory.getCard();
-    card3.setFront('JC');
-    const card4 = cardFactory.getCard();
-    card4.setFront('QC');
-    const card5 = cardFactory.getCard();
-    card5.setFront('JC');
-    const card6 = cardFactory.getCard();
-    card6.setFront('QC');
-
-    board.columns[0].addCard(card);
-    board.columns[4].addCard(card2);
-    board.columns[1].addCard(card2);
-    board.columns[1].addCard(card3);
-    board.columns[2].addCard(card4);
-    board.columns[2].addCard(card5);
-    board.columns[2].addCard(card6);
-
-    const blur = new PIXI.BlurFilter();
-    board.filters = [blur];
-
-    const btn = new Button('New Game', app.stage.width / 2, app.stage.height / 2, 145, 38, 0x28a745)
-    btn.attachEventListener('pointerdown', () => {
-        window.location.reload();
-    })
-    const endScreen = new EndScreen(app, cardFactory, false, btn);
+    // const endScreen = new EndScreen(app, cardFactory, board, false);
 }
-
-
 
 const disconnectBtn = new Button('Disconnect', 150, 22, 85, 25, 0x28a745);
 

@@ -127,11 +127,11 @@ export class Card extends PIXI.Container {
             this.pointerOffsetFromCardPivot.y = e.globalY - this.oldGlobalPosition.y;
 
             // Move card fom pile to stage and set global position
-            this.gameManager.setDraggingCard(this);
             this.x = e.globalX - this.pointerOffsetFromCardPivot.x;
             this.y = e.globalY - this.pointerOffsetFromCardPivot.y;
 
             this.interactive = false;
+            this.gameManager.setDraggingCard(this);
             e.stopPropagation();
 
             this.on('globalmousemove', this.move);
@@ -204,5 +204,14 @@ export class Card extends PIXI.Container {
             default:
                 throw new TypeError('Not a valid suite type');
         }
+    }
+
+    public goGlobal() {
+        // Save pivot offset from click position
+        const globalPosition = this.getGlobalPosition();
+        this.x = globalPosition.x;
+        this.y = globalPosition.y;
+        this.gameManager.app.stage.addChild(this);
+        // this.interactive = false;
     }
 }

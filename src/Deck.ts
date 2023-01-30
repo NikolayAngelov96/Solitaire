@@ -8,7 +8,6 @@ export class Deck extends CardArea {
     constructor(width: number, height: number, gameManager: GameManager, private cardFactory: CardFactory) {
         super(width, height);
         this.position.set(10 + width / 2, 50);
-
         this.interactive = true;
         this.fill();
 
@@ -22,7 +21,7 @@ export class Deck extends CardArea {
     }
 
     get destinationGlobalPosition() {
-        return this.getGlobalPosition();;
+        return this.getGlobalPosition();
     }
 
     private fill() {
@@ -32,7 +31,7 @@ export class Deck extends CardArea {
             card.slot = this;
             this.addChild(card);
         }
-    };
+    }
 
     public addCard(card: Card) {
         this.addChild(card);
