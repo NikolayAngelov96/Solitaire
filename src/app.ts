@@ -46,8 +46,6 @@ function init(assets: Assets) {
     board.addChild(disconnectBtn, hintBtn);
     app.stage.addChild(board);
 
-    const blur = new PIXI.BlurFilter();
-    board.filters = [blur];
 
     const card = cardFactory.getCard();
     card.setFront('KC');
@@ -70,18 +68,25 @@ function init(assets: Assets) {
     board.columns[2].addCard(card5);
     board.columns[2].addCard(card6);
 
-    const endScreen = new EndScreen(app, cardFactory);
+    const blur = new PIXI.BlurFilter();
+    board.filters = [blur];
+
+    const btn = new Button('New Game', app.stage.width / 2, app.stage.height / 2, 145, 38, 0x28a745)
+    btn.attachEventListener('pointerdown', () => {
+        window.location.reload();
+    })
+    const endScreen = new EndScreen(app, cardFactory, false, btn);
 }
 
 
 
-const disconnectBtn = new Button('Disconnect', 100, 10, 85, 25, 0x28a745);
+const disconnectBtn = new Button('Disconnect', 150, 22, 85, 25, 0x28a745);
 
 disconnectBtn.attachEventListener("pointerdown", () => {
     connection?.disconnect();
 });
 
-const hintBtn = new Button('Hint', 200, 10, 85, 25, 0x17a2b8);
+const hintBtn = new Button('Hint', 250, 22, 85, 25, 0x17a2b8);
 hintBtn.attachEventListener('pointerdown', () => alert('This is very usefull hint'));
 
 

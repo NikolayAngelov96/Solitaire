@@ -1,13 +1,20 @@
 import * as PIXI from "pixi.js";
 import { gsap } from 'gsap';
 import { CardFactory } from "./CardFactory";
+import { Button } from "./Button";
 
 export class EndScreen extends PIXI.Container {
     private text: PIXI.Text;
-    constructor(app: PIXI.Application, private cardFactory: CardFactory) {
+    private button: Button
+    constructor(private app: PIXI.Application, private cardFactory: CardFactory, hasWon: boolean, restartGameBtn: Button) {
         super();
+        this.button = restartGameBtn;
 
-        this.animateWin();
+        if (hasWon) {
+            this.animateWin();
+        } else {
+            this.animateLoosing();
+        }
 
         app.stage.addChild(this);
 
@@ -32,7 +39,6 @@ export class EndScreen extends PIXI.Container {
                 x: 'random(0, 1140)',
                 y: 'random(0, 600)'
             },
-            duration: 0.2,
             stagger: {
                 amount: 4
             },
@@ -63,5 +69,47 @@ export class EndScreen extends PIXI.Container {
             .from(this.text, { pixi: { scale: 0, rotation: 720 }, duration: 0.8 })
             .to(this.text, { pixi: { scale: 1.2 }, repeat: -1, yoyo: true, ease: 'sine' }, '<0.7')
 
+    }
+
+    private animateLoosing() {
+        let centerX = this.app.stage.width / 2;
+        let centerY = this.app.stage.height / 2;
+        this.addLosingText();
+        this.text.position.set(centerX, centerY - 120);
+        this.addChild(this.button);
+
+        const tl = gsap.timeline();
+
+
+        tl.from(this.button, {
+            pixi: {
+                y: 800,
+            },
+            duration: 1
+        }).from(this.text, {
+            pixi: {
+                y: 0,
+                blur: 10
+            },
+            duration: 1
+        }, '<')
+    }
+
+    private addLosingText() {
+        const style = new PIXI.TextStyle({
+            fontFamily: 'Arial',
+            fontSize: 60,
+            fontWeight: 'bold',
+            fill: '#E02424',
+            dropShadow: true,
+            dropShadowAlpha: 0.3,
+            dropShadowBlur: 2,
+            letterSpacing: 1,
+        });
+
+        this.text = new PIXI.Text('Game Over', style);
+        this.text.anchor.set(0.5);
+
+        this.addChild(this.text);
     }
 }
