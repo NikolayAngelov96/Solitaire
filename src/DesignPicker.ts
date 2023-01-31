@@ -34,7 +34,14 @@ export class DesignPicker extends PIXI.Container {
         [sample1, sample2, sample3].forEach(s => {
             s.position.set(this.app.stage.width / 2, 200);
             s.interactive = true;
-            s.on('pointerdown', (event: FederatedPointerEvent) => {
+            s.on('pointerdown', () => {
+                s.x -= 10;
+                s.y += 10;
+            });
+
+            s.on('pointerup', (event: FederatedPointerEvent) => {
+                s.x += 10;
+                s.y -= 10;
                 this.gameManager.cards.forEach((c: Card) => {
                     c.setBackLogo = (event.target as any).back.children[1].texture;
                 });
