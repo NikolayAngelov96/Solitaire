@@ -9,6 +9,8 @@ import { cardSize } from "./Constants";
 import { LoadScreen } from "./LoadScreen";
 import { EndScreen } from "./EndScreen";
 
+import { gsap } from 'gsap';
+
 const app = new PIXI.Application({
     width: 1140,
     height: 670,
@@ -47,8 +49,9 @@ function init(assets: Assets) {
     const board = new Board(gameManager, cardFactory);
     board.addChild(disconnectBtn, hintBtn, cardsBrandingBtn);
     app.stage.addChild(board);
-    board.dealCards();
 
+    // board.dealCards();
+    board.shuffleAndDealCards();
     // const endScreen = new EndScreen(app, cardFactory, board, false);
     cardsBrandingBtn.attachEventListener('pointerdown', gameManager.designPicker.bind(gameManager));
 }

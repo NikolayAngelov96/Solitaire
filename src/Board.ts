@@ -6,6 +6,7 @@ import { cardSize, Ranks, Suites } from './Constants';
 import { Deck } from "./Deck";
 import { CardFactory } from "./CardFactory";
 import { Card } from "./Card";
+import { gsap } from 'gsap';
 
 export class Board extends Container {
     private cardWidth = cardSize.w;
@@ -110,5 +111,77 @@ export class Board extends Container {
                 this.dealCards(startCol, col);
             }, 300);
         }
+    }
+
+    public shuffleAndDealCards() {
+        let shuffleContainer = new Container();
+
+        for (let i = 0; i < 5; i++) {
+            let card = this.cardFactory.getCard();
+            card.pivot.set(card.width, 0);
+            card.position.set(this.deck.x + this.deck.width / 2, this.deck.y);
+            shuffleContainer.addChild(card);
+        }
+
+        gsap.to(shuffleContainer, {
+            pixi: { x: this.width / 2 - shuffleContainer.width / 2, y: this.height / 2 }, onStart: () => this.deck.renderable = false
+        })
+        let master = gsap.timeline();
+        const initialSkewAnim = gsap.timeline({ defaults: { ease: 'power2' } });
+
+        let card5 = shuffleContainer.children[4];
+        let card4 = shuffleContainer.children[3];
+        let card3 = shuffleContainer.children[2];
+        let card2 = shuffleContainer.children[1];
+        let card = shuffleContainer.children[0];
+
+        let startSkew = 15;
+        initialSkewAnim.to(card5, { pixi: { skewX: startSkew, skewY: 15 } })
+            .to(card4, { pixi: { skewX: startSkew - 3, skewY: 15 } }, '<')
+            .to(card3, { pixi: { skewX: startSkew - 6, skewY: 15 } }, '<')
+            .to(card2, { pixi: { skewX: startSkew - 9, skewY: 15 } }, '<')
+            .to(card, { pixi: { skewX: startSkew - 12, skewY: 15 } }, '<')
+
+
+        // to make the zIndex work the container.sortableChildren should be set to true;
+        shuffleContainer.sortableChildren = true;
+        // so topmost card is always on top
+        card5.zIndex = 3;
+        card4.zIndex = 1;
+        card3.zIndex = 1;
+
+        const tl = gsap.timeline({ defaults: { duration: 0.1, ease: 'sine' } });
+
+        let children = shuffleContainer.children.slice(0, 2);
+        tl.to(children[0], { pixi: { x: '-=125', skewX: -5 } })
+            .to(children[1], { pixi: { x: '-= 122' } }, '<')
+            .to(children, { pixi: { y: '-= 50', zIndex: 2 } })
+            .to(children, { pixi: { x: '+= 125' } })
+            .to(children[0], { pixi: { skewX: 16, skewY: 15, y: '+= 47' } }, '<')
+            .to(children[1], { pixi: { skewX: 13, y: '+= 50' } }, '<')
+
+
+        tl.repeat(4);
+        tl.repeatDelay(0.2);
+
+        master.add(initialSkewAnim)
+            .add(tl)
+            .to(shuffleContainer, {
+                pixi: { x: this.deck.x - this.deck.width / 2, y: this.deck.y - 50 },
+                ease: 'sine'
+            })
+            .add(() => {
+                initialSkewAnim.reverse()
+                initialSkewAnim.play();
+            })
+            .call(() => {
+                this.deck.renderable = true;
+                shuffleContainer.destroy();
+                this.dealCards();
+            })
+
+
+        this.addChild(shuffleContainer);
+
     }
 }
