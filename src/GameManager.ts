@@ -1,11 +1,17 @@
 import { Card } from "./Card";
 import * as PIXI from 'pixi.js';
+import { DesignPicker } from "./DesignPicker";
 
 
 export class GameManager {
     public draggingCard: Card;
+    public cards: Card[] = [];
+    public sampleCards = [];
 
-    constructor(public app: PIXI.Application, private background: PIXI.Container) {
+    constructor(
+        public app: PIXI.Application,
+        public background: PIXI.Container
+    ) {
 
         this.background.on('pointerupcapture', () => {
             if (this.draggingCard) {
@@ -24,4 +30,7 @@ export class GameManager {
         this.app.stage.addChild(this.draggingCard);
     }
 
+    public designPicker() {
+        new DesignPicker(this.app, this);
+    }
 }

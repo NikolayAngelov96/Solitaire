@@ -2,8 +2,9 @@ import * as PIXI from 'pixi.js';
 import { Card, CardFrontsTextures } from './Card';
 import { cardSheet, cardSize, Ranks, Suites } from './Constants';
 import { GameManager } from './GameManager';
+import { SampleCard } from './SampleCard';
 
-export type images = 'cards' | 'logo';
+export type images = 'cards' | 'logo' | 'logo2' | 'logo3' | 'logo4';
 
 export type Assets = {
     [key in images]: PIXI.Texture;
@@ -39,5 +40,13 @@ export class CardFactory {
     public getCard() {
         const card = new Card(this.cardFrontsTextures, this.assets.logo, this.gameManager);
         return card;
+    }
+
+    public getSampleCard() {
+        return [
+            new SampleCard(this.assets.logo),
+            new SampleCard(this.assets.logo2),
+            new SampleCard(this.assets.logo3)
+        ];
     }
 }

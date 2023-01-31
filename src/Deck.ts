@@ -5,17 +5,17 @@ import { GameManager } from "./GameManager";
 
 export class Deck extends CardArea {
 
-    constructor(width: number, height: number, gameManager: GameManager, private cardFactory: CardFactory) {
+    constructor(width: number, height: number, private gameManager: GameManager, private cardFactory: CardFactory) {
         super(width, height);
         this.position.set(10 + width / 2, 50);
         this.interactive = true;
         this.fill();
 
         this.on('pointerupcapture', () => {
-            if (gameManager.draggingCard) {
-                gameManager.draggingCard.goTo(this);
-                gameManager.draggingCard.disableEventListener();
-                gameManager.draggingCard = null;
+            if (this.gameManager.draggingCard) {
+                this.gameManager.draggingCard.goTo(this);
+                this.gameManager.draggingCard.disableEventListener();
+                this.gameManager.draggingCard = null;
             }
         });
     }
@@ -30,7 +30,12 @@ export class Deck extends CardArea {
             card.x = card.width / 2;
             card.slot = this;
             this.addChild(card);
+
+            this.gameManager.cards.push(card);
         }
+
+        // Provide 3 sample cards for the design picker
+        this.gameManager.sampleCards = this.cardFactory.getSampleCard();
     }
 
     public addCard(card: Card) {

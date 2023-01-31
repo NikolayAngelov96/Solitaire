@@ -32,7 +32,9 @@ const loadScreen = new LoadScreen(app);
 // Load assets
 PIXI.Assets.addBundle('images', {
     cards: '/assets/cards.jpg',
-    logo: '/assets/logo.svg'
+    logo: '/assets/logo.svg',
+    logo2: '/assets/logo2.png',
+    logo3: '/assets/logo3.png',
 });
 
 PIXI.Assets.loadBundle('images', (p) => loadScreen.progress(p))
@@ -43,11 +45,12 @@ function init(assets: Assets) {
     const gameManager = new GameManager(app, background);
     const cardFactory = new CardFactory(assets, gameManager);
     const board = new Board(gameManager, cardFactory);
-    board.addChild(disconnectBtn, hintBtn);
+    board.addChild(disconnectBtn, hintBtn, cardsBrandingBtn);
     app.stage.addChild(board);
     board.dealCards();
 
     // const endScreen = new EndScreen(app, cardFactory, board, false);
+    cardsBrandingBtn.attachEventListener('pointerdown', gameManager.designPicker.bind(gameManager));
 }
 
 const disconnectBtn = new Button('Disconnect', 150, 22, 85, 25, 0x28a745);
@@ -58,6 +61,9 @@ disconnectBtn.attachEventListener("pointerdown", () => {
 
 const hintBtn = new Button('Hint', 250, 22, 85, 25, 0x17a2b8);
 hintBtn.attachEventListener('pointerdown', () => alert('This is very usefull hint'));
+
+const cardsBrandingBtn = new Button('Cards Branding', 367, 22, 120, 25, 0x17a2b8);
+
 
 
 

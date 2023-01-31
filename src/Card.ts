@@ -14,7 +14,8 @@ export type CardFrontsTextures = { [key: string]: PIXI.Texture; };
 window['cards'] = [];
 export class Card extends PIXI.Container {
     private front = new PIXI.Container();
-    private back = new PIXI.Container();
+    private _back = new PIXI.Container();
+    private _backLogoSprite: PIXI.Sprite;
     public suite: Suites;
     public rank: Ranks;
     public power: number;
@@ -30,7 +31,7 @@ export class Card extends PIXI.Container {
         super();
 
         // Initiate the card with the back up and unknown front (empty front container)
-        this.addBack(logoTexture);
+        this.setBack(logoTexture);
 
         this.front.renderable = false;
         this.addChild(this.front);
@@ -49,7 +50,12 @@ export class Card extends PIXI.Container {
         // this.on('pointerupcapture', () => { console.log('Cap'); });
     }
 
-    private addBack(logoTexture: PIXI.Texture) {
+    get back() {
+        return this._back;
+    }
+
+    public setBack(logoTexture: PIXI.Texture) {
+        this._back.removeChildren();
         const backBackground = new PIXI.Graphics();
         backBackground.beginFill(colors.darkBg, 1);
         backBackground.drawRoundedRect(0, 0, cardSize.w, cardSize.h, 16);
@@ -58,10 +64,17 @@ export class Card extends PIXI.Container {
         const backLogo = PIXI.Sprite.from(logoTexture);
         backLogo.anchor.set(0.5);
         backLogo.position.set(backBackground.width / 2, backBackground.height / 2);
-        backLogo.scale.set(0.75);
+        this._backLogoSprite = backLogo;
+        this.setBackLogo = logoTexture;
+        // backLogo.scale.set((cardSize.w - 15) / logoTexture.width);
 
-        this.back.addChild(backBackground, backLogo);
-        this.addChild(this.back);
+        this._back.addChild(backBackground, backLogo);
+        this.addChild(this._back);
+    }
+
+    set setBackLogo(texture: PIXI.Texture) {
+        this._backLogoSprite.texture = texture;
+        this._backLogoSprite.scale.set((cardSize.w - 20) / texture.width);
     }
 
     public setFront(cardId: string) {
@@ -106,7 +119,7 @@ export class Card extends PIXI.Container {
             repeat: 1,
             onRepeat: () => {
                 this.front.renderable = !this.front.renderable;
-                this.back.renderable = !this.back.renderable;
+                this._back.renderable = !this._back.renderable;
             },
             paused: true
         });
