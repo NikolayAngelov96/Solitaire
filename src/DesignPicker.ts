@@ -1,8 +1,7 @@
 import * as PIXI from "pixi.js";
-import { FederatedPointerEvent } from "pixi.js";
 import { Button } from "./Button";
-import { Card } from "./Card";
 import { GameManager } from "./GameManager";
+import { SampleCard } from "./SampleCard";
 
 export class DesignPicker extends PIXI.Container {
 
@@ -31,26 +30,23 @@ export class DesignPicker extends PIXI.Container {
 
         const [sample1, sample2, sample3] = this.gameManager.sampleCards;
 
-        [sample1, sample2, sample3].forEach(s => {
-            s.position.set(this.app.stage.width / 2, 200);
-            s.interactive = true;
-            s.on('pointerdown', () => {
-                s.x -= 10;
-                s.y += 10;
-            });
+        [sample1, sample2, sample3].forEach(sample => {
+            sample.position.set(this.app.stage.width / 2, 200);
+            sample.interactive = true;
 
-            s.on('pointerup', (event: FederatedPointerEvent) => {
-                s.x += 10;
-                s.y -= 10;
-                this.gameManager.cards.forEach((c: Card) => {
-                    c.setBackLogo = (event.target as any).back.children[1].texture;
-                });
-            });
+            sample.on('pointerdown', () => sample.y += 10);
+            sample.on('pointerup', onPointerUp.bind(this, sample));
+            sample.on('pointerupoutside', onPointerUp.bind(this, sample));
         });
 
         sample1.x -= 200;
         sample3.x += 200;
 
         this.addChild(sample1, sample2, sample3);
+
+        function onPointerUp(sample: SampleCard) {
+            sample.y -= 10;
+            this.gameManager.cardsLogo = (sample.back.children[1] as PIXI.Sprite).texture;
+        }
     }
 }

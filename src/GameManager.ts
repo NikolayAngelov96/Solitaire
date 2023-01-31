@@ -1,12 +1,13 @@
 import { Card } from "./Card";
 import * as PIXI from 'pixi.js';
 import { DesignPicker } from "./DesignPicker";
+import { SampleCard } from "./SampleCard";
 
 
 export class GameManager {
     public draggingCard: Card;
     public cards: Card[] = [];
-    public sampleCards = [];
+    public sampleCards: SampleCard[] = [];
 
     constructor(
         public app: PIXI.Application,
@@ -15,17 +16,19 @@ export class GameManager {
 
         this.background.on('pointerupcapture', () => {
             if (this.draggingCard) {
-                // Card to go back to old pile
                 this.draggingCard.goBack();
                 this.draggingCard = null;
             }
-            console.log('background pointer up');
         });
+    }
 
+    set cardsLogo(texture: PIXI.Texture) {
+        this.cards.forEach((card: Card) => {
+            card.setBackLogo = texture;
+        });
     }
 
     public setDraggingCard(card: Card) {
-        // Move the card to the stage
         this.draggingCard = card;
         this.app.stage.addChild(this.draggingCard);
     }
