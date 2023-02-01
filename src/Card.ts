@@ -40,7 +40,7 @@ export class Card extends PIXI.Container {
         this.addMask();
         this.interactive = true;
         this.makeFlippable();
-        this.makeDraggable();
+        // this.makeDraggable();
 
         this.pivot.x = this.width / 2;
 
@@ -121,7 +121,7 @@ export class Card extends PIXI.Container {
         });
     }
 
-    private makeDraggable() {
+    public makeDraggable() {
         this.on('pointerdown', (e) => {
             if (this.gameManager.cardsDealed && this.gameManager.draggingCard == null) {
                 this.interactive = false;

@@ -89,6 +89,7 @@ export class Board extends Container {
 
             const currentCard = this.deck.children.at(-1) as Card;
             currentCard.goTo(this.columns[col], true);
+            currentCard.makeDraggable();
 
             // Random front
             const cardId = Object.values(Ranks)[Math.random() * 13 | 0] + Object.values(Suites)[Math.random() * 4 | 0];
