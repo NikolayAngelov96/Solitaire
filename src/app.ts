@@ -9,24 +9,14 @@ import { cardSize } from "./Constants";
 import { LoadScreen } from "./LoadScreen";
 import { EndScreen } from "./EndScreen";
 
-import { gsap } from 'gsap';
-
 const app = new PIXI.Application({
     width: 1140,
-    height: 670,
+    height: 800,
     background: "#005000",
 });
 document.body.appendChild(app.view as HTMLCanvasElement);
 
 let connection = null;
-
-// Background to track mouse movement
-const background = new PIXI.Graphics();
-background.beginFill(0x005000);
-background.drawRect(0, 0, 1140, 670);
-background.endFill();
-background.interactive = true;
-app.stage.addChild(background);
 
 // Start load screen
 const loadScreen = new LoadScreen(app);
@@ -40,20 +30,21 @@ PIXI.Assets.addBundle('images', {
 });
 
 PIXI.Assets.loadBundle('images', (p) => loadScreen.progress(p))
-    .then(res => loadScreen.on('destroyed', () => init(res)));
+    .then(res => loadScreen.on('destroyed', () => init(res)))
+    .catch(e => new Error(e.message));
 
 
 function init(assets: Assets) {
-    const gameManager = new GameManager(app, background);
+    const gameManager = new GameManager(app);
     const cardFactory = new CardFactory(assets, gameManager);
     const board = new Board(gameManager, cardFactory);
-    board.addChild(disconnectBtn, hintBtn, cardsBrandingBtn);
+    board.addChild(disconnectBtn, hintBtn, cardsDesignBtn);
     app.stage.addChild(board);
 
     // board.dealCards();
     board.shuffleAndDealCards();
     // const endScreen = new EndScreen(app, cardFactory, board, false);
-    cardsBrandingBtn.attachEventListener('pointerdown', gameManager.designPicker.bind(gameManager));
+    cardsDesignBtn.attachEventListener('pointerdown', gameManager.designPicker.bind(gameManager));
 }
 
 const disconnectBtn = new Button('Disconnect', 150, 22, 85, 25, 0x28a745);
@@ -65,7 +56,7 @@ disconnectBtn.attachEventListener("pointerdown", () => {
 const hintBtn = new Button('Hint', 250, 22, 85, 25, 0x17a2b8);
 hintBtn.attachEventListener('pointerdown', () => alert('This is very usefull hint'));
 
-const cardsBrandingBtn = new Button('Cards Branding', 367, 22, 120, 25, 0x17a2b8);
+const cardsDesignBtn = new Button('Cards Design', 367, 22, 120, 25, 0x17a2b8);
 
 
 

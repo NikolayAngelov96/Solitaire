@@ -5,32 +5,41 @@ import { SampleCard } from "./SampleCard";
 
 
 export class GameManager {
-    public draggingCard: Card;
+    private _draggingCard: Card = null;
     public cards: Card[] = [];
-    public sampleCards: SampleCard[] = [];
+    public getSampleCards: () => SampleCard[];
+    public cardsDealed = false;
 
     constructor(
-        public app: PIXI.Application,
-        public background: PIXI.Container
+        public app: PIXI.Application
     ) {
+        // Background to track mouse movement
+        const background = new PIXI.Graphics();
+        background.beginFill(0x005000);
+        background.drawRect(0, 0, 1140, 670);
+        background.endFill();
+        background.interactive = true;
+        this.app.stage.addChild(background);
 
-        this.background.on('pointerupcapture', () => {
-            if (this.draggingCard) {
-                this.draggingCard.goBack();
-                this.draggingCard = null;
-            }
-        });
+        background.on('pointerup', () => this.draggingCard?.goBack());
+    }
+
+    set draggingCard(card: Card) {
+        this._draggingCard = card;
+
+        if (card) {
+            this.app.stage.addChild(card);
+        }
+    }
+
+    get draggingCard() {
+        return this._draggingCard;
     }
 
     set cardsLogo(texture: PIXI.Texture) {
         this.cards.forEach((card: Card) => {
-            card.setBackLogo = texture;
+            card.backLogo = texture;
         });
-    }
-
-    public setDraggingCard(card: Card) {
-        this.draggingCard = card;
-        this.app.stage.addChild(this.draggingCard);
     }
 
     public designPicker() {

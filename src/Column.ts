@@ -2,23 +2,23 @@ import { Card } from "./Card";
 import { CardArea } from "./CardArea";
 import { GameManager } from "./GameManager";
 
-window['columns'] = [];
-
 export class Column extends CardArea {
 
     constructor(width: number, height: number, gameManager: GameManager) {
         super(width, height);
+
         this.interactive = true;
-        this.on('pointerupcapture', (e) => {
+        this.on('pointerup', () => {
             if (gameManager.draggingCard) {
-                gameManager.draggingCard.goTo(this);
-                gameManager.draggingCard.disableEventListener();
-                gameManager.draggingCard = null;
+                if (this.validateCard(gameManager.draggingCard)) {
+                    gameManager.draggingCard.goTo(this);
+                } else {
+                    gameManager.draggingCard.goBack();
+                }
             }
-            console.log('Column pointer Up');
         });
 
-        window['columns'].push(this);
+        window['c'] = this;
     }
 
     get destinationGlobalPosition() {
@@ -39,7 +39,7 @@ export class Column extends CardArea {
         return this.getCardsCount();
     }
 
-    private getDestination(current: any = this) {
+    private getDestination(current: any = this): Card | Column {
         if (current.children.at(-1) instanceof Card) {
             return this.getDestination(current.children.at(-1));
         }
@@ -47,7 +47,7 @@ export class Column extends CardArea {
         return current;
     }
 
-    private getCardsCount(current: any = this, count = 0) {
+    private getCardsCount(current: any = this, count = 0): number {
         if (current.children.at(-1) instanceof Card) {
             count++;
             return this.getCardsCount(current.children.at(-1), count);
@@ -56,13 +56,14 @@ export class Column extends CardArea {
         return count;
     }
 
-    public addCard(card: Card) {
-        this.destination.addChild(card);
-        card.slot = this;
-        card.position.set(0 + card.width / 2, 0);
+    public validateCard(card: Card) {
+        // Validate from the backend if the card can go in the column
 
-        if (card.parent instanceof Card) {
-            card.position.set(0 + card.width / 2, 30);
+        // Temporary solution
+        if (this.cardsCount > 0 && card.suite == (this.destination as Card).suite) {
+            return false;
         }
+
+        return true;
     }
 }

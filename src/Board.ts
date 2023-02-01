@@ -54,9 +54,8 @@ export class Board extends Container {
     }
 
     private addFoundationPile() {
-        let suitesArr = [...Object.values(Suites)];
-        for (let i = 0; i < suitesArr.length; i++) {
-            const currentFoundation = new Foundation(this.cardWidth, this.cardHeight, suitesArr[i], this.gameManager);
+        for (let i = 0; i < [...Object.values(Suites)].length; i++) {
+            const currentFoundation = new Foundation(this.cardWidth, this.cardHeight, this.gameManager);
             currentFoundation.position.set((this.cardWidth * 4 + i * this.spaceBetweenCards) + (i * this.cardWidth), 50);
 
             this.addChild(currentFoundation);
@@ -89,8 +88,7 @@ export class Board extends Container {
         if (startCol < this.columns.length) {
 
             const currentCard = this.deck.children.at(-1) as Card;
-            currentCard.goGlobal();
-            currentCard.goTo(this.columns[col]);
+            currentCard.goTo(this.columns[col], true);
 
             // Random front
             const cardId = Object.values(Ranks)[Math.random() * 13 | 0] + Object.values(Suites)[Math.random() * 4 | 0];
@@ -110,6 +108,8 @@ export class Board extends Container {
 
                 this.dealCards(startCol, col);
             }, 300);
+        } else if (startCol >= this.columns.length) {
+            this.gameManager.cardsDealed = true;
         }
     }
 
@@ -125,7 +125,7 @@ export class Board extends Container {
 
         gsap.to(shuffleContainer, {
             pixi: { x: this.width / 2 - shuffleContainer.width / 2, y: this.height / 2 }, onStart: () => this.deck.renderable = false
-        })
+        });
         let master = gsap.timeline();
         const initialSkewAnim = gsap.timeline({ defaults: { ease: 'power2' } });
 
@@ -140,7 +140,7 @@ export class Board extends Container {
             .to(card4, { pixi: { skewX: startSkew - 3, skewY: 15 } }, '<')
             .to(card3, { pixi: { skewX: startSkew - 6, skewY: 15 } }, '<')
             .to(card2, { pixi: { skewX: startSkew - 9, skewY: 15 } }, '<')
-            .to(card, { pixi: { skewX: startSkew - 12, skewY: 15 } }, '<')
+            .to(card, { pixi: { skewX: startSkew - 12, skewY: 15 } }, '<');
 
 
         // to make the zIndex work the container.sortableChildren should be set to true;
@@ -158,7 +158,7 @@ export class Board extends Container {
             .to(children, { pixi: { y: '-= 50', zIndex: 2 } })
             .to(children, { pixi: { x: '+= 125' } })
             .to(children[0], { pixi: { skewX: 16, skewY: 15, y: '+= 47' } }, '<')
-            .to(children[1], { pixi: { skewX: 13, y: '+= 50' } }, '<')
+            .to(children[1], { pixi: { skewX: 13, y: '+= 50' } }, '<');
 
 
         tl.repeat(4);
@@ -171,14 +171,14 @@ export class Board extends Container {
                 ease: 'sine'
             })
             .add(() => {
-                initialSkewAnim.reverse()
+                initialSkewAnim.reverse();
                 initialSkewAnim.play();
             })
             .call(() => {
                 this.deck.renderable = true;
                 shuffleContainer.destroy();
                 this.dealCards();
-            })
+            });
 
 
         this.addChild(shuffleContainer);

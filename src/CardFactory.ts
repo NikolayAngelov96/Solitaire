@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { Card, CardFrontsTextures } from './Card';
-import { cardSheet, cardSize, Ranks, Suites } from './Constants';
+import { cardSheet, Ranks, Suites } from './Constants';
 import { GameManager } from './GameManager';
 import { SampleCard } from './SampleCard';
 
@@ -19,6 +19,14 @@ export class CardFactory {
 
     constructor(private assets: Assets, private gameManager: GameManager) {
         this.generateFrontsTextures();
+
+        this.gameManager.getSampleCards = () => {
+            return [
+                new SampleCard(this.assets.logo),
+                new SampleCard(this.assets.logo2),
+                new SampleCard(this.assets.logo3)
+            ];
+        };
     }
 
     private generateFrontsTextures() {
@@ -38,15 +46,6 @@ export class CardFactory {
     }
 
     public getCard() {
-        const card = new Card(this.cardFrontsTextures, this.assets.logo, this.gameManager);
-        return card;
-    }
-
-    public getSampleCard() {
-        return [
-            new SampleCard(this.assets.logo),
-            new SampleCard(this.assets.logo2),
-            new SampleCard(this.assets.logo3)
-        ];
+        return new Card(this.cardFrontsTextures, this.assets.logo, this.gameManager);
     }
 }

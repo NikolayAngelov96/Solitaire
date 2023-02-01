@@ -5,7 +5,6 @@ import { cardSize, colors, Ranks, Suites } from './Constants';
 import { GameManager } from './GameManager';
 import { Column } from './Column';
 import { Foundation } from './Foundation';
-import { Deck } from './Deck';
 
 gsap.registerPlugin(PixiPlugin);
 PixiPlugin.registerPIXI(PIXI);
@@ -16,63 +15,59 @@ export class Card extends PIXI.Container {
     private front = new PIXI.Container();
     private _back = new PIXI.Container();
     private _backLogoSprite: PIXI.Sprite;
+    private _faceUp = false;
     public suite: Suites;
     public rank: Ranks;
     public power: number;
     private oldGlobalPosition: PIXI.Point;
     private pointerOffsetFromCardPivot = new PIXI.Point(0, 0);
     private flipTween: gsap.core.Tween;
-    public slot: Column | Foundation | Deck;
+    public slot: Column | Foundation;
 
     constructor(
         private cardFrontsTextures: CardFrontsTextures,
         logoTexture: PIXI.Texture,
-        private gameManager: GameManager) {
+        private gameManager: GameManager
+    ) {
         super();
 
         // Initiate the card with the back up and unknown front (empty front container)
         this.setBack(logoTexture);
-
         this.front.renderable = false;
         this.addChild(this.front);
 
         this.addBorder();
         this.addMask();
+        this.interactive = true;
         this.makeFlippable();
         this.makeDraggable();
 
         this.pivot.x = this.width / 2;
-        // this.scale.set(0.334);
-        this.interactive = true;
 
         // For testing
         window['cards'].push(this);
-        // this.on('pointerupcapture', () => { console.log('Cap'); });
     }
 
-    get back() {
-        return this._back;
+    get faceUp() {
+        return this._faceUp;
     }
 
-    public setBack(logoTexture: PIXI.Texture) {
-        this._back.removeChildren();
+    private setBack(logoTexture: PIXI.Texture) {
         const backBackground = new PIXI.Graphics();
         backBackground.beginFill(colors.darkBg, 1);
         backBackground.drawRoundedRect(0, 0, cardSize.w, cardSize.h, 16);
         backBackground.endFill();
 
-        const backLogo = PIXI.Sprite.from(logoTexture);
-        backLogo.anchor.set(0.5);
-        backLogo.position.set(backBackground.width / 2, backBackground.height / 2);
-        this._backLogoSprite = backLogo;
-        this.setBackLogo = logoTexture;
-        // backLogo.scale.set((cardSize.w - 15) / logoTexture.width);
+        this._backLogoSprite = PIXI.Sprite.from(logoTexture);
+        this.backLogo = logoTexture; // Thru the setter
+        this._backLogoSprite.anchor.set(0.5);
+        this._backLogoSprite.position.set(backBackground.width / 2, backBackground.height / 2);
 
-        this._back.addChild(backBackground, backLogo);
+        this._back.addChild(backBackground, this._backLogoSprite);
         this.addChild(this._back);
     }
 
-    set setBackLogo(texture: PIXI.Texture) {
+    set backLogo(texture: PIXI.Texture) {
         this._backLogoSprite.texture = texture;
         this._backLogoSprite.scale.set((cardSize.w - 20) / texture.width);
     }
@@ -120,40 +115,30 @@ export class Card extends PIXI.Container {
             onRepeat: () => {
                 this.front.renderable = !this.front.renderable;
                 this._back.renderable = !this._back.renderable;
+                this._faceUp = !this._faceUp;
             },
             paused: true
         });
-
-        // Remove later
-        // this.on('pointertap', () => {
-        //     this.flip();
-        // });
-
     }
 
     private makeDraggable() {
         this.on('pointerdown', (e) => {
+            if (this.gameManager.cardsDealed && this.gameManager.draggingCard == null) {
+                this.interactive = false;
 
-            // Save pivot offset from click position
-            this.oldGlobalPosition = (e.target as PIXI.Container).getGlobalPosition();
-            this.pointerOffsetFromCardPivot.x = e.globalX - this.oldGlobalPosition.x;
-            this.pointerOffsetFromCardPivot.y = e.globalY - this.oldGlobalPosition.y;
+                // Save pivot offset from click position
+                this.oldGlobalPosition = this.getGlobalPosition();
+                this.pointerOffsetFromCardPivot.x = e.globalX - this.oldGlobalPosition.x;
+                this.pointerOffsetFromCardPivot.y = e.globalY - this.oldGlobalPosition.y;
 
-            // Move card fom pile to stage and set global position
-            this.x = e.globalX - this.pointerOffsetFromCardPivot.x;
-            this.y = e.globalY - this.pointerOffsetFromCardPivot.y;
+                // Move card fom pile to stage and set global position
+                this.gameManager.draggingCard = this;
+                this.x = e.globalX - this.pointerOffsetFromCardPivot.x;
+                this.y = e.globalY - this.pointerOffsetFromCardPivot.y;
+                this.on('globalmousemove', this.move);
 
-            this.interactive = false;
-            this.gameManager.setDraggingCard(this);
-            e.stopPropagation();
-
-            this.on('globalmousemove', this.move);
-        });
-
-        this.on('pointerup', () => {
-            this.gameManager.draggingCard = null;
-            this.interactive = true;
-            this.off('globalmousemove');
+                e.stopPropagation();
+            }
         });
     }
 
@@ -164,28 +149,34 @@ export class Card extends PIXI.Container {
 
     public flip() {
         if (!this.flipTween.isActive()) {
-            // console.log('Flipping');
             this.flipTween.restart();
+
         }
     }
 
-    public goTo(slot: Column | Foundation | Deck) {
-        // All logic here
+    public goTo(slot: Column | Foundation, dealing = false) {
+        this.goTopLayer();
         const destinationPosition = slot.destinationGlobalPosition;
 
-        gsap.to(this, {
-            pixi: {
-                x: destinationPosition.x,
-                y: destinationPosition.y,
-            },
-            duration: 0.2,
-            onComplete: () => {
-                slot.addCard(this);
-            }
-        });
+        if (slot.validateCard(this) == true || dealing == true) {
+            this.slot = slot;
+
+            gsap.to(this, {
+                pixi: {
+                    x: destinationPosition.x,
+                    y: destinationPosition.y,
+                },
+                duration: 0.2,
+                onComplete: this.onComplete.bind(this)
+            });
+        } else {
+            console.log('go back 1');
+            this.goBack();
+        }
     }
 
     public goBack() {
+        this.goTopLayer();
 
         gsap.to(this, {
             pixi: {
@@ -193,14 +184,20 @@ export class Card extends PIXI.Container {
                 y: this.oldGlobalPosition.y,
             },
             ease: 'back',
-            onComplete: () => this.slot.addCard(this)
+            onComplete: this.onComplete.bind(this)
         });
-        this.disableEventListener();
     }
 
-    public disableEventListener() {
+    private onComplete() {
+        this.gameManager.draggingCard = null;
         this.interactive = true;
-        this.off('globalmousemove');
+
+        this.position.set(0 + this.width / 2, 0);
+        if (this.slot instanceof Column && this.slot.cardsCount > 0) {
+            this.position.set(0 + this.width / 2, 30);
+        }
+
+        this.slot.destination.addChild(this);
     }
 
     private getSuiteFromId(cardId: string): Suites {
@@ -219,12 +216,12 @@ export class Card extends PIXI.Container {
         }
     }
 
-    public goGlobal() {
-        // Save pivot offset from click position
+    public goTopLayer() {
+        // Move card to top layer
+        this.off('globalmousemove'); // to remove
         const globalPosition = this.getGlobalPosition();
         this.x = globalPosition.x;
         this.y = globalPosition.y;
         this.gameManager.app.stage.addChild(this);
-        // this.interactive = false;
     }
 }

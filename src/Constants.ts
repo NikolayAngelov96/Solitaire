@@ -40,6 +40,7 @@ export const cardSize = {
 
 
 export const colors = {
+    mainBg: 0x005000,
     cardPlaceholder: 0x196119,
     greenBtn: 0x28a745,
     blueBtn: 0x17a2b8,

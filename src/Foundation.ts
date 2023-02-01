@@ -1,23 +1,20 @@
 import { Card } from "./Card";
 import { CardArea } from "./CardArea";
-import { Suites } from './Constants';
 import { GameManager } from "./GameManager";
 
 export class Foundation extends CardArea {
 
-    public suite: Suites;
-
-    constructor(width: number, height: number, suite: Suites, gameManager: GameManager) {
+    constructor(width: number, height: number, gameManager: GameManager) {
         super(width, height);
 
-        this.suite = suite;
-
         this.interactive = true;
-        this.on('pointerupcapture', () => {
+        this.on('pointerup', () => {
             if (gameManager.draggingCard) {
-                gameManager.draggingCard.goTo(this);
-                gameManager.draggingCard.disableEventListener();
-                gameManager.draggingCard = null;
+                if (this.validateCard(gameManager.draggingCard)) {
+                    gameManager.draggingCard.goTo(this);
+                } else {
+                    gameManager.draggingCard.goBack();
+                }
             }
         });
     }
@@ -26,13 +23,39 @@ export class Foundation extends CardArea {
         return this.getGlobalPosition();
     }
 
-    public addCard(card: Card): void {
-        if (card.suite == this.suite) {
-            this.addChild(card);
-            card.slot = this;
-            card.position.set(0 + card.width / 2, 0);
-        } else {
-            card.goBack();
+    get destination() {
+        return this.getDestination();
+    }
+
+    get cardsCount() {
+        return this.getCardsCount();
+    }
+
+    private getDestination(current: any = this): Card | Foundation {
+        if (current.children.at(-1) instanceof Card) {
+            return this.getDestination(current.children.at(-1));
         }
+
+        return current;
+    }
+
+    private getCardsCount(current: any = this, count = 0): number {
+        if (current.children.at(-1) instanceof Card) {
+            count++;
+            return this.getCardsCount(current.children.at(-1), count);
+        }
+
+        return count;
+    }
+
+    public validateCard(card: Card) {
+        // Validate from the backend if the card can go in the column
+
+        // Temporary solution
+        if (this.cardsCount > 0 && card.suite != (this.destination as Card).suite || card.faceUp == false) {
+            return false;
+        }
+
+        return true;
     }
 }
