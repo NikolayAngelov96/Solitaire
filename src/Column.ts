@@ -60,7 +60,7 @@ export class Column extends CardArea {
         // Validate from the backend if the card can go in the column
 
         // Temporary solution
-        if (this.cardsCount > 0 && card.suite == (this.destination as Card).suite) {
+        if (this.cardsCount > 0 && card.color == (this.destination as Card).color) {
             return false;
         }
 

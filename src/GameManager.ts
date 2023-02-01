@@ -16,7 +16,7 @@ export class GameManager {
         // Background to track mouse movement
         const background = new PIXI.Graphics();
         background.beginFill(0x005000);
-        background.drawRect(0, 0, 1140, 670);
+        background.drawRect(0, 0, this.app.view.width, this.app.view.height);
         background.endFill();
         background.interactive = true;
         this.app.stage.addChild(background);
