@@ -41,8 +41,9 @@ function init(assets: Assets) {
     board.addChild(disconnectBtn, hintBtn, cardsDesignBtn);
     app.stage.addChild(board);
 
+    gameManager.connectionDialogue(board.shuffleAndDealCards.bind(board));
     // board.dealCards();
-    board.shuffleAndDealCards();
+    // board.shuffleAndDealCards();
     // const endScreen = new EndScreen(app, cardFactory, board, false);
     cardsDesignBtn.attachEventListener('pointerdown', gameManager.designPicker.bind(gameManager));
 }

@@ -47,3 +47,10 @@ export const colors = {
     border: 0xa6ce39,
     darkBg: 0x07162B
 };
+
+export const textStyle = {
+    fontFamily: 'Arial',
+    fontSize: 24,
+    fill: 0xffffff,
+    align: 'left',
+};

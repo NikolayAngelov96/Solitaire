@@ -1,7 +1,8 @@
 import { Card } from "./Card";
 import * as PIXI from 'pixi.js';
-import { DesignPicker } from "./DesignPicker";
+import { DesignPicker } from "./components/DesignPicker";
 import { SampleCard } from "./SampleCard";
+import { ConnectionDialogue } from "./components/ConnectionDialogue";
 
 
 export class GameManager {
@@ -44,5 +45,15 @@ export class GameManager {
 
     public designPicker() {
         new DesignPicker(this.app, this);
+    }
+
+    public connectionDialogue(shuffleAndDealCards: () => void): void {
+        new ConnectionDialogue(this.app, this, shuffleAndDealCards);
+    }
+
+    public connect(nickName: string, dialogue: ConnectionDialogue) {
+        console.log('Connecting ...');
+
+        dialogue.destroy();
     }
 }
