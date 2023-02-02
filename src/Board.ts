@@ -127,7 +127,6 @@ export class Board extends Container {
         gsap.to(shuffleContainer, {
             pixi: { x: this.width / 2 - shuffleContainer.width / 2, y: this.height / 2 }, onStart: () => this.deck.renderable = false
         });
-        let master = gsap.timeline();
         const initialSkewAnim = gsap.timeline({ defaults: { ease: 'power2' } });
 
         let card5 = shuffleContainer.children[4];
@@ -151,10 +150,10 @@ export class Board extends Container {
         card4.zIndex = 1;
         card3.zIndex = 1;
 
-        const tl = gsap.timeline({ defaults: { duration: 0.1, ease: 'sine' } });
+        const shuffleAnim = gsap.timeline({ defaults: { duration: 0.1, ease: 'sine' } });
 
         let children = shuffleContainer.children.slice(0, 2);
-        tl.to(children[0], { pixi: { x: '-=125', skewX: -5 } })
+        shuffleAnim.to(children[0], { pixi: { x: '-=125', skewX: -5 } })
             .to(children[1], { pixi: { x: '-= 122' } }, '<')
             .to(children, { pixi: { y: '-= 50', zIndex: 2 } })
             .to(children, { pixi: { x: '+= 125' } })
@@ -162,11 +161,12 @@ export class Board extends Container {
             .to(children[1], { pixi: { skewX: 13, y: '+= 50' } }, '<');
 
 
-        tl.repeat(4);
-        tl.repeatDelay(0.2);
+        shuffleAnim.repeat(4);
+        shuffleAnim.repeatDelay(0.2);
 
+        let master = gsap.timeline();
         master.add(initialSkewAnim)
-            .add(tl)
+            .add(shuffleAnim)
             .to(shuffleContainer, {
                 pixi: { x: this.deck.x - this.deck.width / 2, y: this.deck.y - 50 },
                 ease: 'sine'
