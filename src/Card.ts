@@ -52,6 +52,13 @@ export class Card extends PIXI.Container {
         return this._faceUp;
     }
 
+    get color() {
+        // 0 = Black, 1 = Red :)
+        if (this.suite) {
+            return Number(this.suite == Suites.Hearts || this.suite == Suites.Diamonds);
+        }
+    }
+
     private setBack(logoTexture: PIXI.Texture) {
         const backBackground = new PIXI.Graphics();
         backBackground.beginFill(colors.darkBg, 1);
