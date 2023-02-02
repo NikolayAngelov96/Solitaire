@@ -11,7 +11,7 @@ export class Cursor {
         this.element.anchor.set(0, 0.55);
         this.element.renderable = true;
         document.body.addEventListener('keydown', this.onInput.bind(this));
-
+        this.blink();
     }
 
     public goTo(input: Input) {
@@ -43,6 +43,12 @@ export class Cursor {
         }
 
         this.fixPosition();
+    }
+
+    private blink() {
+        setInterval(() => {
+            this.element.renderable = !this.element.renderable;
+        }, 500)
     }
 }
 
