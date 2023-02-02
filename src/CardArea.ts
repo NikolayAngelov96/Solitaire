@@ -20,7 +20,7 @@ export abstract class CardArea extends Container {
                     gameManager.draggingCard.goBack();
                 }
             }
-        })
+        });
     }
 
 
@@ -34,7 +34,7 @@ export abstract class CardArea extends Container {
     }
 
     get destinationGlobalPosition() {
-        return this.getGlobalPosition();
+        return this.destination.getGlobalPosition();
     }
 
     get destination() {
