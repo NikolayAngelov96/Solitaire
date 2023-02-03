@@ -6,6 +6,7 @@ import { GameManager } from '../GameManager';
 import { Column } from './Column';
 import { Foundation } from './Foundation';
 import { FlippedPile } from './FlippedPile';
+import { Deck } from './Deck';
 
 gsap.registerPlugin(PixiPlugin);
 PixiPlugin.registerPIXI(PIXI);
@@ -23,7 +24,7 @@ export class Card extends PIXI.Container {
     private oldGlobalPosition: PIXI.Point;
     private pointerOffsetFromCardPivot = new PIXI.Point(0, 0);
     private flipTween: gsap.core.Tween;
-    public slot: Column | Foundation | FlippedPile;
+    public slot: Column | Foundation | FlippedPile | Deck;
 
     constructor(
         private cardFrontsTextures: CardFrontsTextures,
@@ -88,9 +89,10 @@ export class Card extends PIXI.Container {
 
             let suite = this.getSuiteFromId(cardId);
             this.suite = suite;
-        } else {
-            throw new Error('This card already has a front.');
         }
+        // else {
+        //     throw new Error('This card already has a front.');
+        // }
     }
 
     private addBorder() {
@@ -161,11 +163,11 @@ export class Card extends PIXI.Container {
         }
     }
 
-    public goTo(slot: Column | Foundation | FlippedPile, dealing = false) {
+    public goTo(slot: Column | Foundation | FlippedPile | Deck, dealing = false) {
         this.goTopLayer();
         const destinationPosition = slot.destinationGlobalPosition;
 
-        if (slot instanceof FlippedPile || slot.validateCard(this) == true || dealing == true) {
+        if (slot instanceof FlippedPile || slot instanceof Deck || slot.validateCard(this) == true || dealing == true) {
             this.slot = slot;
 
             gsap.to(this, {

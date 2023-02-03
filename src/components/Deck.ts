@@ -2,8 +2,10 @@ import { Container, Graphics } from "pixi.js";
 import { cardSize, colors } from "../Constants";
 import { Board } from "./Board";
 import { Card } from "./Card";
+import gsap from 'gsap';
 
 export class Deck extends Container {
+    private empty = true;
 
     constructor(private board: Board) {
         super();
@@ -19,8 +21,30 @@ export class Deck extends Container {
             if (this.board.gameManager.cardsDealed && lastChild instanceof Card) {
                 lastChild.setRandomFront();
                 lastChild.goTo(this.board.flippedPile);
+
+                if (this.children.length == 1) {
+                    this.empty = true;
+                }
+
+            } else if (this.board.gameManager.cardsDealed && this.empty == true && this.board.flippedPile.children.at(-1) instanceof Card) {
+                this.empty = false;
+                const flippedPileCards = this.board.flippedPile.children.slice(1) as Card[];
+                flippedPileCards.reverse();
+
+                flippedPileCards.forEach((target, i) => {
+                    target.flip();
+
+                    gsap.to(target, {
+                        delay: 0.6 + i * 0.2,
+                        onStart: () => target.goTo(this)
+                    });
+                });
             }
         });
+    }
+
+    get destination() {
+        return this;
     }
 
     get destinationGlobalPosition() {
@@ -34,6 +58,7 @@ export class Deck extends Container {
             this.addChild(card);
             this.board.gameManager.cards.push(card);
         }
+        this.empty = false;
     }
 
     private createArea(width: number, height: number) {

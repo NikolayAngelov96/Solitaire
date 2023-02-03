@@ -14,11 +14,7 @@ export class FlippedPile extends Container {
         this.pivot.x = cardSize.w / 2;
         this.position.set(cardSize.w * 1.5 + 20 + 10, 50);
 
-        this.on('pointertapcapture', () => {
-            if (board.deck.children.at(-1) instanceof Card == false) {
-                console.log('Return cards');
-            }
-        });
+        window['flipped'] = this;
     }
 
     get destinationGlobalPosition() {
