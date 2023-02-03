@@ -1,20 +1,24 @@
 import { Container, Graphics } from "pixi.js";
-import { CardFactory } from "../CardFactory";
-import { colors } from "../Constants";
-import { GameManager } from "../GameManager";
+import { cardSize, colors } from "../Constants";
+import { Board } from "./Board";
+import { Card } from "./Card";
 
 export class Deck extends Container {
 
-    constructor(width: number, height: number, private gameManager: GameManager, private cardFactory: CardFactory) {
+    constructor(private board: Board) {
         super();
-        this.createArea(width, height);
-        this.position.set(10 + width / 2, 50);
+
+        this.createArea(cardSize.w, cardSize.h);
+        this.position.set(10 + cardSize.w / 2, 50);
         this.interactive = true;
         this.fill();
 
-        this.on('pointertapcapture', (e) => {
-            if (this.gameManager.cardsDealed) {
-                console.log('Flip card');
+        this.on('pointertapcapture', () => {
+            const lastChild = this.children.at(-1);
+
+            if (this.board.gameManager.cardsDealed && lastChild instanceof Card) {
+                lastChild.setRandomFront();
+                lastChild.goTo(this.board.flippedPile);
             }
         });
     }
@@ -25,10 +29,10 @@ export class Deck extends Container {
 
     private fill() {
         for (let i = 0; i < 52; i++) {
-            const card = this.cardFactory.getCard();
+            const card = this.board.cardFactory.getCard();
             card.x = card.width / 2;
             this.addChild(card);
-            this.gameManager.cards.push(card);
+            this.board.gameManager.cards.push(card);
         }
     }
 

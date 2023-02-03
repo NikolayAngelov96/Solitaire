@@ -5,6 +5,7 @@ import { cardSize, colors, Ranks, Suites } from '../Constants';
 import { GameManager } from '../GameManager';
 import { Column } from './Column';
 import { Foundation } from './Foundation';
+import { FlippedPile } from './FlippedPile';
 
 gsap.registerPlugin(PixiPlugin);
 PixiPlugin.registerPIXI(PIXI);
@@ -22,7 +23,7 @@ export class Card extends PIXI.Container {
     private oldGlobalPosition: PIXI.Point;
     private pointerOffsetFromCardPivot = new PIXI.Point(0, 0);
     private flipTween: gsap.core.Tween;
-    public slot: Column | Foundation;
+    public slot: Column | Foundation | FlippedPile;
 
     constructor(
         private cardFrontsTextures: CardFrontsTextures,
@@ -157,15 +158,14 @@ export class Card extends PIXI.Container {
     public flip() {
         if (!this.flipTween.isActive()) {
             this.flipTween.restart();
-
         }
     }
 
-    public goTo(slot: Column | Foundation, dealing = false) {
+    public goTo(slot: Column | Foundation | FlippedPile, dealing = false) {
         this.goTopLayer();
         const destinationPosition = slot.destinationGlobalPosition;
 
-        if (slot.validateCard(this) == true || dealing == true) {
+        if (slot instanceof FlippedPile || slot.validateCard(this) == true || dealing == true) {
             this.slot = slot;
 
             gsap.to(this, {
@@ -177,7 +177,6 @@ export class Card extends PIXI.Container {
                 onComplete: this.onComplete.bind(this)
             });
         } else {
-            console.log('go back 1');
             this.goBack();
         }
     }
@@ -199,9 +198,14 @@ export class Card extends PIXI.Container {
         this.gameManager.draggingCard = null;
         this.interactive = true;
 
-        this.position.set(0 + this.width / 2, 0);
+        this.position.set(cardSize.w / 2, 0);
+
         if (this.slot instanceof Column && this.slot.cardsCount > 0) {
-            this.position.set(0 + this.width / 2, 30);
+            this.position.set(cardSize.w / 2, 30);
+        }
+
+        if (this.slot instanceof FlippedPile) {
+            this.flip();
         }
 
         this.slot.destination.addChild(this);
@@ -230,5 +234,12 @@ export class Card extends PIXI.Container {
         this.x = globalPosition.x;
         this.y = globalPosition.y;
         this.gameManager.app.stage.addChild(this);
+    }
+
+    // Temporary
+    public setRandomFront() {
+        // Random front
+        const cardId = Object.values(Ranks)[Math.random() * 13 | 0] + Object.values(Suites)[Math.random() * 4 | 0];
+        this.setFront(cardId);
     }
 }
