@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import { ITextStyle } from "pixi.js";
-import { Button } from "../Button";
+import { Button } from "./Button";
 import { colors, textStyle } from "../Constants";
 import { GameManager } from "../GameManager";
 import { Input } from "./InputField";

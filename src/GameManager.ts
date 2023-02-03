@@ -1,7 +1,7 @@
-import { Card } from "./Card";
+import { Card } from "./components/Card";
 import * as PIXI from 'pixi.js';
 import { DesignPicker } from "./components/DesignPicker";
-import { SampleCard } from "./SampleCard";
+import { SampleCard } from "./components/SampleCard";
 import { ConnectionDialogue } from "./components/ConnectionDialogue";
 
 

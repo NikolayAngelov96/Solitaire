@@ -1,13 +1,13 @@
 import { Connection } from "./Connection";
 import { engine } from "./engine";
 import * as PIXI from 'pixi.js';
-import { Board } from "./Board";
-import { Button } from "./Button";
+import { Board } from "./components/Board";
+import { Button } from "./components/Button";
 import { Assets, CardFactory } from "./CardFactory";
 import { GameManager } from "./GameManager";
 import { cardSize } from "./Constants";
-import { LoadScreen } from "./LoadScreen";
-import { EndScreen } from "./EndScreen";
+import { LoadScreen } from "./components/LoadScreen";
+import { EndScreen } from "./components/EndScreen";
 
 const app = new PIXI.Application({
     width: 1140,

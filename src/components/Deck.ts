@@ -1,7 +1,7 @@
 import { Container, Graphics } from "pixi.js";
-import { CardFactory } from "./CardFactory";
-import { colors } from "./Constants";
-import { GameManager } from "./GameManager";
+import { CardFactory } from "../CardFactory";
+import { colors } from "../Constants";
+import { GameManager } from "../GameManager";
 
 export class Deck extends Container {
 

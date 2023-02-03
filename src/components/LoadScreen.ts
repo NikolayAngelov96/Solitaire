@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { colors } from './Constants';
+import { colors } from '../Constants';
 import gsap from 'gsap';
 
 export class LoadScreen extends PIXI.Container {

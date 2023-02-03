@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import { gsap } from 'gsap';
-import { CardFactory } from "./CardFactory";
+import { CardFactory } from "../CardFactory";
 import { Button } from "./Button";
 import { Board } from "./Board";
 

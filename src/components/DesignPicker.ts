@@ -1,8 +1,8 @@
 import * as PIXI from "pixi.js";
-import { Button } from "../Button";
+import { Button } from "./Button";
 import { colors } from "../Constants";
 import { GameManager } from "../GameManager";
-import { SampleCard } from "../SampleCard";
+import { SampleCard } from "./SampleCard";
 
 export class DesignPicker extends PIXI.Container {
     private modal = new PIXI.Graphics();

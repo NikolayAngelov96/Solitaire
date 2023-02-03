@@ -1,10 +1,10 @@
 import { Container, Graphics, Text } from "pixi.js";
 import { Column } from "./Column";
 import { Foundation } from "./Foundation";
-import { GameManager } from "./GameManager";
-import { cardSize, Ranks, Suites } from './Constants';
+import { GameManager } from "../GameManager";
+import { cardSize, Ranks, Suites } from '../Constants';
 import { Deck } from "./Deck";
-import { CardFactory } from "./CardFactory";
+import { CardFactory } from "../CardFactory";
 import { Card } from "./Card";
 import { gsap } from 'gsap';
 

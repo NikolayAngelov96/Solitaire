@@ -1,8 +1,8 @@
 import * as PIXI from 'pixi.js';
-import { Card, CardFrontsTextures } from './Card';
+import { Card, CardFrontsTextures } from './components/Card';
 import { cardSheet, Ranks, Suites } from './Constants';
 import { GameManager } from './GameManager';
-import { SampleCard } from './SampleCard';
+import { SampleCard } from './components/SampleCard';
 
 export type images = 'cards' | 'logo' | 'logo2' | 'logo3' | 'logo4';
 

@@ -1,8 +1,8 @@
 import gsap from 'gsap';
 import * as PIXI from 'pixi.js';
 import { PixiPlugin } from 'gsap/PixiPlugin';
-import { cardSize, colors, Ranks, Suites } from './Constants';
-import { GameManager } from './GameManager';
+import { cardSize, colors, Ranks, Suites } from '../Constants';
+import { GameManager } from '../GameManager';
 import { Column } from './Column';
 import { Foundation } from './Foundation';
 

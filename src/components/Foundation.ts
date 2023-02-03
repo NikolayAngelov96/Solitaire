@@ -1,6 +1,6 @@
 import { Card } from "./Card";
 import { CardArea } from "./CardArea";
-import { GameManager } from "./GameManager";
+import { GameManager } from "../GameManager";
 
 export class Foundation extends CardArea {
 

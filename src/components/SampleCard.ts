@@ -1,7 +1,7 @@
 import gsap from 'gsap';
 import * as PIXI from 'pixi.js';
 import { PixiPlugin } from 'gsap/PixiPlugin';
-import { cardSize, colors } from './Constants';
+import { cardSize, colors } from '../Constants';
 
 gsap.registerPlugin(PixiPlugin);
 PixiPlugin.registerPIXI(PIXI);
