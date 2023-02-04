@@ -1,30 +1,21 @@
-import { Container, Graphics, Text } from "pixi.js";
-import { cardSize, colors } from "../Constants";
+import { FlipArea } from "./FlipArea";
 import { Board } from "./Board";
+import { Text } from "pixi.js";
+import { cardSize } from "../Constants";
 import { Card } from "./Card";
 import gsap from 'gsap';
 
-export class Deck extends Container {
-    private _area = new Graphics();
+export class Deck extends FlipArea {
 
     constructor(private board: Board) {
         super();
 
-        this.createArea(cardSize.w, cardSize.h);
         this.addText();
         this.position.set(10 + cardSize.w / 2, 50);
         this.interactive = true;
         this.fill();
 
         this.on('pointertapcapture', () => this.flipCard());
-    }
-
-    get destination() {
-        return this;
-    }
-
-    get destinationGlobalPosition() {
-        return this.getGlobalPosition();
     }
 
     private fill() {
@@ -34,14 +25,6 @@ export class Deck extends Container {
             this.addChild(card);
             this.board.gameManager.cards.push(card);
         }
-    }
-
-    private createArea(width: number, height: number) {
-        this._area.beginFill(colors.cardPlaceholder);
-        this._area.drawRoundedRect(0, 0, width, height, 12);
-        this._area.endFill();
-        this.pivot.x = width / 2;
-        this.addChild(this._area);
     }
 
     private addText() {
@@ -80,7 +63,11 @@ export class Deck extends Container {
                 repeat: 1,
                 stagger: (i, target) => {
                     target.flip();
-                    setTimeout(() => target.goTo(this), 900 + i * 150);
+                    if (i < flippedPileCards.length - 1) {
+                        setTimeout(() => target.goTo(this), 900 + i * 150);
+                    } else {
+                        setTimeout(() => target.flip(), 900 + i * 150);
+                    }
                     return 0;
                 }
             });
