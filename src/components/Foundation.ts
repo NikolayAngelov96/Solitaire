@@ -9,7 +9,7 @@ export class Foundation extends CardArea {
 
     }
 
-    public override validateCard(card: Card) {
+    public validateCard(card: Card) {
         // Validate from the backend if the card can go in the column
 
         // Temporary solution

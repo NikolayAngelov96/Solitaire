@@ -1,4 +1,4 @@
-import { Container, DisplayObject, Graphics } from "pixi.js";
+import { Container, Graphics } from "pixi.js";
 import { Card } from "./Card";
 import { colors } from '../Constants';
 import { GameManager } from "../GameManager";
@@ -22,7 +22,6 @@ export abstract class CardArea extends Container {
             }
         });
     }
-
 
     protected createArea(width: number, height: number) {
         const area = new Graphics();
@@ -62,12 +61,5 @@ export abstract class CardArea extends Container {
         return count;
     }
 
-    public validateCard<T extends Card>(card: T) {
-
-        if (this.cardsCount > 0 && card.suite == (this.destination as T).suite) {
-            return false;
-        }
-
-        return true;
-    }
+    abstract validateCard(card: Card): boolean;
 }

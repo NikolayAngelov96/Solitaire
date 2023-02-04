@@ -6,8 +6,6 @@ export class Column extends CardArea {
 
     constructor(width: number, height: number, gameManager: GameManager) {
         super(width, height, gameManager);
-
-        window['c'] = this;
     }
 
     override get destinationGlobalPosition() {
@@ -18,5 +16,16 @@ export class Column extends CardArea {
         }
 
         return position;
+    }
+
+    public validateCard<T extends Card>(card: T) {
+        // Validate from the backend if the card can go in the column
+
+        // Temporary solution
+        if (this.cardsCount > 0 && card.color == (this.destination as T).color) {
+            return false;
+        }
+
+        return true;
     }
 }
