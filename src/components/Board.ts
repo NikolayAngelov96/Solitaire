@@ -75,7 +75,7 @@ export class Board extends Container {
         if (startCol < this.columns.length) {
 
             const currentCard = this.deck.children.at(-1) as Card;
-            currentCard.goTo(this.columns[col], true);
+            currentCard.goTo(this.columns[col]);
 
             // Random front
             currentCard.setRandomFront();

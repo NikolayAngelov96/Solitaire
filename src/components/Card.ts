@@ -11,6 +11,8 @@ import { Deck } from './Deck';
 gsap.registerPlugin(PixiPlugin);
 PixiPlugin.registerPIXI(PIXI);
 
+export type Slot = Column | Foundation | FlippedPile | Deck;
+
 export type CardFrontsTextures = { [key: string]: PIXI.Texture; };
 window['cards'] = [];
 export class Card extends PIXI.Container {
@@ -24,7 +26,7 @@ export class Card extends PIXI.Container {
     private oldGlobalPosition: PIXI.Point;
     private pointerOffsetFromCardPivot = new PIXI.Point(0, 0);
     private flipTween: gsap.core.Tween;
-    public slot: Column | Foundation | FlippedPile | Deck;
+    public _slot: Slot;
 
     constructor(
         private cardFrontsTextures: CardFrontsTextures,
@@ -58,6 +60,19 @@ export class Card extends PIXI.Container {
         // 0 = Black, 1 = Red :)
         if (this.suite) {
             return Number(this.suite == Suites.Hearts || this.suite == Suites.Diamonds);
+        }
+    }
+
+    get slot() {
+        return this._slot;
+    }
+
+    set slot(newSlot: Slot) {
+        this._slot = newSlot;
+
+        const lastChild = this.children.at(-1);
+        if (lastChild instanceof Card) {
+            lastChild.slot = newSlot;
         }
     }
 
@@ -163,7 +178,7 @@ export class Card extends PIXI.Container {
         }
     }
 
-    public goTo(newSlot: Column | Foundation | FlippedPile | Deck, dealing = false) {
+    public goTo(newSlot: Slot) {
 
         this.goTopLayer();
         const destinationPosition = newSlot.destinationGlobalPosition;
