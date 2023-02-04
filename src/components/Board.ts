@@ -33,7 +33,7 @@ export class Board extends Container {
 
     private addDeckArea() {
         this.deck = new Deck(this);
-        this.flippedPile = new FlippedPile(this);
+        this.flippedPile = new FlippedPile();
 
         this.addChild(this.deck, this.flippedPile);
     }
@@ -95,6 +95,7 @@ export class Board extends Container {
             }, 300);
         } else if (startCol >= this.columns.length) {
             this.gameManager.cardsDealed = true;
+            setTimeout(() => { this.deck.flipCard(); }, 600);
         }
     }
 

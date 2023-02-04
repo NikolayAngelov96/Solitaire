@@ -125,8 +125,8 @@ export class Card extends PIXI.Container {
             onRepeat: () => {
                 this.front.renderable = !this.front.renderable;
                 this._back.renderable = !this._back.renderable;
-                this._faceUp = !this._faceUp;
             },
+            onComplete: () => this._faceUp = !this._faceUp,
             paused: true
         });
     }
