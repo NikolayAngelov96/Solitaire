@@ -8,11 +8,10 @@ import gsap from 'gsap';
 export class Deck extends FlipArea {
 
     constructor(private board: Board) {
-        super();
+        super(board);
 
         this.addText();
         this.position.set(10 + cardSize.w / 2, 50);
-        this.interactive = true;
         this.fill();
 
         this.on('pointertapcapture', () => this.flipCard());
@@ -23,6 +22,7 @@ export class Deck extends FlipArea {
             const card = this.board.cardFactory.getCard();
             card.x = card.width / 2;
             this.addChild(card);
+            card.slot = this;
             this.board.gameManager.cards.push(card);
         }
     }
@@ -63,11 +63,17 @@ export class Deck extends FlipArea {
                 repeat: 1,
                 stagger: (i, target) => {
                     target.flip();
+                    target.interactive = false; // Prevents from clicking on cards during returning animation
+
                     if (i < flippedPileCards.length - 1) {
                         setTimeout(() => target.goTo(this), 900 + i * 150);
                     } else {
-                        setTimeout(() => target.flip(), 900 + i * 150);
+                        setTimeout(() => {
+                            target.flip();
+                            flippedPileCards.forEach(card => card.interactive = true);
+                        }, 900 + i * 150);
                     }
+
                     return 0;
                 }
             });

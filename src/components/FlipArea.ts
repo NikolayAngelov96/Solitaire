@@ -1,13 +1,16 @@
 import { Container, Graphics } from "pixi.js";
 import { cardSize, colors } from "../Constants";
+import { Board } from "./Board";
 
 export abstract class FlipArea extends Container {
     protected _area = new Graphics();
 
-    constructor() {
+    constructor(board: Board) {
         super();
 
         this.createArea();
+        this.interactive = true;
+        this.on('pointerup', () => board.gameManager.draggingCard?.goBack());
     }
 
     get destination() {

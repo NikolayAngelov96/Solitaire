@@ -42,7 +42,7 @@ export class Card extends PIXI.Container {
         this.addMask();
         this.interactive = true;
         this.makeFlippable();
-        // this.makeDraggable();
+        this.makeDraggable();
 
         this.pivot.x = this.width / 2;
 
@@ -133,7 +133,7 @@ export class Card extends PIXI.Container {
 
     public makeDraggable() {
         this.on('pointerdown', (e) => {
-            if (this.gameManager.cardsDealed && this.gameManager.draggingCard == null) {
+            if (this.gameManager.cardsDealed && this.gameManager.draggingCard == null && this.slot instanceof Deck == false) {
                 this.interactive = false;
 
                 // Save pivot offset from click position
@@ -163,24 +163,27 @@ export class Card extends PIXI.Container {
         }
     }
 
-    public goTo(slot: Column | Foundation | FlippedPile | Deck, dealing = false) {
+    public goTo(newSlot: Column | Foundation | FlippedPile | Deck, dealing = false) {
+
         this.goTopLayer();
-        const destinationPosition = slot.destinationGlobalPosition;
+        const destinationPosition = newSlot.destinationGlobalPosition;
 
-        if (slot instanceof FlippedPile || slot instanceof Deck || slot.validateCard(this) == true || dealing == true) {
-            this.slot = slot;
+        gsap.to(this, {
+            pixi: {
+                x: destinationPosition.x,
+                y: destinationPosition.y,
+            },
+            duration: 0.2,
+            onComplete: () => {
+                // If card is coming from Flipped Pile to Column or Foundation, flip new card
+                if (this.slot instanceof FlippedPile && newSlot instanceof Deck == false) {
+                    this.gameManager.board.deck.flipCard();
+                }
 
-            gsap.to(this, {
-                pixi: {
-                    x: destinationPosition.x,
-                    y: destinationPosition.y,
-                },
-                duration: 0.2,
-                onComplete: this.onComplete.bind(this)
-            });
-        } else {
-            this.goBack();
-        }
+                this.slot = newSlot;
+                this.onComplete();
+            }
+        });
     }
 
     public goBack() {
@@ -192,7 +195,7 @@ export class Card extends PIXI.Container {
                 y: this.oldGlobalPosition.y,
             },
             ease: 'back',
-            onComplete: this.onComplete.bind(this)
+            onComplete: () => this.onComplete()
         });
     }
 
@@ -206,7 +209,7 @@ export class Card extends PIXI.Container {
             this.position.set(cardSize.w / 2, 30);
         }
 
-        if (this.slot instanceof FlippedPile) {
+        if (this.slot instanceof FlippedPile && this.faceUp == false) {
             this.flip();
         }
 

@@ -35,7 +35,7 @@ export class Board extends Container {
 
     private addDeckArea() {
         this.deck = new Deck(this);
-        this.flippedPile = new FlippedPile();
+        this.flippedPile = new FlippedPile(this);
 
         this.addChild(this.deck, this.flippedPile);
     }
@@ -76,7 +76,6 @@ export class Board extends Container {
 
             const currentCard = this.deck.children.at(-1) as Card;
             currentCard.goTo(this.columns[col], true);
-            currentCard.makeDraggable();
 
             // Random front
             currentCard.setRandomFront();
