@@ -1,7 +1,6 @@
 import { Card } from "./components/Card";
 import * as PIXI from 'pixi.js';
 import { DesignPicker } from "./components/DesignPicker";
-import { SampleCard } from "./components/SampleCard";
 import { ConnectionDialogue } from "./components/ConnectionDialogue";
 import { Assets, CardFactory } from "./CardFactory";
 import { Board } from "./components/Board";
@@ -12,7 +11,6 @@ export class GameManager {
     public board: Board;
     private _draggingCard: Card = null;
     public cards: Card[] = [];
-    public getSampleCards: () => SampleCard[];
     public cardsDealed = false;
 
     constructor(
@@ -54,7 +52,7 @@ export class GameManager {
     }
 
     public designPicker() {
-        new DesignPicker(this.app, this);
+        new DesignPicker(this.app, this, this.cardFactory);
     }
 
     public connectionDialogue(): void {

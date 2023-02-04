@@ -3,13 +3,15 @@ import { Button } from "./Button";
 import { colors } from "../Constants";
 import { GameManager } from "../GameManager";
 import { SampleCard } from "./SampleCard";
+import { CardFactory } from "../CardFactory";
 
 export class DesignPicker extends PIXI.Container {
     private modal = new PIXI.Graphics();
 
     constructor(
         private app: PIXI.Application,
-        private gameManager: GameManager
+        private gameManager: GameManager,
+        private cardFactory: CardFactory
     ) {
         super();
 
@@ -41,7 +43,7 @@ export class DesignPicker extends PIXI.Container {
 
     private generateSamples() {
 
-        const [sample1, sample2, sample3] = this.gameManager.getSampleCards();
+        const [sample1, sample2, sample3] = this.cardFactory.getSampleCards();
 
         [sample1, sample2, sample3].forEach((sample, i) => {
             sample.position.set((1 + (i * 2)) * (this.modal.width / 6), 25);

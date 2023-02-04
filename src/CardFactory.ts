@@ -20,16 +20,7 @@ export class CardFactory {
 
     constructor(private gameManager: GameManager) {
         this.assets = gameManager.assets;
-
         this.generateFrontsTextures();
-
-        this.gameManager.getSampleCards = () => {
-            return [
-                new SampleCard(this.assets.logo),
-                new SampleCard(this.assets.logo2),
-                new SampleCard(this.assets.logo3)
-            ];
-        };
     }
 
     private generateFrontsTextures() {
@@ -50,5 +41,13 @@ export class CardFactory {
 
     public getCard() {
         return new Card(this.cardFrontsTextures, this.assets.logo, this.gameManager);
+    }
+
+    public getSampleCards() {
+        return [
+            new SampleCard(this.assets.logo),
+            new SampleCard(this.assets.logo2),
+            new SampleCard(this.assets.logo3)
+        ];
     }
 }
