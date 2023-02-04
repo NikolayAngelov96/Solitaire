@@ -67,6 +67,7 @@ export class GameManager {
 
     public restart() {
         this.cards.forEach(card => card.destroy());
+        this.cardsDealed = false;
         this.cards.length = 0;
         this.board.deck.fill();
         this.connectionDialogue();
