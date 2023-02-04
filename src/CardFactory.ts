@@ -16,8 +16,11 @@ export type Cards = {
 
 export class CardFactory {
     private cardFrontsTextures: CardFrontsTextures = {};
+    private assets: Assets;
 
-    constructor(private assets: Assets, private gameManager: GameManager) {
+    constructor(private gameManager: GameManager) {
+        this.assets = gameManager.assets;
+
         this.generateFrontsTextures();
 
         this.gameManager.getSampleCards = () => {

@@ -18,7 +18,7 @@ export class Deck extends FlipArea {
         this.on('pointertapcapture', () => this.flipCard());
     }
 
-    private fill() {
+    public fill() {
         for (let i = 0; i < 52; i++) {
             const card = this.board.cardFactory.getCard();
             card.x = card.width / 2;

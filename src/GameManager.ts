@@ -3,17 +3,24 @@ import * as PIXI from 'pixi.js';
 import { DesignPicker } from "./components/DesignPicker";
 import { SampleCard } from "./components/SampleCard";
 import { ConnectionDialogue } from "./components/ConnectionDialogue";
+import { Assets, CardFactory } from "./CardFactory";
+import { Board } from "./components/Board";
 
 
 export class GameManager {
+    public cardFactory: CardFactory;
+    public board: Board;
     private _draggingCard: Card = null;
     public cards: Card[] = [];
     public getSampleCards: () => SampleCard[];
     public cardsDealed = false;
 
     constructor(
-        public app: PIXI.Application
+        public app: PIXI.Application,
+        public assets: Assets
     ) {
+        this.cardFactory = new CardFactory(this);
+
         // Background to track mouse movement
         const background = new PIXI.Graphics();
         background.beginFill(0x005000);
@@ -22,7 +29,10 @@ export class GameManager {
         background.interactive = true;
         this.app.stage.addChild(background);
 
+        this.board = new Board(this, this.cardFactory);
+
         background.on('pointerup', () => this.draggingCard?.goBack());
+        this.connectionDialogue();
     }
 
     set draggingCard(card: Card) {
@@ -47,13 +57,20 @@ export class GameManager {
         new DesignPicker(this.app, this);
     }
 
-    public connectionDialogue(shuffleAndDealCards: () => void): void {
-        new ConnectionDialogue(this.app, this, shuffleAndDealCards);
+    public connectionDialogue(): void {
+        new ConnectionDialogue(this.app, this, this.board.shuffleAndDealCards.bind(this.board));
     }
 
     public connect(nickName: string, dialogue: ConnectionDialogue) {
         console.log('Connecting ...');
 
         dialogue.destroy();
+    }
+
+    public restart() {
+        this.cards.forEach(card => card.destroy());
+        this.cards.length = 0;
+        this.board.deck.fill();
+        this.connectionDialogue();
     }
 }

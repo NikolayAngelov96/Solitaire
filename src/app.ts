@@ -1,11 +1,8 @@
 import { Connection } from "./Connection";
 import { engine } from "./engine";
 import * as PIXI from 'pixi.js';
-import { Board } from "./components/Board";
-import { Button } from "./components/Button";
-import { Assets, CardFactory } from "./CardFactory";
+import { Assets } from "./CardFactory";
 import { GameManager } from "./GameManager";
-import { cardSize } from "./Constants";
 import { LoadScreen } from "./components/LoadScreen";
 import { EndScreen } from "./components/EndScreen";
 
@@ -35,34 +32,10 @@ PIXI.Assets.loadBundle('images', (p) => loadScreen.progress(p))
 
 
 function init(assets: Assets) {
-    const gameManager = new GameManager(app);
-    const cardFactory = new CardFactory(assets, gameManager);
-    const board = new Board(gameManager, cardFactory);
-    board.addChild(disconnectBtn, hintBtn, cardsDesignBtn);
-    app.stage.addChild(board);
+    const gameManager = new GameManager(app, assets);
 
-    gameManager.connectionDialogue(board.shuffleAndDealCards.bind(board));
-    // board.dealCards();
-    // board.shuffleAndDealCards();
     // const endScreen = new EndScreen(app, cardFactory, board, false);
-    cardsDesignBtn.attachEventListener('pointerdown', gameManager.designPicker.bind(gameManager));
 }
-
-const disconnectBtn = new Button('Disconnect', 150, 22, 85, 25, 0x28a745);
-
-disconnectBtn.attachEventListener("pointerdown", () => {
-    connection?.disconnect();
-});
-
-const hintBtn = new Button('Hint', 250, 22, 85, 25, 0x17a2b8);
-hintBtn.attachEventListener('pointerdown', () => alert('This is very usefull hint'));
-
-const cardsDesignBtn = new Button('Cards Design', 367, 22, 120, 25, 0x17a2b8);
-
-
-
-
-
 /*
 
 initForm.addEventListener('submit', async event => {

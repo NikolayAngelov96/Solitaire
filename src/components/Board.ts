@@ -8,12 +8,13 @@ import { CardFactory } from "../CardFactory";
 import { Card } from "./Card";
 import { gsap } from 'gsap';
 import { FlippedPile } from "./FlippedPile";
+import { Button } from "./Button";
 
 export class Board extends Container {
     private cardWidth = cardSize.w;
     private cardHeight = cardSize.h;
     private spaceBetweenCards: number = 20;
-    columns: Column[];
+    public columns: Column[] = [];
     public deck: Deck;
     public flippedPile: FlippedPile;
 
@@ -23,12 +24,13 @@ export class Board extends Container {
     ) {
         super();
 
-        this.columns = [];
-
+        this.addButtons();
         this.addCardColumns();
         this.addDeckArea();
         this.addFoundationPile();
         this.addGameTitle();
+
+        this.gameManager.app.stage.addChild(this);
     }
 
     private addDeckArea() {
@@ -169,5 +171,18 @@ export class Board extends Container {
 
         this.addChild(shuffleContainer);
 
+    }
+
+    private addButtons() {
+        const cardsDesignBtn = new Button('Cards Design', 367, 22, 120, 25, 0x17a2b8);
+        cardsDesignBtn.attachEventListener('pointerdown', this.gameManager.designPicker.bind(this.gameManager));
+
+        const hintBtn = new Button('Hint', 250, 22, 85, 25, 0x17a2b8);
+        hintBtn.attachEventListener('pointerdown', () => alert('This is very usefull hint'));
+
+        const disconnectBtn = new Button('Disconnect', 150, 22, 85, 25, 0x28a745);
+        disconnectBtn.attachEventListener('pointerdown', () => this.gameManager.restart());
+
+        this.addChild(disconnectBtn, hintBtn, cardsDesignBtn);
     }
 }
