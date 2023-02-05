@@ -261,7 +261,7 @@ export class Card extends PIXI.Container {
         const globalPosition = this.getGlobalPosition();
         this.x = globalPosition.x;
         this.y = globalPosition.y;
-        this.gameManager.app.stage.addChild(this);
+        this.gameManager.dealLayer.addChild(this);
     }
 
     // Temporary

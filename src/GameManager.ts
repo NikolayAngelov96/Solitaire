@@ -12,6 +12,7 @@ export class GameManager {
     private _draggingCard: Card = null;
     public cards: Card[] = [];
     public cardsDealed = false;
+    public dealLayer = new PIXI.Container();
 
     constructor(
         public app: PIXI.Application,
@@ -25,9 +26,10 @@ export class GameManager {
         background.drawRect(0, 0, this.app.view.width, this.app.view.height);
         background.endFill();
         background.interactive = true;
-        this.app.stage.addChild(background);
 
+        this.app.stage.addChild(background);
         this.board = new Board(this, this.cardFactory);
+        this.app.stage.addChild(this.dealLayer);
 
         background.on('pointerup', () => this.draggingCard?.goBack());
         this.connectionDialogue();
