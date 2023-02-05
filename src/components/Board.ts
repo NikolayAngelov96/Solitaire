@@ -70,33 +70,27 @@ export class Board extends Container {
         this.addChild(title);
     }
 
-    public dealCards(startCol = 0, col = 0) {
+    public dealCards(startColumn = 0, currentColumn = 0) {
 
-        if (startCol < this.columns.length) {
+        // If the current column is outside our total columns, proceed dealing next row of cards
+        if (currentColumn == this.columns.length) {
+            startColumn++;
+            currentColumn = startColumn;
+        }
 
+        if (startColumn < this.columns.length) {
+
+            // Deal the last card from deck
             const currentCard = this.deck.children.at(-1) as Card;
-            currentCard.goTo(this.columns[col]);
+            currentCard.goTo(this.columns[currentColumn], currentColumn == startColumn, () => this.dealCards(startColumn, currentColumn + 1));
 
             // Random front
             currentCard.setRandomFront();
 
-            setTimeout(() => {
-                if (col == startCol) {
-                    currentCard.flip();
-                }
-
-                col++;
-
-                if (col == this.columns.length) {
-                    startCol++;
-                    col = startCol;
-                }
-
-                this.dealCards(startCol, col);
-            }, 300);
-        } else if (startCol >= this.columns.length) {
+        } else if (startColumn >= this.columns.length) {
+            // End of dealing cards
             this.gameManager.cardsDealed = true;
-            setTimeout(() => { this.deck.flipCard(); }, 600);
+            this.deck.flipCard();
         }
     }
 

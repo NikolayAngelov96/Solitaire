@@ -178,7 +178,7 @@ export class Card extends PIXI.Container {
         }
     }
 
-    public goTo(newSlot: Slot) {
+    public goTo(newSlot: Slot, flip = false, onCompleteCallBack?: () => void) {
 
         this.goTopLayer();
         const destinationPosition = newSlot.destinationGlobalPosition;
@@ -190,13 +190,21 @@ export class Card extends PIXI.Container {
             },
             duration: 0.2,
             onComplete: () => {
-                // If card is coming from Flipped Pile to Column or Foundation, flip new card
+                // If card is coming from Flipped Pile to Column or Foundation, flip new card from deck
                 if (this.slot instanceof FlippedPile && newSlot instanceof Deck == false) {
                     this.gameManager.board.deck.flipCard();
                 }
 
                 this.slot = newSlot;
                 this.onComplete();
+
+                if (flip) {
+                    this.flip();
+                }
+
+                if (onCompleteCallBack) {
+                    onCompleteCallBack();
+                }
             }
         });
     }
