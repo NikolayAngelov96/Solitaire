@@ -6,11 +6,14 @@ export class Cursor {
     public element = new Text('|', new TextStyle(textStyle as ITextStyle));
     public target: Text;
     public onEnter = () => { };
+    private _blinkId: NodeJS.Timer;
+    private _keyboardListener: (e: KeyboardEvent) => void;
 
     constructor() {
         this.element.anchor.set(0, 0.55);
         this.element.renderable = true;
-        document.body.addEventListener('keydown', this.onInput.bind(this));
+        this._keyboardListener = this.onInput.bind(this);
+        document.body.addEventListener('keydown', this._keyboardListener);
         this.blink();
     }
 
@@ -46,9 +49,14 @@ export class Cursor {
     }
 
     private blink() {
-        setInterval(() => {
+        this._blinkId = setInterval(() => {
             this.element.renderable = !this.element.renderable;
         }, 500)
+    }
+
+    public clearListeners() {
+        clearInterval(this._blinkId);
+        document.body.removeEventListener('keydown', this._keyboardListener);
     }
 }
 

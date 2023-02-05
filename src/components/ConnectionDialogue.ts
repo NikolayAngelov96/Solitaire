@@ -7,6 +7,7 @@ import { Input } from "./InputField";
 
 export class ConnectionDialogue extends PIXI.Container {
     private modal = new PIXI.Graphics();
+    private input: Input;
 
     constructor(
         private app: PIXI.Application,
@@ -40,7 +41,11 @@ export class ConnectionDialogue extends PIXI.Container {
         this.addText();
         this.addTextInput();
 
-        this.on('destroyed', this.shuffleAndDealCards);
+        // this.on('destroyed', this.shuffleAndDealCards);
+        this.on('destroyed', () => {
+            this.input.destroy();
+            this.shuffleAndDealCards()
+        });
 
         this.app.stage.addChild(this);
     }
@@ -53,6 +58,7 @@ export class ConnectionDialogue extends PIXI.Container {
     }
 
     private addTextInput() {
-        this.modal.addChild(new Input(this.modal.width / 2, this.modal.height / 2, 300, 50));
+        this.input = new Input(this.modal.width / 2, this.modal.height / 2, 300, 50)
+        this.modal.addChild(this.input);
     }
 }
