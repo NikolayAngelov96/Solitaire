@@ -21,7 +21,6 @@ export class Card extends PIXI.Container {
     private _backLogoSprite: PIXI.Sprite;
     private _faceUp = false;
     public suite: Suites;
-    public rank: Ranks;
     public power: number;
     private oldGlobalPosition: PIXI.Point;
     private pointerOffsetFromCardPivot = new PIXI.Point(0, 0);
@@ -97,14 +96,13 @@ export class Card extends PIXI.Container {
     }
 
     public setFront(cardId: string) {
-        if (this.front.children.length == 0) {
-            const sprite = PIXI.Sprite.from(this.cardFrontsTextures[cardId]);
-            sprite.scale.set(0.334);
-            this.front.addChild(sprite);
+        const sprite = PIXI.Sprite.from(this.cardFrontsTextures[cardId]);
+        sprite.scale.set(0.334);
+        this.front.addChild(sprite);
 
-            let suite = this.getSuiteFromId(cardId);
-            this.suite = suite;
-        }
+
+        // if (this.front.children.length == 0) {
+        // }
         // else {
         //     throw new Error('This card already has a front.');
         // }
@@ -239,21 +237,21 @@ export class Card extends PIXI.Container {
         this.slot.destination.addChild(this);
     }
 
-    private getSuiteFromId(cardId: string): Suites {
-        let letter = cardId.slice(cardId.length - 1);
-        switch (letter) {
-            case 'S':
-                return Suites.Spades;
-            case 'D':
-                return Suites.Diamonds;
-            case 'H':
-                return Suites.Hearts;
-            case 'C':
-                return Suites.Clubs;
-            default:
-                throw new TypeError('Not a valid suite type');
-        }
-    }
+    // private getSuiteFromId(cardId: string): Suites {
+    //     let letter = cardId.slice(cardId.length - 1);
+    //     switch (letter) {
+    //         case 'S':
+    //             return Suites.Spades;
+    //         case 'D':
+    //             return Suites.Diamonds;
+    //         case 'H':
+    //             return Suites.Hearts;
+    //         case 'C':
+    //             return Suites.Clubs;
+    //         default:
+    //             throw new TypeError('Not a valid suite type');
+    //     }
+    // }
 
     public goTopLayer() {
         // Move card to top layer
@@ -266,8 +264,16 @@ export class Card extends PIXI.Container {
 
     // Temporary
     public setRandomFront() {
-        // Random front
-        const cardId = Object.values(Ranks)[Math.random() * 13 | 0] + Object.values(Suites)[Math.random() * 4 | 0];
-        this.setFront(cardId);
+        if (this.front.children.length == 0) {
+            const rankIndex = Math.random() * 13 | 0;
+            const suiteIndex = Math.random() * 4 | 0;
+
+            const cardId = Object.values(Ranks)[rankIndex] + Object.values(Suites)[suiteIndex];
+
+            this.power = rankIndex;
+            this.suite = Object.values(Suites)[suiteIndex];
+
+            this.setFront(cardId);
+        }
     }
 }

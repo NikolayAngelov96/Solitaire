@@ -11,12 +11,11 @@ export class Foundation extends CardArea {
 
     public validateCard(card: Card) {
         // Validate from the backend if the card can go in the column
-
-        // Temporary solution
-        if (this.cardsCount > 0 && card.suite != (this.destination as Card).suite || card.faceUp == false) {
-            return false;
+        if (card.faceUp == true && this.cardsCount > 0 && card.suite == (this.destination as Card).suite && card.power == (this.destination as Card).power + 1 ||
+            card.faceUp == true && this.cardsCount == 0 && card.power == 0) {
+            return true;
         }
 
-        return true;
+        return false;
     }
 }
