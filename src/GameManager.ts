@@ -61,9 +61,9 @@ export class GameManager {
         new ConnectionDialogue(this.app, this, this.board.shuffleAndDealCards.bind(this.board));
     }
 
-    public connect(nickName: string, dialogue: ConnectionDialogue) {
+    public connect(nickname: string, dialogue: ConnectionDialogue) {
         console.log('Connecting ...');
-
+        this.board.addPlayerNickname(nickname);
         dialogue.destroy();
     }
 

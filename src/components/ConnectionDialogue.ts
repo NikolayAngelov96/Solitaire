@@ -34,7 +34,7 @@ export class ConnectionDialogue extends PIXI.Container {
 
         // Close button
         const closeBtn = new Button('Connect', this.modal.width / 2, this.modal.height - 50, 100, 50, colors.blueBtn);
-        closeBtn.attachEventListener('pointertap', () => this.gameManager.connect('nickname', this));
+        closeBtn.attachEventListener('pointertap', () => this.gameManager.connect(this.input.element.text, this));
         this.modal.addChild(closeBtn);
 
         // Input field

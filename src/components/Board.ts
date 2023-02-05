@@ -1,8 +1,8 @@
-import { Container, Graphics, Text } from "pixi.js";
+import { Container, Graphics, ITextStyle, Text, TextStyle } from "pixi.js";
 import { Column } from "./Column";
 import { Foundation } from "./Foundation";
 import { GameManager } from "../GameManager";
-import { cardSize, Ranks, Suites } from '../Constants';
+import { cardSize, Ranks, Suites, textStyle } from '../Constants';
 import { Deck } from "./Deck";
 import { CardFactory } from "../CardFactory";
 import { Card } from "./Card";
@@ -177,5 +177,20 @@ export class Board extends Container {
         disconnectBtn.attachEventListener('pointerdown', () => this.gameManager.restart());
 
         this.addChild(disconnectBtn, hintBtn, cardsDesignBtn);
+    }
+
+    public addPlayerNickname(nickname: string) {
+        const text = new Text(`Hello, ${nickname}`, {
+            fontFamily: 'Arial',
+            fontSize: 18,
+            fontStyle: 'italic',
+            fill: 0xffffff,
+            align: 'left',
+        });
+        text.anchor.set(0, 0.5);
+        text.position.set(this.gameManager.app.screen.width - text.width - 55, 22);
+
+        gsap.from(text, { pixi: { scale: 0 }, ease: 'back' })
+        this.addChild(text);
     }
 }
