@@ -22,10 +22,6 @@ export class Column extends CardArea {
         // Validate from the backend if the card can go in the column
 
         // Temporary solution
-        if (this.cardsCount > 0 && card.color == (this.destination as T).color) {
-            return false;
-        }
-
-        return true;
+        return (this.cardsCount == 0 && card.power == 12 && card.faceUp || card.faceUp && card.color !== (this.destination as T).color && card.power == (this.destination as T).power - 1);
     }
 }
