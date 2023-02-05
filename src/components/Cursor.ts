@@ -41,6 +41,7 @@ export class Cursor {
             cursor.target.text = cursor.target.text.slice(0, -1);
         } else if (key == 'Enter') {
             this.onEnter();
+            return;
         } else if (key.length == 1) {
             cursor.target.text += key;
         }

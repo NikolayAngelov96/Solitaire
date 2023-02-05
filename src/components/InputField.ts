@@ -1,13 +1,13 @@
 import * as PIXI from 'pixi.js';
 import { ITextStyle } from 'pixi.js';
 import { colors, textStyle } from '../Constants';
-import { cursor } from './Cursor';
+import { cursor, Cursor } from './Cursor';
 import { mask } from '../utils';
 
 export class Input extends PIXI.Container {
     private background = new PIXI.Graphics();
     public element = new PIXI.Text('', new PIXI.TextStyle(textStyle as ITextStyle));
-
+    public cursorElement: Cursor = cursor;
     constructor(
         x: number,
         y: number,

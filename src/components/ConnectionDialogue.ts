@@ -34,14 +34,14 @@ export class ConnectionDialogue extends PIXI.Container {
 
         // Close button
         const closeBtn = new Button('Connect', this.modal.width / 2, this.modal.height - 50, 100, 50, colors.blueBtn);
-        closeBtn.attachEventListener('pointertap', () => this.gameManager.connect(this.input.element.text, this));
+        closeBtn.attachEventListener('pointertap', this.onSubmit.bind(this));
         this.modal.addChild(closeBtn);
 
         // Input field
         this.addText();
         this.addTextInput();
+        this.input.cursorElement.onEnter = this.onSubmit.bind(this);
 
-        // this.on('destroyed', this.shuffleAndDealCards);
         this.on('destroyed', () => {
             this.input.destroy();
             this.shuffleAndDealCards()
@@ -60,5 +60,9 @@ export class ConnectionDialogue extends PIXI.Container {
     private addTextInput() {
         this.input = new Input(this.modal.width / 2, this.modal.height / 2, 300, 50)
         this.modal.addChild(this.input);
+    }
+
+    private onSubmit() {
+        this.gameManager.connect(this.input.element.text, this);
     }
 }
