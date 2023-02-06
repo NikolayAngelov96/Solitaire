@@ -1,13 +1,14 @@
 import * as PIXI from 'pixi.js';
 import { ITextStyle } from 'pixi.js';
 import { colors, textStyle } from '../Constants';
-import { cursor, Cursor } from './Cursor';
+import { Cursor } from './Cursor';
 import { mask } from '../utils';
 
 export class Input extends PIXI.Container {
     private background = new PIXI.Graphics();
     public element = new PIXI.Text('', new PIXI.TextStyle(textStyle as ITextStyle));
-    public cursorElement: Cursor = cursor;
+    public cursorElement = Cursor.getCursor();
+
     constructor(
         x: number,
         y: number,
@@ -37,8 +38,8 @@ export class Input extends PIXI.Container {
         maskContainer.addChild(this.element);
 
         // Cursor
-        cursor.goTo(this);
-        cursor.element.x = this.element.width;
-        this.on('destroyed', () => cursor.clearListeners());
+        this.cursorElement.goTo(this);
+        this.cursorElement.element.x = this.element.width;
+        this.on('destroyed', () => this.cursorElement.clearListeners());
     }
 }

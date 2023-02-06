@@ -3,18 +3,28 @@ import { textStyle } from "../Constants";
 import { Input } from "./InputField";
 
 export class Cursor {
+    private static instance: Cursor;
+
     public element = new Text('|', new TextStyle(textStyle as ITextStyle));
     public target: Text;
     public onEnter = () => { };
     private _blinkId: NodeJS.Timer;
     private _keyboardListener: (e: KeyboardEvent) => void;
 
-    constructor() {
+    private constructor() {
         this.element.anchor.set(0, 0.55);
         this.element.renderable = true;
         this._keyboardListener = this.onInput.bind(this);
         document.body.addEventListener('keydown', this._keyboardListener);
         this.blink();
+    }
+
+    public static getCursor(): Cursor {
+        if (!this.instance) {
+            this.instance = new Cursor();
+        }
+
+        return this.instance;
     }
 
     public goTo(input: Input) {
@@ -36,14 +46,14 @@ export class Cursor {
     async onInput({ key, code, ctrlKey }: KeyboardEvent) {
 
         if (ctrlKey && code == 'KeyV') { // Paste
-            cursor.target.text += await navigator.clipboard.readText();
+            this.target.text += await navigator.clipboard.readText();
         } else if (key == 'Backspace') {
-            cursor.target.text = cursor.target.text.slice(0, -1);
+            this.target.text = this.target.text.slice(0, -1);
         } else if (key == 'Enter') {
             this.onEnter();
             return;
         } else if (key.length == 1) {
-            cursor.target.text += key;
+            this.target.text += key;
         }
 
         this.fixPosition();
@@ -52,7 +62,7 @@ export class Cursor {
     private blink() {
         this._blinkId = setInterval(() => {
             this.element.renderable = !this.element.renderable;
-        }, 500)
+        }, 500);
     }
 
     public clearListeners() {
@@ -60,5 +70,3 @@ export class Cursor {
         document.body.removeEventListener('keydown', this._keyboardListener);
     }
 }
-
-export const cursor = new Cursor();

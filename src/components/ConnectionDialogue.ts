@@ -55,7 +55,7 @@ export class ConnectionDialogue extends PIXI.Container {
     }
 
     private addTextInput() {
-        this.input = new Input(this.modal.width / 2, this.modal.height / 2, 300, 50)
+        this.input = new Input(this.modal.width / 2, this.modal.height / 2, 300, 50);
         this.modal.addChild(this.input);
     }
 
