@@ -5,18 +5,14 @@ import { Input } from "./InputField";
 export class Cursor {
     private static instance: Cursor;
 
-    public element = new Text('|', new TextStyle(textStyle as ITextStyle));
+    public element: Text;
     public target: Text;
     public onEnter = () => { };
     private _blinkId: NodeJS.Timer;
     private _keyboardListener: (e: KeyboardEvent) => void;
 
     private constructor() {
-        this.element.anchor.set(0, 0.55);
-        this.element.renderable = true;
-        this._keyboardListener = this.onInput.bind(this);
-        document.body.addEventListener('keydown', this._keyboardListener);
-        this.blink();
+        this.initElement();
     }
 
     public static getCursor(): Cursor {
@@ -28,6 +24,10 @@ export class Cursor {
     }
 
     public goTo(input: Input) {
+        if (this.element.destroyed == true) {
+            this.initElement();
+        }
+
         this.target = input.element;
         this.target.addChild(this.element);
         this.element.x = this.target.width;
@@ -65,8 +65,18 @@ export class Cursor {
         }, 500);
     }
 
-    public clearListeners() {
+    private clearListeners() {
         clearInterval(this._blinkId);
         document.body.removeEventListener('keydown', this._keyboardListener);
+    }
+
+    private initElement() {
+        this.element = new Text('|', new TextStyle(textStyle as ITextStyle));
+        this.element.anchor.set(0, 0.55);
+        this.element.renderable = true;
+        this.blink();
+        this._keyboardListener = this.onInput.bind(this);
+        document.body.addEventListener('keydown', this._keyboardListener);
+        this.element.on('destroyed', () => this.clearListeners());
     }
 }

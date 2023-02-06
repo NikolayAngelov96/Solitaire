@@ -40,6 +40,5 @@ export class Input extends PIXI.Container {
         // Cursor
         this.cursorElement.goTo(this);
         this.cursorElement.element.x = this.element.width;
-        this.on('destroyed', () => this.cursorElement.clearListeners());
     }
 }
