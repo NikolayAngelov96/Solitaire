@@ -193,6 +193,10 @@ export class Card extends PIXI.Container {
                     this.gameManager.board.deck.flipCard();
                 }
 
+                if (this.slot instanceof Column) {
+                    this.slot.flipLastCard();
+                }
+
                 this.slot = newSlot;
                 this.onComplete();
 
