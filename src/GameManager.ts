@@ -64,7 +64,7 @@ export class GameManager {
     public connect(nickname: string, dialogue: ConnectionDialogue) {
         console.log('Connecting ...');
         this.board.addPlayerNickname(nickname);
-        dialogue.destroy();
+        dialogue.destroy({ children: true });
     }
 
     public restart() {

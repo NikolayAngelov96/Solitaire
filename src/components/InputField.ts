@@ -39,8 +39,6 @@ export class Input extends PIXI.Container {
         // Cursor
         cursor.goTo(this);
         cursor.element.x = this.element.width;
-        this.on('destroyed', () => {
-            cursor.clearListeners();
-        })
+        this.on('destroyed', () => cursor.clearListeners());
     }
 }

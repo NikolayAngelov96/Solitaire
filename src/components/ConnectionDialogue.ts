@@ -42,10 +42,7 @@ export class ConnectionDialogue extends PIXI.Container {
         this.addTextInput();
         this.input.cursorElement.onEnter = this.onSubmit.bind(this);
 
-        this.on('destroyed', () => {
-            this.input.destroy();
-            this.shuffleAndDealCards()
-        });
+        this.on('destroyed', this.shuffleAndDealCards);
 
         this.app.stage.addChild(this);
     }
