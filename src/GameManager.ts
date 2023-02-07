@@ -72,7 +72,7 @@ export class GameManager {
         }
 
         this.connection = new Connection(nickname);
-        this.connection.on('state', this.onState);
+        this.connection.on('state', this.onState.bind(this));
         await this.connection.open();
 
         this.connection.send('startGame');
