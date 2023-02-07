@@ -17,7 +17,6 @@ export class Board extends Container {
     public columns: Column[] = [];
     public deck: Deck;
     public flippedPile: FlippedPile;
-
     public foundations: Foundation[] = [];
 
     constructor(
@@ -44,9 +43,8 @@ export class Board extends Container {
     }
 
     private addFoundationPile() {
-        let suits = [...Object.values(Suits)];
-        for (let i = 0; i < suits.length; i++) {
-            const currentFoundation = new Foundation(this.cardWidth, this.cardHeight, suits[i], this.gameManager);
+        for (let i = 0; i < [...Object.values(Suits)].length; i++) {
+            const currentFoundation = new Foundation(this.cardWidth, this.cardHeight, this.gameManager);
             currentFoundation.position.set((this.cardWidth * 4 + i * this.spaceBetweenCards) + (i * this.cardWidth), 50);
             this.foundations.push(currentFoundation);
             this.addChild(currentFoundation);
@@ -72,41 +70,6 @@ export class Board extends Container {
 
         title.position.set(10, 10);
         this.addChild(title);
-    }
-
-    public dealCards(row = 0, col = 0, maxRows = 0) {
-
-        // Initially set max rows to go for (possibly coming form a saved state)
-        if (row == 0 && col == 0) {
-            this.gameManager.state.piles.forEach(pile => {
-                if (pile.cards.length > maxRows) {
-                    maxRows = pile.cards.length;
-                }
-            });
-        }
-
-        // If the current column is outside our total columns, proceed dealing next row of cards
-        if (col == this.columns.length) {
-            row++;
-            col = 0;
-        }
-
-        if (row < maxRows && this.gameManager.state.piles[col].cards[row]) {
-
-            // Set front and Deal the last card from deck
-            const { face, suit, faceUp } = this.gameManager.state.piles[col].cards[row];
-            const currentCard = this.deck.children.at(-1) as Card;
-            currentCard.setFront(face, suit);
-            currentCard.goTo(this.columns[col], faceUp, () => this.dealCards(row, col + 1, maxRows));
-
-        } else if (row < maxRows && this.gameManager.state.piles[col].cards[row] == undefined) {
-            // If there is no card proceed to next column
-            this.dealCards(row, col + 1, maxRows);
-        } else {
-            // End of dealing
-            this.gameManager.cardsDealed = true;
-            this.dealFoundation();
-        }
     }
 
     public shuffleAndDealCards() {
@@ -173,7 +136,7 @@ export class Board extends Container {
             .call(() => {
                 this.deck.renderable = true;
                 shuffleContainer.destroy();
-                this.dealCards();
+                this.dealColumns();
             });
 
 
@@ -209,80 +172,90 @@ export class Board extends Container {
         this.addChild(text);
     }
 
-    public dealFoundation() {
-        // const foundationState = this.gameManager.state.foundations;
-        const foundationState = mockFoundationState;
+    public dealColumns(row = 0, col = 0, maxRows = 0) {
+        const columns = this.gameManager.state.piles;
 
-        for (const key of Object.keys(foundationState)) {
-            const state = foundationState[key as keyof typeof foundationState];
-            let currStateSuit = state.suit.slice(0, 1).toUpperCase();
+        // Initially set max rows to go for (possibly coming form a saved state)
+        if (row == 0 && col == 0) {
+            columns.forEach(pile => {
+                if (pile.cards.length > maxRows) {
+                    maxRows = pile.cards.length;
+                }
+            });
+        }
 
-            let foundation = this.foundations.find(x => x.suit == currStateSuit);
-            if (foundation) {
-                foundation.setCardsFromState(state.cards);
-            }
+        // If the current column is outside our total columns, proceed dealing next row of cards
+        if (col == this.columns.length) {
+            row++;
+            col = 0;
+        }
 
+        if (row < maxRows && columns[col].cards[row]) {
+
+            // Set front and Deal the last card from deck
+            const { face, suit, faceUp } = columns[col].cards[row];
+            const currentCard = this.deck.children.at(-1) as Card;
+            currentCard.setFront(face, suit);
+            currentCard.goTo(this.columns[col], faceUp, () => this.dealColumns(row, col + 1, maxRows));
+
+        } else if (row < maxRows && columns[col].cards[row] == undefined) {
+            // If there is no card proceed to next column
+            this.dealColumns(row, col + 1, maxRows);
+        } else {
+            // Move to dealing to foundation
+            this.dealFoundation();
         }
     }
-}
 
+    public dealFoundation(row = 0, col = 0, maxCards = 0) {
+        const foundations = Object.values(this.gameManager.state.foundations) as any[];
 
-const mockFoundationState = {
-    clubs: {
-        cards: [
-            {
-                face: 2,
-                suit: 'clubs',
-                faceUp: true
-            },
-            {
-                face: 7,
-                suit: 'clubs',
-                faceUp: true
-            }
-        ],
-        type: 'foundation',
-        suit: 'clubs'
-    },
-    diamonds: {
-        cards: [{
-            face: 1,
-            suit: 'diamonds',
-            faceUp: true
-        },
-        {
-            face: 5,
-            suit: 'diamonds',
-            faceUp: true
-        }],
-        type: "foundation",
-        suit: "diamonds"
-    },
-    hearts: {
-        cards: [
-            {
-                face: 1,
-                suit: 'hearts',
-                faceUp: true
-            }
-        ],
-        type: "foundation",
-        suit: "hearts"
-    },
-    spades: {
-        cards: [
-            {
-                face: 3,
-                suit: 'spades',
-                faceUp: true
-            },
-            {
-                face: 4,
-                suit: 'spades',
-                faceUp: true
-            }
-        ],
-        type: "foundation",
-        suit: "spades"
+        // Initially set max cards to go for (coming form a saved state)
+        if (row == 0 && col == 0) {
+            foundations.forEach((foundation) => {
+                if (foundation.cards.length > maxCards) {
+                    maxCards = foundation.cards.length;
+                }
+            });
+        }
+
+        // If the current column is outside our total foundations, proceed dealing next row of cards
+        if (col == this.foundations.length) {
+            row++;
+            col = 0;
+        }
+
+        if (row < maxCards && foundations[col].cards[row]) {
+
+            // Set front and Deal the last card from deck
+            const { face, suit, faceUp } = foundations[col].cards[row];
+            const currentCard = this.deck.children.at(-1) as Card;
+            currentCard.setFront(face, suit);
+            currentCard.goTo(this.foundations[col], faceUp, () => this.dealFoundation(row, col + 1, maxCards));
+
+        } else if (row < maxCards && foundations[col].cards[row] == undefined) {
+            // If there is no card proceed to next column
+            this.dealFoundation(row, col + 1, maxCards);
+        } else {
+            // TODO: Move to dealing to waste pile
+            this.gameManager.cardsDealed = true;
+        }
     }
-};
+
+    // public dealFoundation() {
+    //     const foundationState = this.gameManager.state.foundations;
+
+    //     for (const {suit, cards} of Object.values(foundationState) as any) {
+
+
+    //         const state = foundationState[key as keyof typeof foundationState];
+    //         let currStateSuit = state.suit.slice(0, 1).toUpperCase();
+
+    //         let foundation = this.foundations.find(x => x.suit == currStateSuit);
+    //         if (foundation) {
+    //             foundation.setCardsFromState(state.cards);
+    //         }
+
+    //     }
+    // }
+}

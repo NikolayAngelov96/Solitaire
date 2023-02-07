@@ -91,6 +91,7 @@ export class GameManager {
     private onState(state) {
         console.log('received state', state);
         this.state = state;
+        this.state.foundations = foundations; // Mock data
     }
 
     public endGame(hasWon: boolean) {
@@ -104,3 +105,62 @@ export class GameManager {
     }
 }
 
+const foundations = {
+    clubs: {
+        cards: [
+            {
+                face: 2,
+                suit: 'clubs',
+                faceUp: true
+            },
+            {
+                face: 7,
+                suit: 'clubs',
+                faceUp: true
+            }
+        ],
+        type: 'foundation',
+        suit: 'clubs'
+    },
+    diamonds: {
+        cards: [{
+            face: 1,
+            suit: 'diamonds',
+            faceUp: true
+        },
+        {
+            face: 5,
+            suit: 'diamonds',
+            faceUp: true
+        }],
+        type: "foundation",
+        suit: "diamonds"
+    },
+    hearts: {
+        cards: [
+            // {
+            //     face: 1,
+            //     suit: 'hearts',
+            //     faceUp: true
+            // }
+        ],
+        type: "foundation",
+        suit: "hearts"
+    },
+    spades: {
+        cards: [
+            {
+                face: 3,
+                suit: 'spades',
+                faceUp: true
+            },
+            {
+                face: 4,
+                suit: 'spades',
+                faceUp: true
+            }
+        ],
+        type: "foundation",
+        suit: "spades"
+    }
+};
