@@ -34,7 +34,6 @@ export class GameManager {
         this.app.stage.addChild(background);
         this.board = new Board(this, this.cardFactory);
         this.app.stage.addChild(this.dealLayer);
-        this.endScreen = new EndScreen(this.app, this.cardFactory, this.board);
 
         background.on('pointerup', () => this.draggingCard?.goBack());
         this.connectionDialogue();
@@ -94,6 +93,8 @@ export class GameManager {
     }
 
     public endGame(hasWon: boolean) {
+        this.endScreen = new EndScreen(this.app, this.cardFactory, this.board);
+
         if (hasWon) {
             this.endScreen.animateWin();
         } else {
