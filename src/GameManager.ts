@@ -5,6 +5,8 @@ import { ConnectionDialogue } from "./components/ConnectionDialogue";
 import { Assets, CardFactory } from "./CardFactory";
 import { Board } from "./components/Board";
 import { Connection } from "./Connection";
+import { EndScreen } from './components/EndScreen';
+
 
 export class GameManager {
     public cardFactory: CardFactory;
@@ -14,6 +16,7 @@ export class GameManager {
     public cardsDealed = false;
     public dealLayer = new PIXI.Container();
     private connection: Connection;
+    private endScreen: EndScreen;
 
     constructor(
         public app: PIXI.Application,
@@ -31,6 +34,7 @@ export class GameManager {
         this.app.stage.addChild(background);
         this.board = new Board(this, this.cardFactory);
         this.app.stage.addChild(this.dealLayer);
+        this.endScreen = new EndScreen(this.app, this.cardFactory, this.board);
 
         background.on('pointerup', () => this.draggingCard?.goBack());
         this.connectionDialogue();
@@ -87,5 +91,13 @@ export class GameManager {
 
     private onState(state) {
         console.log('received state', state);
+    }
+
+    public endGame(hasWon: boolean) {
+        if (hasWon) {
+            this.endScreen.animateWin();
+        } else {
+            this.endScreen.animateLoosing();
+        }
     }
 }

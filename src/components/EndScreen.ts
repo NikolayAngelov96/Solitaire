@@ -11,7 +11,6 @@ export class EndScreen extends PIXI.Container {
         private app: PIXI.Application,
         private cardFactory: CardFactory,
         private board: Board,
-        hasWon: boolean,
     ) {
         super();
         this.button = new Button('New Game', app.stage.width / 2, app.stage.height / 2, 145, 38, 0x28a745);
@@ -22,17 +21,11 @@ export class EndScreen extends PIXI.Container {
         const blur = new PIXI.BlurFilter();
         this.board.filters = [blur];
 
-        if (hasWon) {
-            this.animateWin();
-        } else {
-            this.animateLoosing();
-        }
-
         app.stage.addChild(this);
 
     };
 
-    private animateWin() {
+    public animateWin() {
         let cards: PIXI.DisplayObject[] = [];
 
         for (let i = 0; i < 100; i++) {
@@ -83,7 +76,7 @@ export class EndScreen extends PIXI.Container {
 
     }
 
-    private animateLoosing() {
+    public animateLoosing() {
         let centerX = this.app.stage.width / 2;
         let centerY = this.app.stage.height / 2;
         this.addLosingText();
