@@ -1,5 +1,3 @@
-import { Connection } from "./Connection";
-import { engine } from "./engine";
 import * as PIXI from 'pixi.js';
 import { Assets } from "./CardFactory";
 import { GameManager } from "./GameManager";
@@ -12,8 +10,6 @@ const app = new PIXI.Application({
     background: "#005000",
 });
 document.body.appendChild(app.view as HTMLCanvasElement);
-
-let connection = null;
 
 // Start load screen
 const loadScreen = new LoadScreen(app);
@@ -36,18 +32,3 @@ function init(assets: Assets) {
 
     // const endScreen = new EndScreen(app, cardFactory, board, false);
 }
-/*
-
-initForm.addEventListener('submit', async event => {
-    event.preventDefault();
-    const { nickname } = Object.fromEntries(new FormData(event.target as HTMLFormElement));
-
-    connection = new Connection(nickname as string);
-    await connection.open();
-    engine(connection);
-    showBoard();
-
-    connection.send('startGame');
-});
-
-*/

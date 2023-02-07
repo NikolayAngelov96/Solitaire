@@ -4,7 +4,7 @@ import { DesignPicker } from "./components/DesignPicker";
 import { ConnectionDialogue } from "./components/ConnectionDialogue";
 import { Assets, CardFactory } from "./CardFactory";
 import { Board } from "./components/Board";
-
+import { Connection } from "./Connection";
 
 export class GameManager {
     public cardFactory: CardFactory;
@@ -13,6 +13,7 @@ export class GameManager {
     public cards: Card[] = [];
     public cardsDealed = false;
     public dealLayer = new PIXI.Container();
+    private connection: Connection;
 
     constructor(
         public app: PIXI.Application,
@@ -61,17 +62,30 @@ export class GameManager {
         new ConnectionDialogue(this.app, this, this.board.shuffleAndDealCards.bind(this.board));
     }
 
-    public connect(nickname: string, dialogue: ConnectionDialogue) {
-        console.log('Connecting ...');
+    public async connect(nickname: string, dialogue: ConnectionDialogue) {
+        if (nickname == '') {
+            throw new Error('Nickname is required.');
+        }
+
+        this.connection = new Connection(nickname);
+        this.connection.on('state', this.onState);
+        await this.connection.open();
+
+        this.connection.send('startGame');
         this.board.addPlayerNickname(nickname);
         dialogue.destroy({ children: true });
     }
 
     public restart() {
+        this.connection.disconnect();
         this.cards.forEach(card => card.destroy());
         this.cardsDealed = false;
         this.cards.length = 0;
         this.board.deck.fill();
         this.connectionDialogue();
+    }
+
+    private onState(state) {
+        console.log('received state', state);
     }
 }
