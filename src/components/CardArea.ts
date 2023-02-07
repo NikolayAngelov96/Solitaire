@@ -6,7 +6,7 @@ import { GameManager } from "../GameManager";
 export abstract class CardArea extends Container {
     protected placeholderColor: number = colors.cardPlaceholder;
 
-    protected constructor(width: number, height: number, gameManager: GameManager) {
+    protected constructor(width: number, height: number, protected gameManager: GameManager) {
         super();
 
         this.createArea(width, height);
@@ -15,7 +15,7 @@ export abstract class CardArea extends Container {
         this.on('pointerup', () => {
             if (gameManager.draggingCard) {
                 if (this.validateCard(gameManager.draggingCard)) {
-                    gameManager.draggingCard.goTo(this);
+                    gameManager.draggingCard.goTo(this as any);
                 } else {
                     gameManager.draggingCard.goBack();
                 }

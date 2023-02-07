@@ -73,9 +73,11 @@ export class GameManager {
 
         this.connection = new Connection(nickname);
         this.connection.on('state', this.onState.bind(this));
-        await this.connection.open();
+        // await this.connection.open();
 
-        this.connection.send('startGame');
+        this.board.dealFoundation(mockFoundationState);
+
+        // this.connection.send('startGame');
         this.board.addPlayerNickname(nickname);
         dialogue.destroy({ children: true });
     }
@@ -104,3 +106,63 @@ export class GameManager {
         }
     }
 }
+
+const mockFoundationState = {
+    clubs: {
+        cards: [
+            {
+                face: 2,
+                suit: 'clubs',
+                faceUp: true
+            },
+            {
+                face: 7,
+                suit: 'clubs',
+                faceUp: true
+            }
+        ],
+        type: 'foundation',
+        suit: 'clubs'
+    },
+    diamonds: {
+        cards: [{
+            face: 1,
+            suit: 'diamonds',
+            faceUp: true
+        },
+        {
+            face: 5,
+            suit: 'diamonds',
+            faceUp: true
+        }],
+        type: "foundation",
+        suit: "diamonds"
+    },
+    hearts: {
+        cards: [
+            {
+                face: 1,
+                suit: 'hearts',
+                faceUp: true
+            }
+        ],
+        type: "foundation",
+        suit: "hearts"
+    },
+    spades: {
+        cards: [
+            {
+                face: 3,
+                suit: 'spades',
+                faceUp: true
+            },
+            {
+                face: 4,
+                suit: 'spades',
+                faceUp: true
+            }
+        ],
+        type: "foundation",
+        suit: "spades"
+    }
+};

@@ -18,6 +18,8 @@ export class Board extends Container {
     public deck: Deck;
     public flippedPile: FlippedPile;
 
+    public foundations: Foundation[] = [];
+
     constructor(
         public gameManager: GameManager,
         public cardFactory: CardFactory
@@ -41,10 +43,11 @@ export class Board extends Container {
     }
 
     private addFoundationPile() {
-        for (let i = 0; i < [...Object.values(Suites)].length; i++) {
-            const currentFoundation = new Foundation(this.cardWidth, this.cardHeight, this.gameManager);
+        let suites = [...Object.values(Suites)];
+        for (let i = 0; i < suites.length; i++) {
+            const currentFoundation = new Foundation(this.cardWidth, this.cardHeight, suites[i], this.gameManager);
             currentFoundation.position.set((this.cardWidth * 4 + i * this.spaceBetweenCards) + (i * this.cardWidth), 50);
-
+            this.foundations.push(currentFoundation);
             this.addChild(currentFoundation);
         }
     }
@@ -192,5 +195,19 @@ export class Board extends Container {
 
         gsap.from(text, { pixi: { scale: 0 }, ease: 'back' })
         this.addChild(text);
+    }
+
+    public dealFoundation(foundationState) {
+
+        for (const key of Object.keys(foundationState)) {
+            const state = foundationState[key as keyof typeof foundationState];
+            let currStateSuit = state.suit.slice(0, 1).toUpperCase();
+
+            let foundation = this.foundations.find(x => x.suit == currStateSuit);
+            if (foundation) {
+                foundation.setCardsFromState(state.cards);
+            }
+
+        }
     }
 }
