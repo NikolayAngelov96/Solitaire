@@ -6,6 +6,7 @@ import { Assets, CardFactory } from "./CardFactory";
 import { Board } from "./components/Board";
 import { Connection } from "./Connection";
 import { EndScreen } from './components/EndScreen';
+import { Suits, EntityState, GameState } from "./Constants";
 
 
 export class GameManager {
@@ -17,7 +18,7 @@ export class GameManager {
     public dealLayer = new PIXI.Container();
     private connection: Connection;
     private endScreen: EndScreen;
-    public state: any;
+    public state: GameState;
 
     constructor(
         public app: PIXI.Application,
@@ -92,6 +93,8 @@ export class GameManager {
         console.log('received state', state);
         this.state = state;
         this.state.foundations = foundations; // Mock data
+        this.state.waste = waste; // Mock data
+        this.board.deck.fill();
     }
 
     public endGame(hasWon: boolean) {
@@ -105,7 +108,23 @@ export class GameManager {
     }
 }
 
-const foundations = {
+const waste: EntityState = {
+    cards: [{
+        face: 2,
+        suit: 'clubs',
+        faceUp: true
+    },
+    {
+        face: 7,
+        suit: 'clubs',
+        faceUp: true
+    }
+    ],
+    type: "waste",
+    suit: null
+};
+
+const foundations: { [key in keyof typeof Suits]: EntityState } = {
     clubs: {
         cards: [
             {

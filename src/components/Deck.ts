@@ -12,13 +12,22 @@ export class Deck extends FlipArea {
 
         this.addText();
         this.position.set(10 + cardSize.w / 2, 50);
-        this.fill();
+        // this.fill();
 
         this.on('pointertapcapture', () => this.flipCard());
+
+        window['deck'] = this;
     }
 
     public fill() {
-        for (let i = 0; i < 52; i++) {
+        const state = this.board.gameManager.state;
+        let totalCards = 0;
+
+        totalCards += state.stock.cards.length + state.waste.cards.length;
+        Object.values(state.foundations).forEach(f => totalCards += f.cards.length);
+        state.piles.forEach(p => totalCards += p.cards.length);
+
+        for (let i = 0; i < totalCards; i++) {
             const card = this.board.cardFactory.getCard();
             card.x = card.width / 2;
             this.addChild(card);

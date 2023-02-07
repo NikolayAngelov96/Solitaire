@@ -40,3 +40,24 @@ export const textStyle = {
     fill: 0xffffff,
     align: 'left',
 };
+
+type CardState = {
+    face: number,
+    suit: keyof typeof Suits,
+    faceUp: boolean;
+};
+
+export type EntityState = {
+    cards: CardState[],
+    type: string,
+    suit: keyof typeof Suits;
+};
+
+export type GameState = {
+    stock: EntityState,
+    waste: EntityState,
+    foundations: {
+        [key in keyof typeof Suits]: EntityState
+    },
+    piles: EntityState[];
+};

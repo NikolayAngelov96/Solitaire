@@ -172,7 +172,7 @@ export class Board extends Container {
         this.addChild(text);
     }
 
-    public dealColumns(row = 0, col = 0, maxRows = 0) {
+    private dealColumns(row = 0, col = 0, maxRows = 0) {
         const columns = this.gameManager.state.piles;
 
         // Initially set max rows to go for (possibly coming form a saved state)
@@ -207,7 +207,7 @@ export class Board extends Container {
         }
     }
 
-    public dealFoundation(row = 0, col = 0, maxCards = 0) {
+    private dealFoundation(row = 0, col = 0, maxCards = 0) {
         const foundations = Object.values(this.gameManager.state.foundations) as any[];
 
         // Initially set max cards to go for (coming form a saved state)
@@ -238,8 +238,32 @@ export class Board extends Container {
             this.dealFoundation(row, col + 1, maxCards);
         } else {
             // TODO: Move to dealing to waste pile
-            this.gameManager.cardsDealed = true;
+            this.dealWaste();
         }
+    }
+
+    private dealWaste(i = 0) {
+        const wasteCards = this.gameManager.state.waste.cards;
+
+        if (wasteCards[i]) {
+            const { face, suit, faceUp } = wasteCards[i];
+            const currentCard = this.deck.children.at(-1) as Card;
+            currentCard.setFront(face, suit);
+            currentCard.goTo(this.flippedPile, faceUp, () => this.dealWaste(i + 1));
+        } else {
+            this.setDeckCards();
+        }
+    }
+
+    private setDeckCards() {
+        const stateCards = this.gameManager.state.stock.cards;
+
+        for (let i = 0; i < stateCards.length; i++) {
+            const { face, suit } = stateCards[i];
+            this.deck.cards[i].setFront(face, suit);
+        }
+
+        this.gameManager.cardsDealed = true;
     }
 
     // public dealFoundation() {
