@@ -1,13 +1,12 @@
 import { Card } from "./Card";
 import { CardArea } from "./CardArea";
 import { GameManager } from "../GameManager";
-import { getCardId } from "../utils";
-import { Suites } from "../Constants";
+import { Suits } from "../Constants";
 
 export class Foundation extends CardArea {
-    public suit: Suites;
+    public suit: Suits;
 
-    constructor(width: number, height: number, suit: Suites, gameManager: GameManager) {
+    constructor(width: number, height: number, suit: Suits, gameManager: GameManager) {
         super(width, height, gameManager);
         this.suit = suit;
     }
@@ -18,14 +17,14 @@ export class Foundation extends CardArea {
         //     card.faceUp == true && this.cardsCount == 0 && card.power == 0);
 
         // TODO: fix foundation suit
-        return card.suite == this.suit;
+        return card.suit == this.suit;
     }
 
-    public setCardsFromState(cards: { face: number, suit: string, faceUp: boolean }[]) {
+    public setCardsFromState(cards: { face: number, suit: string, faceUp: boolean; }[]) {
         for (const card of cards) {
             const current = this.gameManager.cardFactory.getCard();
-            let cardId = getCardId(card.face, card.suit);
-            current.setFront(cardId);
+            // let cardId = getCardId(card.face, card.suit);
+            current.setFront(card.face, card.suit);
             current.goTo(this, card.faceUp);
         }
     }

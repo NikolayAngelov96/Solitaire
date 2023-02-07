@@ -1,7 +1,7 @@
 import gsap from 'gsap';
 import * as PIXI from 'pixi.js';
 import { PixiPlugin } from 'gsap/PixiPlugin';
-import { cardSize, colors, Ranks, Suites } from '../Constants';
+import { cardSize, colors, Ranks, Suits } from '../Constants';
 import { GameManager } from '../GameManager';
 import { Column } from './Column';
 import { Foundation } from './Foundation';
@@ -20,7 +20,7 @@ export class Card extends PIXI.Container {
     private _back = new PIXI.Container();
     private _backLogoSprite: PIXI.Sprite;
     private _faceUp = false;
-    public suite: Suites;
+    public suit: Suits;
     public power: number;
     private oldGlobalPosition: PIXI.Point;
     private pointerOffsetFromCardPivot = new PIXI.Point(0, 0);
@@ -57,8 +57,8 @@ export class Card extends PIXI.Container {
 
     get color() {
         // 0 = Black, 1 = Red :)
-        if (this.suite) {
-            return Number(this.suite == Suites.Hearts || this.suite == Suites.Diamonds);
+        if (this.suit) {
+            return Number(this.suit == Suits.hearts || this.suit == Suits.diamonds);
         }
     }
 
@@ -95,17 +95,14 @@ export class Card extends PIXI.Container {
         this._backLogoSprite.scale.set((cardSize.w - 20) / texture.width);
     }
 
-    public setFront(cardId: string) {
-        const sprite = PIXI.Sprite.from(this.cardFrontsTextures[cardId]);
+    public setFront(power: number, suit: string) {
+        this.power = power;
+        this.suit = Suits[suit];
+
+        const sprite = PIXI.Sprite.from(this.cardFrontsTextures[`${this.power}${this.suit}`]);
         sprite.scale.set(0.334);
         this.front.addChild(sprite);
 
-
-        // if (this.front.children.length == 0) {
-        // }
-        // else {
-        //     throw new Error('This card already has a front.');
-        // }
     }
 
     private addBorder() {
@@ -267,17 +264,17 @@ export class Card extends PIXI.Container {
     }
 
     // Temporary
-    public setRandomFront() {
-        if (this.front.children.length == 0) {
-            const rankIndex = Math.random() * 13 | 0;
-            const suiteIndex = Math.random() * 4 | 0;
+    // public setRandomFront() {
+    //     if (this.front.children.length == 0) {
+    //         const rankIndex = Math.random() * 13 | 0;
+    //         const suiteIndex = Math.random() * 4 | 0;
 
-            const cardId = Object.values(Ranks)[rankIndex] + Object.values(Suites)[suiteIndex];
+    //         const cardId = Object.values(Ranks)[rankIndex] + Object.values(Suits)[suiteIndex];
 
-            this.power = rankIndex;
-            this.suite = Object.values(Suites)[suiteIndex];
+    //         this.power = rankIndex;
+    //         this.suit = Object.values(Suits)[suiteIndex];
 
-            this.setFront(cardId);
-        }
-    }
+    //         this.setFront(cardId);
+    //     }
+    // }
 }

@@ -1,25 +1,11 @@
-export enum Suites {
-    Clubs = 'C',
-    Hearts = 'H',
-    Spades = 'S',
-    Diamonds = 'D'
+export enum Suits {
+    clubs = 'C',
+    hearts = 'H',
+    spades = 'S',
+    diamonds = 'D'
 }
 
-export enum Ranks {
-    ACE = 'A',
-    N2 = '2',
-    N3 = '3',
-    N4 = '4',
-    N5 = '5',
-    N6 = '6',
-    N7 = '7',
-    N8 = '8',
-    N9 = '9',
-    N10 = '10',
-    JACK = 'J',
-    QUEEN = 'Q',
-    KING = 'K',
-}
+export const Ranks = ['_', 'A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
 
 // export type CardsIds = 'AS' | '1S' | '2S' ...
 

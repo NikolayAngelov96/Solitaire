@@ -46,7 +46,7 @@ export class Deck extends FlipArea {
 
         // Flip card to flipped area
         if (this.board.gameManager.cardsDealed && deckLastChild instanceof Card) {
-            deckLastChild.setRandomFront();
+            // deckLastChild.setRandomFront();
             deckLastChild.goTo(this.board.flippedPile);
 
             // Return cards to deck

@@ -1,8 +1,8 @@
-import { Container, Graphics, ITextStyle, Text, TextStyle } from "pixi.js";
+import { Container, Text } from "pixi.js";
 import { Column } from "./Column";
 import { Foundation } from "./Foundation";
 import { GameManager } from "../GameManager";
-import { cardSize, Ranks, Suites, textStyle } from '../Constants';
+import { cardSize, Suits } from '../Constants';
 import { Deck } from "./Deck";
 import { CardFactory } from "../CardFactory";
 import { Card } from "./Card";
@@ -33,6 +33,7 @@ export class Board extends Container {
         this.addGameTitle();
 
         this.gameManager.app.stage.addChild(this);
+        window['board'] = this;
     }
 
     private addDeckArea() {
@@ -43,9 +44,9 @@ export class Board extends Container {
     }
 
     private addFoundationPile() {
-        let suites = [...Object.values(Suites)];
-        for (let i = 0; i < suites.length; i++) {
-            const currentFoundation = new Foundation(this.cardWidth, this.cardHeight, suites[i], this.gameManager);
+        let suits = [...Object.values(Suits)];
+        for (let i = 0; i < suits.length; i++) {
+            const currentFoundation = new Foundation(this.cardWidth, this.cardHeight, suits[i], this.gameManager);
             currentFoundation.position.set((this.cardWidth * 4 + i * this.spaceBetweenCards) + (i * this.cardWidth), 50);
             this.foundations.push(currentFoundation);
             this.addChild(currentFoundation);
@@ -73,27 +74,38 @@ export class Board extends Container {
         this.addChild(title);
     }
 
-    public dealCards(startColumn = 0, currentColumn = 0) {
+    public dealCards(row = 0, col = 0, maxRows = 0) {
 
-        // If the current column is outside our total columns, proceed dealing next row of cards
-        if (currentColumn == this.columns.length) {
-            startColumn++;
-            currentColumn = startColumn;
+        // Initially set max rows to go for (possibly coming form a saved state)
+        if (row == 0 && col == 0) {
+            this.gameManager.state.piles.forEach(pile => {
+                if (pile.cards.length > maxRows) {
+                    maxRows = pile.cards.length;
+                }
+            });
         }
 
-        if (startColumn < this.columns.length) {
+        // If the current column is outside our total columns, proceed dealing next row of cards
+        if (col == this.columns.length) {
+            row++;
+            col = 0;
+        }
 
-            // Deal the last card from deck
+        if (row < maxRows && this.gameManager.state.piles[col].cards[row]) {
+
+            // Set front and Deal the last card from deck
+            const { face, suit, faceUp } = this.gameManager.state.piles[col].cards[row];
             const currentCard = this.deck.children.at(-1) as Card;
-            currentCard.goTo(this.columns[currentColumn], currentColumn == startColumn, () => this.dealCards(startColumn, currentColumn + 1));
+            currentCard.setFront(face, suit);
+            currentCard.goTo(this.columns[col], faceUp, () => this.dealCards(row, col + 1, maxRows));
 
-            // Random front
-            currentCard.setRandomFront();
-
-        } else if (startColumn >= this.columns.length) {
-            // End of dealing cards
+        } else if (row < maxRows && this.gameManager.state.piles[col].cards[row] == undefined) {
+            // If there is no card proceed to next column
+            this.dealCards(row, col + 1, maxRows);
+        } else {
+            // End of dealing
             this.gameManager.cardsDealed = true;
-            this.deck.flipCard();
+            this.dealFoundation();
         }
     }
 
@@ -193,11 +205,13 @@ export class Board extends Container {
         text.anchor.set(0, 0.5);
         text.position.set(this.gameManager.app.screen.width - text.width - 55, 22);
 
-        gsap.from(text, { pixi: { scale: 0 }, ease: 'back' })
+        gsap.from(text, { pixi: { scale: 0 }, ease: 'back' });
         this.addChild(text);
     }
 
-    public dealFoundation(foundationState) {
+    public dealFoundation() {
+        // const foundationState = this.gameManager.state.foundations;
+        const foundationState = mockFoundationState;
 
         for (const key of Object.keys(foundationState)) {
             const state = foundationState[key as keyof typeof foundationState];
@@ -211,3 +225,64 @@ export class Board extends Container {
         }
     }
 }
+
+
+const mockFoundationState = {
+    clubs: {
+        cards: [
+            {
+                face: 2,
+                suit: 'clubs',
+                faceUp: true
+            },
+            {
+                face: 7,
+                suit: 'clubs',
+                faceUp: true
+            }
+        ],
+        type: 'foundation',
+        suit: 'clubs'
+    },
+    diamonds: {
+        cards: [{
+            face: 1,
+            suit: 'diamonds',
+            faceUp: true
+        },
+        {
+            face: 5,
+            suit: 'diamonds',
+            faceUp: true
+        }],
+        type: "foundation",
+        suit: "diamonds"
+    },
+    hearts: {
+        cards: [
+            {
+                face: 1,
+                suit: 'hearts',
+                faceUp: true
+            }
+        ],
+        type: "foundation",
+        suit: "hearts"
+    },
+    spades: {
+        cards: [
+            {
+                face: 3,
+                suit: 'spades',
+                faceUp: true
+            },
+            {
+                face: 4,
+                suit: 'spades',
+                faceUp: true
+            }
+        ],
+        type: "foundation",
+        suit: "spades"
+    }
+};

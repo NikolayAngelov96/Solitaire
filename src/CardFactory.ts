@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { Card, CardFrontsTextures } from './components/Card';
-import { cardSheet, Ranks, Suites } from './Constants';
+import { cardSheet, Ranks, Suits } from './Constants';
 import { GameManager } from './GameManager';
 import { SampleCard } from './components/SampleCard';
 
@@ -24,17 +24,15 @@ export class CardFactory {
     }
 
     private generateFrontsTextures() {
-        for (let suiteIndex = 0; suiteIndex < [...Object.values(Suites)].length; suiteIndex++) {
-            const suite = Object.values(Suites)[suiteIndex];
+        for (let suitIndex = 0; suitIndex < [...Object.values(Suits)].length; suitIndex++) {
+            const suit = Object.values(Suits)[suitIndex];
 
-            for (let rankIndex = 0; rankIndex < [...Object.values(Ranks)].length; rankIndex++) {
-                const rank = Object.values(Ranks)[rankIndex];
-
-                const x = cardSheet.startX + (rankIndex * (cardSheet.w + cardSheet.marginX));
-                const y = cardSheet.startY + (suiteIndex * (cardSheet.h + cardSheet.marginY));
+            for (let rank = 1; rank < Ranks.length; rank++) {
+                const x = cardSheet.startX + ((rank - 1) * (cardSheet.w + cardSheet.marginX));
+                const y = cardSheet.startY + (suitIndex * (cardSheet.h + cardSheet.marginY));
 
                 const frontTexture = new PIXI.Texture(this.assets.cards.baseTexture, new PIXI.Rectangle(x, y, cardSheet.w, cardSheet.h));
-                this.cardFrontsTextures[`${rank}${suite}`] = frontTexture;
+                this.cardFrontsTextures[`${rank}${suit}`] = frontTexture;
             }
         }
     }
