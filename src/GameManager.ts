@@ -17,6 +17,7 @@ export class GameManager {
     public dealLayer = new PIXI.Container();
     private connection: Connection;
     private endScreen: EndScreen;
+    public state: any;
 
     constructor(
         public app: PIXI.Application,
@@ -72,15 +73,15 @@ export class GameManager {
 
         this.connection = new Connection(nickname);
         this.connection.on('state', this.onState);
-        // await this.connection.open();
+        await this.connection.open();
 
-        // this.connection.send('startGame');
+        this.connection.send('startGame');
         this.board.addPlayerNickname(nickname);
         dialogue.destroy({ children: true });
     }
 
     public restart() {
-        // this.connection.disconnect();
+        this.connection.disconnect();
         this.cards.forEach(card => card.destroy());
         this.cardsDealed = false;
         this.cards.length = 0;
@@ -90,6 +91,7 @@ export class GameManager {
 
     private onState(state) {
         console.log('received state', state);
+        this.state = state;
     }
 
     public endGame(hasWon: boolean) {
