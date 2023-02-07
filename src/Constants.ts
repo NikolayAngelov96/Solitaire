@@ -1,7 +1,7 @@
 export enum Suites {
-    Spades = 'S',
-    Hearts = 'H',
     Clubs = 'C',
+    Hearts = 'H',
+    Spades = 'S',
     Diamonds = 'D'
 }
 
