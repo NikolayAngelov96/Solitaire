@@ -73,15 +73,15 @@ export class GameManager {
 
         this.connection = new Connection(nickname);
         this.connection.on('state', this.onState);
-        await this.connection.open();
+        // await this.connection.open();
 
-        this.connection.send('startGame');
+        // this.connection.send('startGame');
         this.board.addPlayerNickname(nickname);
         dialogue.destroy({ children: true });
     }
 
     public restart() {
-        this.connection.disconnect();
+        // this.connection.disconnect();
         this.cards.forEach(card => card.destroy());
         this.cardsDealed = false;
         this.cards.length = 0;
