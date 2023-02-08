@@ -6,7 +6,7 @@ import { Assets, CardFactory } from "./CardFactory";
 import { Board } from "./components/Board";
 import { Connection } from "./Connection";
 import { EndScreen } from './components/EndScreen';
-import { Suits, EntityState, GameState } from "./Constants";
+import { Suits, EntityState, GameState, Moves } from "./Constants";
 
 
 export class GameManager {
@@ -19,6 +19,7 @@ export class GameManager {
     private connection: Connection;
     private endScreen: EndScreen;
     public state: GameState;
+    public moves: Moves;
 
     constructor(
         public app: PIXI.Application,
@@ -73,7 +74,8 @@ export class GameManager {
         // }
 
         this.connection = new Connection(nickname);
-        this.connection.on('state', this.onState.bind(this));
+        // this.connection.on('state', this.onState.bind(this));
+        this.setConnectionListeners();
         await this.connection.open();
         this.connection.send('startGame');
         this.board.addPlayerNickname(nickname);
@@ -89,14 +91,6 @@ export class GameManager {
         this.connectionDialogue();
     }
 
-    private onState(state) {
-        console.log('received state', state);
-        this.state = state;
-        this.state.foundations = foundations; // Mock data
-        this.state.waste = waste; // Mock data
-        this.board.deck.fill();
-    }
-
     public endGame(hasWon: boolean) {
         this.endScreen = new EndScreen(this.app, this.cardFactory, this.board);
 
@@ -105,6 +99,34 @@ export class GameManager {
         } else {
             this.endScreen.animateLoosing();
         }
+    }
+
+    private setConnectionListeners() {
+        this.connection.on('state', this.onState.bind(this));
+        this.connection.on('moves', this.onMoves.bind(this));
+        this.connection.on('moveResult', this.onResult.bind(this));
+        this.connection.on('victory', this.onVictory.bind(this));
+    }
+
+    private onState(state) {
+        console.log('received state', state);
+        this.state = state;
+        // this.state.foundations = foundations; // Mock data
+        // this.state.waste = waste; // Mock data
+        this.board.deck.fill();
+    }
+
+    private onMoves(receivedMoves) {
+        console.log('received moves: ', receivedMoves);
+        this.moves = receivedMoves;
+    }
+
+    private onResult(data) {
+        console.log(data);
+    }
+
+    private onVictory() {
+        this.endGame(true);
     }
 }
 
