@@ -2,7 +2,7 @@ import { Container, Text } from "pixi.js";
 import { Column } from "./Column";
 import { Foundation } from "./Foundation";
 import { GameManager } from "../GameManager";
-import { cardSize, Suits } from '../Constants';
+import { cardSize, Suits, SuitsKey } from '../Constants';
 import { Deck } from "./Deck";
 import { CardFactory } from "../CardFactory";
 import { Card } from "./Card";
@@ -17,7 +17,7 @@ export class Board extends Container {
     public columns: Column[] = [];
     public deck: Deck;
     public flippedPile: FlippedPile;
-    public foundations: Foundation[] = [];
+    public foundations: { [key in SuitsKey]: Foundation } = { clubs: null, hearts: null, spades: null, diamonds: null };
 
     constructor(
         public gameManager: GameManager,
@@ -48,7 +48,7 @@ export class Board extends Container {
         for (let i = 0; i < suits.length; i++) {
             const currentFoundation = new Foundation(this.cardWidth, this.cardHeight, suits[i], this.gameManager);
             currentFoundation.position.set((this.cardWidth * 4 + i * this.spaceBetweenCards) + (i * this.cardWidth), 50);
-            this.foundations.push(currentFoundation);
+            this.foundations[suits[i]] = currentFoundation;
             this.addChild(currentFoundation);
         }
     }
@@ -214,11 +214,11 @@ export class Board extends Container {
     }
 
     private dealFoundation(row = 0, col = 0, maxCards = 0) {
-        const foundations = Object.values(this.gameManager.state.foundations) as any[];
+        const foundationsState = Object.values(this.gameManager.state.foundations) as any[];
 
         // Initially set max cards to go for (coming form a saved state)
         if (row == 0 && col == 0) {
-            foundations.forEach((foundation) => {
+            foundationsState.forEach((foundation) => {
                 if (foundation.cards.length > maxCards) {
                     maxCards = foundation.cards.length;
                 }
@@ -226,24 +226,25 @@ export class Board extends Container {
         }
 
         // If the current column is outside our total foundations, proceed dealing next row of cards
-        if (col == this.foundations.length) {
+        if (col == Object.keys(this.foundations).length) {
             row++;
             col = 0;
         }
 
-        if (row < maxCards && foundations[col].cards[row]) {
+        if (row < maxCards && foundationsState[col].cards[row]) {
+            const foundSuit = foundationsState[col].suit;
 
             // Set front and Deal the last card from deck
-            const { face, suit, faceUp } = foundations[col].cards[row];
+            const { face, suit, faceUp } = foundationsState[col].cards[row];
             const currentCard = this.deck.children.at(-1) as Card;
             currentCard.setFront(face, suit);
-            currentCard.goTo(this.foundations[col], faceUp, () => this.dealFoundation(row, col + 1, maxCards));
+            currentCard.goTo(this.foundations[foundSuit], faceUp, () => this.dealFoundation(row, col + 1, maxCards));
 
-        } else if (row < maxCards && foundations[col].cards[row] == undefined) {
+        } else if (row < maxCards && foundationsState[col].cards[row] == undefined) {
             // If there is no card proceed to next column
             this.dealFoundation(row, col + 1, maxCards);
         } else {
-            // TODO: Move to dealing to waste pile
+            // Move to dealing to waste pile
             this.dealWaste();
         }
     }
@@ -257,6 +258,7 @@ export class Board extends Container {
             currentCard.setFront(face, suit);
             currentCard.goTo(this.flippedPile, faceUp, () => this.dealWaste(i + 1));
         } else {
+            // Move to setting deck cards faces
             this.setDeckCards();
         }
     }
@@ -270,24 +272,7 @@ export class Board extends Container {
                 this.deck.cards[i].setFront(face, suit);
             }
         }
-
+        // Dealing completed
         this.gameManager.cardsDealed = true;
     }
-
-    // public dealFoundation() {
-    //     const foundationState = this.gameManager.state.foundations;
-
-    //     for (const {suit, cards} of Object.values(foundationState) as any) {
-
-
-    //         const state = foundationState[key as keyof typeof foundationState];
-    //         let currStateSuit = state.suit.slice(0, 1).toUpperCase();
-
-    //         let foundation = this.foundations.find(x => x.suit == currStateSuit);
-    //         if (foundation) {
-    //             foundation.setCardsFromState(state.cards);
-    //         }
-
-    //     }
-    // }
 }

@@ -5,6 +5,8 @@ export enum Suits {
     diamonds = 'D'
 }
 
+export type SuitsKey = keyof typeof Suits;
+
 export const Ranks = ['_', 'A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
 
 export const cardSheet = {
