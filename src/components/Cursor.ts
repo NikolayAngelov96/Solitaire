@@ -1,5 +1,5 @@
 import { Text, TextStyle, ITextStyle } from "pixi.js";
-import { textStyle } from "../Constants";
+import { TEXT_STYLE } from "../Constants";
 import { Input } from "./InputField";
 
 export class Cursor {
@@ -71,7 +71,7 @@ export class Cursor {
     }
 
     private initElement() {
-        this.element = new Text('|', new TextStyle(textStyle as ITextStyle));
+        this.element = new Text('|', new TextStyle(TEXT_STYLE as ITextStyle));
         this.element.anchor.set(0, 0.55);
         this.element.renderable = true;
         this.blink();

@@ -1,10 +1,10 @@
 import { Container, Graphics } from "pixi.js";
 import { Card } from "./Card";
-import { colors } from '../Constants';
+import { COLORS } from '../Constants';
 import { GameManager } from "../GameManager";
 
 export abstract class CardArea extends Container {
-    protected placeholderColor: number = colors.cardPlaceholder;
+    protected placeholderColor: number = COLORS.cardPlaceholder;
 
     protected constructor(width: number, height: number, protected gameManager: GameManager) {
         super();

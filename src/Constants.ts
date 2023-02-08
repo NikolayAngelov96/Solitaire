@@ -7,9 +7,9 @@ export enum Suits {
 
 export type SuitsKey = keyof typeof Suits;
 
-export const Ranks = ['_', 'A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+export const RANKS = ['_', 'A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
 
-export const cardSheet = {
+export const CARD_SHEET = {
     startX: 47.5,
     startY: 848,
     w: 409,
@@ -18,13 +18,13 @@ export const cardSheet = {
     marginY: 37
 };
 
-export const cardSize = {
-    w: cardSheet.w * 0.334,
-    h: cardSheet.h * 0.334
+export const CARD_SIZE = {
+    w: CARD_SHEET.w * 0.334,
+    h: CARD_SHEET.h * 0.334
 };
 
 
-export const colors = {
+export const COLORS = {
     mainBg: 0x005000,
     cardPlaceholder: 0x196119,
     greenBtn: 0x28a745,
@@ -33,7 +33,7 @@ export const colors = {
     darkBg: 0x07162B
 };
 
-export const textStyle = {
+export const TEXT_STYLE = {
     fontFamily: 'Arial',
     fontSize: 24,
     fill: 0xffffff,
@@ -66,8 +66,8 @@ export type GameState = {
 type Actions = {
     flip: boolean,
     place: boolean,
-    take: [] | [number]
-}
+    take: [] | [number];
+};
 
 export type Moves = {
     stock: Actions,
@@ -75,5 +75,5 @@ export type Moves = {
     piles: Actions[],
     foundations: {
         [key in keyof typeof Suits]: Actions
-    }
-}
+    };
+};

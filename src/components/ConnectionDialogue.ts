@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
 import { ITextStyle } from "pixi.js";
 import { Button } from "./Button";
-import { colors, textStyle } from "../Constants";
+import { COLORS, TEXT_STYLE } from "../Constants";
 import { GameManager } from "../GameManager";
 import { Input } from "./InputField";
 
@@ -25,7 +25,7 @@ export class ConnectionDialogue extends PIXI.Container {
         this.addChild(containerBg);
 
         // Modal window
-        this.modal.beginFill(colors.cardPlaceholder);
+        this.modal.beginFill(COLORS.cardPlaceholder);
         this.modal.drawRoundedRect(0, 0, 0.5 * this.app.view.width, 0.30 * this.app.view.height, 15);
         this.modal.endFill();
         this.modal.pivot.set(this.modal.width / 2, this.modal.height / 2);
@@ -33,7 +33,7 @@ export class ConnectionDialogue extends PIXI.Container {
         containerBg.addChild(this.modal);
 
         // Close button
-        const closeBtn = new Button('Connect', this.modal.width / 2, this.modal.height - 50, 100, 50, colors.blueBtn);
+        const closeBtn = new Button('Connect', this.modal.width / 2, this.modal.height - 50, 100, 50, COLORS.blueBtn);
         closeBtn.attachEventListener('pointertap', this.onSubmit.bind(this));
         this.modal.addChild(closeBtn);
 
@@ -48,7 +48,7 @@ export class ConnectionDialogue extends PIXI.Container {
     }
 
     private addText() {
-        const text = new PIXI.Text('Enter your nickname:', new PIXI.TextStyle(textStyle as ITextStyle));
+        const text = new PIXI.Text('Enter your nickname:', new PIXI.TextStyle(TEXT_STYLE as ITextStyle));
         text.anchor.set(0.5);
         text.position.set(this.modal.width / 2, 50);
         this.modal.addChild(text);

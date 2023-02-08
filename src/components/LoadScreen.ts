@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { colors } from '../Constants';
+import { COLORS } from '../Constants';
 import gsap from 'gsap';
 
 export class LoadScreen extends PIXI.Container {
@@ -19,8 +19,8 @@ export class LoadScreen extends PIXI.Container {
             fontSize: 42,
             fontStyle: 'italic',
             fontWeight: 'bold',
-            fill: colors.border,
-            stroke: colors.darkBg,
+            fill: COLORS.border,
+            stroke: COLORS.darkBg,
             strokeThickness: 3,
             dropShadow: true,
             dropShadowColor: '#000000',
@@ -40,7 +40,7 @@ export class LoadScreen extends PIXI.Container {
 
     private addLoadbar() {
         const barBg = new PIXI.Graphics();
-        barBg.lineStyle(6, colors.border, 1);
+        barBg.lineStyle(6, COLORS.border, 1);
         barBg.beginFill(0xFFFFFF);
         barBg.drawRoundedRect(0, 0, 500, 30, 30);
         barBg.endFill();
@@ -56,7 +56,7 @@ export class LoadScreen extends PIXI.Container {
         progressContainer.mask = barMask;
         progressContainer.addChild(barMask);
 
-        this.progressBar.beginFill(colors.darkBg);
+        this.progressBar.beginFill(COLORS.darkBg);
         this.progressBar.drawRect(0, 0, 500, 60);
         this.progressBar.endFill();
         this.progressBar.scale.x = 0.05;

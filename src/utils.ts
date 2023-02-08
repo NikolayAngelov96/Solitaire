@@ -1,5 +1,5 @@
 import { Container, Graphics } from 'pixi.js';
-import { Ranks, Suits } from './Constants';
+import { RANKS, Suits } from './Constants';
 
 export function mask(x: number, y: number, w: number, h: number) {
     // Container
@@ -21,6 +21,6 @@ export function mask(x: number, y: number, w: number, h: number) {
 }
 
 export function getCardId(face: number, suit: string) {
-    let ranks = [...Object.values(Ranks)];
+    let ranks = [...Object.values(RANKS)];
     return ranks[face - 1] + Suits[suit.at(0).toUpperCase() + suit.slice(1)];
 }

@@ -1,5 +1,5 @@
 import { Container, Graphics } from "pixi.js";
-import { cardSize, colors } from "../Constants";
+import { CARD_SIZE, COLORS } from "../Constants";
 import { Board } from "./Board";
 import { Card } from "./Card";
 
@@ -27,10 +27,10 @@ export abstract class FlipArea extends Container {
     }
 
     protected createArea() {
-        this._area.beginFill(colors.cardPlaceholder);
-        this._area.drawRoundedRect(0, 0, cardSize.w, cardSize.h, 12);
+        this._area.beginFill(COLORS.cardPlaceholder);
+        this._area.drawRoundedRect(0, 0, CARD_SIZE.w, CARD_SIZE.h, 12);
         this._area.endFill();
-        this.pivot.x = cardSize.w / 2;
+        this.pivot.x = CARD_SIZE.w / 2;
         this.addChild(this._area);
     }
 }

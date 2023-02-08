@@ -1,7 +1,7 @@
 import { FlipArea } from "./FlipArea";
 import { Board } from "./Board";
 import { Text } from "pixi.js";
-import { cardSize } from "../Constants";
+import { CARD_SIZE } from "../Constants";
 import { Card } from "./Card";
 import gsap from 'gsap';
 
@@ -11,7 +11,7 @@ export class Deck extends FlipArea {
         super(board);
 
         this.addText();
-        this.position.set(10 + cardSize.w / 2, 50);
+        this.position.set(10 + CARD_SIZE.w / 2, 50);
         // this.fill();
 
         this.on('pointertapcapture', () => this.flipCard());

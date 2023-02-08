@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import { Button } from "./Button";
-import { colors } from "../Constants";
+import { COLORS } from "../Constants";
 import { GameManager } from "../GameManager";
 import { SampleCard } from "./SampleCard";
 import { CardFactory } from "../CardFactory";
@@ -24,7 +24,7 @@ export class DesignPicker extends PIXI.Container {
         this.addChild(containerBg);
 
         // Modal window
-        this.modal.beginFill(colors.cardPlaceholder);
+        this.modal.beginFill(COLORS.cardPlaceholder);
         this.modal.drawRoundedRect(0, 0, 0.5 * this.app.view.width, 0.45 * this.app.view.height, 15);
         this.modal.endFill();
         this.modal.pivot.set(this.modal.width / 2, this.modal.height / 2);
@@ -34,7 +34,7 @@ export class DesignPicker extends PIXI.Container {
         this.generateSamples();
 
         // Close button
-        const closeBtn = new Button('Done', this.modal.width / 2, this.modal.height - 50, 100, 50, colors.blueBtn);
+        const closeBtn = new Button('Done', this.modal.width / 2, this.modal.height - 50, 100, 50, COLORS.blueBtn);
         closeBtn.attachEventListener('pointertap', () => this.destroy({ children: true }));
         this.modal.addChild(closeBtn);
 

@@ -2,7 +2,7 @@ import { Container, Text } from "pixi.js";
 import { Column } from "./Column";
 import { Foundation } from "./Foundation";
 import { GameManager } from "../GameManager";
-import { cardSize, Suits, SuitsKey } from '../Constants';
+import { CARD_SIZE, Suits, SuitsKey } from '../Constants';
 import { Deck } from "./Deck";
 import { CardFactory } from "../CardFactory";
 import { Card } from "./Card";
@@ -11,8 +11,8 @@ import { FlippedPile } from "./FlippedPile";
 import { Button } from "./Button";
 
 export class Board extends Container {
-    private cardWidth = cardSize.w;
-    private cardHeight = cardSize.h;
+    private cardWidth = CARD_SIZE.w;
+    private cardHeight = CARD_SIZE.h;
     private spaceBetweenCards: number = 20;
     public columns: Column[] = [];
     public deck: Deck;

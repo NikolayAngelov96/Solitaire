@@ -1,7 +1,7 @@
 import gsap from 'gsap';
 import * as PIXI from 'pixi.js';
 import { PixiPlugin } from 'gsap/PixiPlugin';
-import { cardSize, colors, Ranks, Suits } from '../Constants';
+import { CARD_SIZE, COLORS, RANKS, Suits } from '../Constants';
 import { GameManager } from '../GameManager';
 import { Column } from './Column';
 import { Foundation } from './Foundation';
@@ -77,8 +77,8 @@ export class Card extends PIXI.Container {
 
     private setBack(logoTexture: PIXI.Texture) {
         const backBackground = new PIXI.Graphics();
-        backBackground.beginFill(colors.darkBg, 1);
-        backBackground.drawRoundedRect(0, 0, cardSize.w, cardSize.h, 16);
+        backBackground.beginFill(COLORS.darkBg, 1);
+        backBackground.drawRoundedRect(0, 0, CARD_SIZE.w, CARD_SIZE.h, 16);
         backBackground.endFill();
 
         this._backLogoSprite = PIXI.Sprite.from(logoTexture);
@@ -92,7 +92,7 @@ export class Card extends PIXI.Container {
 
     set backLogo(texture: PIXI.Texture) {
         this._backLogoSprite.texture = texture;
-        this._backLogoSprite.scale.set((cardSize.w - 20) / texture.width);
+        this._backLogoSprite.scale.set((CARD_SIZE.w - 20) / texture.width);
     }
 
     public setFront(power: number, suit: string) {
@@ -107,9 +107,9 @@ export class Card extends PIXI.Container {
 
     private addBorder() {
         const border = new PIXI.Graphics();
-        border.lineStyle(4, colors.border);
+        border.lineStyle(4, COLORS.border);
         border.beginFill(0x000000, 0);
-        border.drawRoundedRect(2, 2, cardSize.w - 4, cardSize.h - 4, 12);
+        border.drawRoundedRect(2, 2, CARD_SIZE.w - 4, CARD_SIZE.h - 4, 12);
         border.endFill();
         this.addChild(border);
     }
@@ -118,7 +118,7 @@ export class Card extends PIXI.Container {
         const mask = new PIXI.Graphics();
         mask.lineStyle(1, 0x999999);
         mask.beginFill(0x000000, 1);
-        mask.drawRoundedRect(0, 0, cardSize.w, cardSize.h, 16);
+        mask.drawRoundedRect(0, 0, CARD_SIZE.w, CARD_SIZE.h, 16);
         mask.endFill();
         this.front.mask = mask;
         this.addChild(mask);
@@ -225,10 +225,10 @@ export class Card extends PIXI.Container {
         this.gameManager.draggingCard = null;
         this.interactive = true;
 
-        this.position.set(cardSize.w / 2, 0);
+        this.position.set(CARD_SIZE.w / 2, 0);
 
         if (this.slot instanceof Column && this.slot.cardsCount > 0) {
-            this.position.set(cardSize.w / 2, 30);
+            this.position.set(CARD_SIZE.w / 2, 30);
         }
 
         if (this.slot instanceof FlippedPile && this.faceUp == false) {

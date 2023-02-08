@@ -1,7 +1,7 @@
 import gsap from 'gsap';
 import * as PIXI from 'pixi.js';
 import { PixiPlugin } from 'gsap/PixiPlugin';
-import { cardSize, colors } from '../Constants';
+import { CARD_SIZE, COLORS } from '../Constants';
 
 gsap.registerPlugin(PixiPlugin);
 PixiPlugin.registerPIXI(PIXI);
@@ -26,14 +26,14 @@ export class SampleCard extends PIXI.Container {
     public setBack(logoTexture: PIXI.Texture) {
         this._back.removeChildren();
         const backBackground = new PIXI.Graphics();
-        backBackground.beginFill(colors.darkBg, 1);
-        backBackground.drawRoundedRect(0, 0, cardSize.w, cardSize.h, 16);
+        backBackground.beginFill(COLORS.darkBg, 1);
+        backBackground.drawRoundedRect(0, 0, CARD_SIZE.w, CARD_SIZE.h, 16);
         backBackground.endFill();
 
         const backLogo = PIXI.Sprite.from(logoTexture);
         backLogo.anchor.set(0.5);
         backLogo.position.set(backBackground.width / 2, backBackground.height / 2);
-        backLogo.scale.set((cardSize.w - 20) / logoTexture.width);
+        backLogo.scale.set((CARD_SIZE.w - 20) / logoTexture.width);
 
         this._back.addChild(backBackground, backLogo);
         this.addChild(this._back);
@@ -41,9 +41,9 @@ export class SampleCard extends PIXI.Container {
 
     private addBorder() {
         const border = new PIXI.Graphics();
-        border.lineStyle(4, colors.border);
+        border.lineStyle(4, COLORS.border);
         border.beginFill(0x000000, 0);
-        border.drawRoundedRect(2, 2, cardSize.w - 4, cardSize.h - 4, 12);
+        border.drawRoundedRect(2, 2, CARD_SIZE.w - 4, CARD_SIZE.h - 4, 12);
         border.endFill();
         this.addChild(border);
     }
@@ -52,7 +52,7 @@ export class SampleCard extends PIXI.Container {
         const mask = new PIXI.Graphics();
         mask.lineStyle(1, 0x999999);
         mask.beginFill(0x000000, 1);
-        mask.drawRoundedRect(0, 0, cardSize.w, cardSize.h, 16);
+        mask.drawRoundedRect(0, 0, CARD_SIZE.w, CARD_SIZE.h, 16);
         mask.endFill();
         this._back.mask = mask;
         this.addChild(mask);
