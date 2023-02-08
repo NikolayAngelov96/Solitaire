@@ -16,7 +16,7 @@ export class GameManager {
     public cards: Card[] = [];
     public cardsDealed = false;
     public dealLayer = new PIXI.Container();
-    private connection: Connection;
+    public connection: Connection;
     private endScreen: EndScreen;
     public state: GameState;
     public moves: Moves;
@@ -80,6 +80,7 @@ export class GameManager {
         this.connection.send('startGame');
         this.board.addPlayerNickname(nickname);
         dialogue.destroy({ children: true });
+        this.board.deck.attachListenerForDeckFlip();
     }
 
     public restart() {
@@ -122,7 +123,7 @@ export class GameManager {
     }
 
     private onResult(data) {
-        console.log(data);
+        console.log('onResult: ', data);
     }
 
     private onVictory() {
