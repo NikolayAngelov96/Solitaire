@@ -7,9 +7,6 @@ export enum Suits {
 
 export const Ranks = ['_', 'A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
 
-// export type CardsIds = 'AS' | '1S' | '2S' ...
-
-
 export const cardSheet = {
     startX: 47.5,
     startY: 848,
@@ -47,9 +44,11 @@ type CardState = {
     faceUp: boolean;
 };
 
+type EntityType = 'stock' | 'waste' | 'foundation' | 'pile';
+
 export type EntityState = {
     cards: CardState[],
-    type: string,
+    type: EntityType,
     suit: keyof typeof Suits;
 };
 

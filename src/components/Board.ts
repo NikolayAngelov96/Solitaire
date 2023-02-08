@@ -195,7 +195,11 @@ export class Board extends Container {
             // Set front and Deal the last card from deck
             const { face, suit, faceUp } = columns[col].cards[row];
             const currentCard = this.deck.children.at(-1) as Card;
-            currentCard.setFront(face, suit);
+
+            if (face && suit) {
+                currentCard.setFront(face, suit);
+            }
+
             currentCard.goTo(this.columns[col], faceUp, () => this.dealColumns(row, col + 1, maxRows));
 
         } else if (row < maxRows && columns[col].cards[row] == undefined) {
@@ -260,7 +264,9 @@ export class Board extends Container {
 
         for (let i = 0; i < stateCards.length; i++) {
             const { face, suit } = stateCards[i];
-            this.deck.cards[i].setFront(face, suit);
+            if (face && suit) {
+                this.deck.cards[i].setFront(face, suit);
+            }
         }
 
         this.gameManager.cardsDealed = true;
