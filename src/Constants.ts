@@ -60,3 +60,18 @@ export type GameState = {
     },
     piles: EntityState[];
 };
+
+type Actions = {
+    flip: boolean,
+    place: boolean,
+    take: [] | [number]
+}
+
+export type Moves = {
+    stock: Actions,
+    waste: Actions,
+    piles: Actions[],
+    foundations: {
+        [key in keyof typeof Suits]: Actions
+    }
+}
