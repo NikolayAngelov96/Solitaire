@@ -43,8 +43,10 @@ export class Board extends Container {
     }
 
     private addFoundationPile() {
-        for (let i = 0; i < [...Object.values(Suits)].length; i++) {
-            const currentFoundation = new Foundation(this.cardWidth, this.cardHeight, this.gameManager);
+        const suits = Object.keys(Suits) as [keyof typeof Suits];
+
+        for (let i = 0; i < suits.length; i++) {
+            const currentFoundation = new Foundation(this.cardWidth, this.cardHeight, suits[i], this.gameManager);
             currentFoundation.position.set((this.cardWidth * 4 + i * this.spaceBetweenCards) + (i * this.cardWidth), 50);
             this.foundations.push(currentFoundation);
             this.addChild(currentFoundation);
