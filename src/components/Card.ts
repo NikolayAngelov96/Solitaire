@@ -75,6 +75,24 @@ export class Card extends PIXI.Container {
         }
     }
 
+    get index() {
+        return this.getIndex();
+    }
+
+    private getIndex(i = 0, parent = this.parent as Slot | Card) {
+        if (parent instanceof Column || parent instanceof Foundation) {
+            return i;
+        }
+
+        if (parent instanceof Deck || parent instanceof FlippedPile) {
+            return parent.children.filter(e => e instanceof Card).findIndex(e => e === this);
+        }
+
+        if (parent instanceof Card) {
+            return this.getIndex(i + 1, parent.parent as Card | Column | Foundation);
+        }
+    }
+
     private setBack(logoTexture: PIXI.Texture) {
         const backBackground = new PIXI.Graphics();
         backBackground.beginFill(COLORS.darkBg, 1);
