@@ -14,7 +14,8 @@ export abstract class CardArea extends Container {
         this.interactive = true;
         this.on('pointerup', () => {
             if (gameManager.draggingCard) {
-                if (this.validateCard(gameManager.draggingCard)) {
+                if (gameManager.checkValidPlace(this as any)) {
+                    gameManager.sendPlaceEvent(this as any);
                     gameManager.draggingCard.goTo(this as any);
                 } else {
                     gameManager.draggingCard.goBack();

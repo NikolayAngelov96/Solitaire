@@ -66,7 +66,7 @@ export type GameState = {
 type Actions = {
     flip: boolean,
     place: boolean,
-    take: [] | [number];
+    take: number[];
 };
 
 export type Moves = {

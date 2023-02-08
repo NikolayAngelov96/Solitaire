@@ -55,7 +55,7 @@ export class Board extends Container {
 
     private addCardColumns() {
         for (let i = 0; i < 7; i++) {
-            const currentCol = new Column(this.cardWidth, this.cardHeight, this.gameManager);
+            const currentCol = new Column(this.cardWidth, this.cardHeight, this.gameManager, i);
             currentCol.position.set((this.cardWidth / 2) + 10 + (i * this.spaceBetweenCards) + (i * this.cardWidth), this.cardHeight + this.spaceBetweenCards + 50);
 
             this.columns.push(currentCol);

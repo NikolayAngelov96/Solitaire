@@ -26,6 +26,7 @@ export class Card extends PIXI.Container {
     private pointerOffsetFromCardPivot = new PIXI.Point(0, 0);
     private flipTween: gsap.core.Tween;
     public _slot: Slot;
+    public sourceIndex: number;
 
     constructor(
         private cardFrontsTextures: CardFrontsTextures,
@@ -75,7 +76,7 @@ export class Card extends PIXI.Container {
         }
     }
 
-    get index() {
+    get index(): number {
         return this.getIndex();
     }
 
@@ -114,13 +115,14 @@ export class Card extends PIXI.Container {
     }
 
     public setFront(power: number, suit: string) {
+        this.front.removeChildren();
+
         this.power = power;
         this.suit = Suits[suit];
 
         const sprite = PIXI.Sprite.from(this.cardFrontsTextures[`${this.power}${this.suit}`]);
         sprite.scale.set(0.334);
         this.front.addChild(sprite);
-
     }
 
     private addBorder() {
@@ -161,8 +163,9 @@ export class Card extends PIXI.Container {
 
     public makeDraggable() {
         this.on('pointerdown', (e) => {
-            if (this.gameManager.cardsDealed && this.gameManager.draggingCard == null && this.slot instanceof Deck == false) {
+            if (this.gameManager.cardsDealed && this.gameManager.draggingCard == null && this.gameManager.checkValidTake(this)) {
                 this.interactive = false;
+                this.sourceIndex = this.index;
 
                 // Save pivot offset from click position
                 this.oldGlobalPosition = this.getGlobalPosition();
@@ -192,7 +195,6 @@ export class Card extends PIXI.Container {
     }
 
     public goTo(newSlot: Slot, flip = false, onCompleteCallBack?: () => void) {
-
         this.goTopLayer();
         const destinationPosition = newSlot.destinationGlobalPosition;
 
@@ -235,7 +237,10 @@ export class Card extends PIXI.Container {
                 y: this.oldGlobalPosition.y,
             },
             ease: 'back',
-            onComplete: () => this.onComplete()
+            onComplete: () => {
+                this.onComplete();
+                Object.assign(this.gameManager.moves, this.gameManager.movesCache); // Restore initial valid moves
+            }
         });
     }
 
@@ -256,22 +261,6 @@ export class Card extends PIXI.Container {
         this.slot.destination.addChild(this);
     }
 
-    // private getSuiteFromId(cardId: string): Suites {
-    //     let letter = cardId.slice(cardId.length - 1);
-    //     switch (letter) {
-    //         case 'S':
-    //             return Suites.Spades;
-    //         case 'D':
-    //             return Suites.Diamonds;
-    //         case 'H':
-    //             return Suites.Hearts;
-    //         case 'C':
-    //             return Suites.Clubs;
-    //         default:
-    //             throw new TypeError('Not a valid suite type');
-    //     }
-    // }
-
     public goTopLayer() {
         // Move card to top layer
         this.off('globalmousemove'); // to remove
@@ -280,19 +269,4 @@ export class Card extends PIXI.Container {
         this.y = globalPosition.y;
         this.gameManager.dealLayer.addChild(this);
     }
-
-    // Temporary
-    // public setRandomFront() {
-    //     if (this.front.children.length == 0) {
-    //         const rankIndex = Math.random() * 13 | 0;
-    //         const suiteIndex = Math.random() * 4 | 0;
-
-    //         const cardId = Object.values(Ranks)[rankIndex] + Object.values(Suits)[suiteIndex];
-
-    //         this.power = rankIndex;
-    //         this.suit = Object.values(Suits)[suiteIndex];
-
-    //         this.setFront(cardId);
-    //     }
-    // }
 }

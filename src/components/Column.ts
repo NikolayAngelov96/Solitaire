@@ -4,7 +4,7 @@ import { GameManager } from "../GameManager";
 
 export class Column extends CardArea {
 
-    constructor(width: number, height: number, gameManager: GameManager) {
+    constructor(width: number, height: number, gameManager: GameManager, public id: number) {
         super(width, height, gameManager);
     }
 
