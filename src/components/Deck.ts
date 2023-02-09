@@ -19,7 +19,7 @@ export class Deck extends FlipArea {
                 this.board.gameManager.toFlip = this.cards.at(-1);
 
                 if (this.cards.length > 0 || this.board.flippedPile.cards.at(-1).faceUp) {
-                    this.board.gameManager.connection.send('move', { action: 'flip', source: 'stock' });
+                    this.board.gameManager.sendFlipStockEvent();
                 }
             }
         });

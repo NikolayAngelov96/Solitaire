@@ -241,4 +241,8 @@ export class GameManager {
             index: index
         });
     }
+
+    public sendFlipStockEvent() {
+        this.connection.send('move', { action: 'flip', source: 'stock' });
+    }
 }

@@ -268,6 +268,13 @@ export class Board extends Container {
                 this.deck.cards[i].setFront(face, suit);
             }
         }
+
+        // Flip a card if waste is empty
+        if (this.flippedPile.cards.length == 0) {
+            this.gameManager.toFlip = this.deck.cards.at(-1);
+            this.gameManager.sendFlipStockEvent();
+        }
+
         // Dealing completed
         this.gameManager.cardsDealed = true;
     }
