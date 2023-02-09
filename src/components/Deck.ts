@@ -6,6 +6,7 @@ import { Card } from "./Card";
 import gsap from 'gsap';
 
 export class Deck extends FlipArea {
+    public returning = false;
 
     constructor(private board: Board) {
         super(board);
@@ -14,61 +15,18 @@ export class Deck extends FlipArea {
         this.position.set(10 + CARD_SIZE.w / 2, 50);
 
         this.on('pointertapcapture', () => {
-            if (this.cards.length > 0 && this.board.gameManager.moves.stock.flip) {
-                this.board.gameManager.toFlip = this.cards.at(-1);
+            if (this.board.gameManager.cardsDealed && this.board.gameManager.moves.stock.flip && this.returning == false) {
+
+                if (this.cards.length > 0) {
+                    this.board.gameManager.toFlip = this.cards.at(-1);
+                }
+
+                this.board.gameManager.connection.send('move', { action: 'flip', source: 'stock' });
             }
-            this.board.gameManager.connection.send('move', { action: 'flip', source: `stock` });
         });
 
         window['deck'] = this;
     }
-
-    // public attachListenerForDeckFlip() {
-    //     this.board.gameManager.connection.on('moveResult', (data) => {
-    //         // this.flipCard(data.face, data.suit);
-    //         if (data) {
-    //             let { face, suit, faceUp } = data;
-    //             const deckLastChild = this.children.at(-1);
-    //             const flippedLastChild = this.board.flippedPile.children.at(-1);
-    //             if (this.board.gameManager.cardsDealed && deckLastChild instanceof Card) {
-    //                 // deckLastChild.setRandomFront();
-    //                 if (face && suit) {
-    //                     deckLastChild.setFront(face, suit);
-    //                 }
-    //                 deckLastChild.goTo(this.board.flippedPile);
-    //             }
-    //         } else {
-    //             // move all cards from waste to deck
-    //             const flippedPileCards = this.board.flippedPile.children.slice(0) as Card[];
-    //             flippedPileCards.reverse();
-
-    //             gsap.to(flippedPileCards, {
-    //                 pixi: {
-    //                     y: -50,
-    //                 },
-    //                 duration: 0.3,
-    //                 yoyo: true,
-    //                 repeat: 1,
-    //                 stagger: (i, target) => {
-    //                     target.flip();
-    //                     target.interactive = false; // Prevents from clicking on cards during returning animation
-
-    //                     if (i < flippedPileCards.length) {
-    //                         setTimeout(() => target.goTo(this), 900 + i * 150);
-    //                     } else {
-    //                         setTimeout(() => {
-    //                             target.flip();
-    //                             flippedPileCards.forEach(card => card.interactive = true);
-    //                         }, 900 + i * 150);
-    //                     }
-
-    //                     return 0;
-    //                 }
-    //             });
-    //         }
-    //     });
-
-    // }
 
     public fill() {
         const state = this.board.gameManager.state;
@@ -101,39 +59,35 @@ export class Deck extends FlipArea {
     }
 
     public flipCard() {
-        const deckLastChild = this.children.at(-1);
+        const lastCard = this.cards.at(-1);
 
-        // Flip card to flipped area
-        if (this.board.gameManager.cardsDealed && deckLastChild instanceof Card) {
-            // deckLastChild.setRandomFront();
-            deckLastChild.goTo(this.board.flippedPile);
+        if (this.board.gameManager.cardsDealed && lastCard) {
+            lastCard.goTo(this.board.flippedPile);
         }
     }
 
     public returnCards() {
-        const flippedLastChild = this.board.flippedPile.children.at(-1);
+        const wasteCards = this.board.flippedPile.cards;
 
-        if (this.board.gameManager.cardsDealed && flippedLastChild instanceof Card && flippedLastChild.faceUp) {
-            const flippedPileCards = this.board.flippedPile.cards;
-            flippedPileCards.reverse();
+        if (this.board.gameManager.cardsDealed && wasteCards.length > 0 && wasteCards.at(-1).faceUp) {
+            this.returning = true;
+            wasteCards.reverse();
 
-            gsap.to(flippedPileCards, {
+            gsap.to(wasteCards, {
                 pixi: {
                     y: -50,
                 },
                 duration: 0.3,
                 yoyo: true,
                 repeat: 1,
-                stagger: (i, target) => {
+                stagger: (i, target: Card) => {
                     target.flip();
                     target.interactive = false; // Prevents from clicking on cards during returning animation
 
-                    if (i < flippedPileCards.length) {
-                        setTimeout(() => target.goTo(this), 900 + i * 150);
+                    if (i == wasteCards.length - 1) { // If last card, switch returning flag
+                        setTimeout(() => target.goTo(this, false, () => this.returning = false), 900 + i * 150);
                     } else {
-                        setTimeout(() => {
-                            flippedPileCards.forEach(card => card.interactive = true);
-                        }, 900 + i * 150);
+                        setTimeout(() => target.goTo(this), 900 + i * 150);
                     }
 
                     return 0;
