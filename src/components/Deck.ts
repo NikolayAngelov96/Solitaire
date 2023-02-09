@@ -6,7 +6,7 @@ import { Card } from "./Card";
 import gsap from 'gsap';
 
 export class Deck extends FlipArea {
-    public returning = false;
+    public movingCard = false;
 
     constructor(private board: Board) {
         super(board);
@@ -15,13 +15,12 @@ export class Deck extends FlipArea {
         this.position.set(10 + CARD_SIZE.w / 2, 50);
 
         this.on('pointertapcapture', () => {
-            if (this.board.gameManager.cardsDealed && this.board.gameManager.moves.stock.flip && this.returning == false) {
+            if (this.board.gameManager.cardsDealed && this.board.gameManager.moves.stock.flip && this.movingCard == false) {
+                this.board.gameManager.toFlip = this.cards.at(-1);
 
-                if (this.cards.length > 0) {
-                    this.board.gameManager.toFlip = this.cards.at(-1);
+                if (this.cards.length > 0 || this.board.flippedPile.cards.at(-1).faceUp) {
+                    this.board.gameManager.connection.send('move', { action: 'flip', source: 'stock' });
                 }
-
-                this.board.gameManager.connection.send('move', { action: 'flip', source: 'stock' });
             }
         });
     }
@@ -60,7 +59,8 @@ export class Deck extends FlipArea {
         const lastCard = this.cards.at(-1);
 
         if (this.board.gameManager.cardsDealed && lastCard) {
-            lastCard.goTo(this.board.flippedPile);
+            this.movingCard = true;
+            lastCard.goTo(this.board.flippedPile, false, () => this.movingCard = false);
         }
     }
 
@@ -68,7 +68,7 @@ export class Deck extends FlipArea {
         const wasteCards = this.board.flippedPile.cards;
 
         if (this.board.gameManager.cardsDealed && wasteCards.length > 0 && wasteCards.at(-1).faceUp) {
-            this.returning = true;
+
             wasteCards.reverse();
 
             gsap.to(wasteCards, {
@@ -83,9 +83,9 @@ export class Deck extends FlipArea {
                     target.interactive = false; // Prevents from clicking on cards during returning animation
 
                     if (i == wasteCards.length - 1) { // If last card, switch returning flag
-                        setTimeout(() => target.goTo(this, false, () => this.returning = false), 900 + i * 150);
+                        setTimeout(() => target.goTo(this, false, () => this.movingCard = false), 900 + i * 15);
                     } else {
-                        setTimeout(() => target.goTo(this), 900 + i * 150);
+                        setTimeout(() => target.goTo(this), 900 + i * 15);
                     }
 
                     return 0;

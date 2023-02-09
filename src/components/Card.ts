@@ -202,11 +202,6 @@ export class Card extends PIXI.Container {
             },
             duration: 0.2,
             onComplete: () => {
-                // If card is coming from Flipped Pile to Column or Foundation, flip new card from deck
-                // if (this.slot instanceof FlippedPile && newSlot instanceof Deck == false) {
-                //     this.gameManager.board.deck.flipCard();
-                // }
-
                 if (this.slot instanceof Column) {
                     this.slot.flipLastCard();
                 }

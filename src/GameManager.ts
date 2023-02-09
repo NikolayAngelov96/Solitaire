@@ -11,6 +11,7 @@ import { Column } from "./components/Column";
 import { Foundation } from "./components/Foundation";
 import { FlippedPile } from "./components/FlippedPile";
 import { Deck } from "./components/Deck";
+import { CardArea } from "./components/CardArea";
 
 
 export class GameManager {
@@ -200,7 +201,7 @@ export class GameManager {
         }
     }
 
-    public checkValidPlace(slot: Column | Foundation) {
+    public checkValidPlace(slot: CardArea) {
         if (slot instanceof Column) {
             return this.moves.piles[slot.id].place;
         } else if (slot instanceof Foundation) {
@@ -208,7 +209,7 @@ export class GameManager {
         }
     }
 
-    public sendPlaceEvent(newSlot: Column | Foundation = null) {
+    public sendPlaceEvent(newSlot: CardArea = null) {
         const index = this.draggingCard.sourceIndex;
         let sourceSlot = this.draggingCard.slot;
         let source = '';
