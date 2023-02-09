@@ -47,9 +47,6 @@ export class Card extends PIXI.Container {
         this.makeDraggable();
 
         this.pivot.x = this.width / 2;
-
-        // For testing
-        window['cards'].push(this);
     }
 
     get faceUp() {

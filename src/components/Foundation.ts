@@ -18,13 +18,4 @@ export class Foundation extends CardArea {
         return (card.faceUp == true && this.cardsCount == 0 && card.power == 1 ||
             card.faceUp == true && this.cardsCount > 0 && card.suit == (this.destination as Card).suit && card.power == (this.destination as Card).power + 1);
     }
-
-    // public setCardsFromState(cards: { face: number, suit: string, faceUp: boolean; }[]) {
-    //     for (const card of cards) {
-    //         const current = this.gameManager.cardFactory.getCard();
-    //         // let cardId = getCardId(card.face, card.suit);
-    //         current.setFront(card.face, card.suit);
-    //         current.goTo(this, card.faceUp);
-    //     }
-    // }
 }

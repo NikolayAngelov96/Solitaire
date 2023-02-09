@@ -6,7 +6,7 @@ import { Assets, CardFactory } from "./CardFactory";
 import { Board } from "./components/Board";
 import { Connection } from "./Connection";
 import { EndScreen } from './components/EndScreen';
-import { Suits, EntityState, GameState, Moves } from "./Constants";
+import { GameState, Moves } from "./Constants";
 import { Column } from "./components/Column";
 import { Foundation } from "./components/Foundation";
 import { FlippedPile } from "./components/FlippedPile";
@@ -46,8 +46,6 @@ export class GameManager {
 
         background.on('pointerup', () => this.draggingCard?.goBack());
         this.connectionDialogue();
-
-        window['gm'] = this;
     }
 
     set draggingCard(card: Card) {
@@ -88,7 +86,6 @@ export class GameManager {
         this.connection.send('startGame');
         this.board.addPlayerNickname(nickname);
         dialogue.destroy({ children: true });
-        // this.board.deck.attachListenerForDeckFlip();
     }
 
     public restart() {
@@ -120,8 +117,6 @@ export class GameManager {
     private onState(state) {
         console.log('received state', state);
         this.state = state;
-        // this.state.foundations = foundations; // Mock data
-        // this.state.waste = waste; // Mock data
         this.board.deck.fill();
     }
 
@@ -241,79 +236,3 @@ export class GameManager {
         });
     }
 }
-
-const waste: EntityState = {
-    cards: [{
-        face: 2,
-        suit: 'clubs',
-        faceUp: true
-    },
-    {
-        face: 7,
-        suit: 'clubs',
-        faceUp: true
-    }
-    ],
-    type: "waste",
-    suit: null
-};
-
-const foundations: { [key in keyof typeof Suits]: EntityState } = {
-    clubs: {
-        cards: [
-            {
-                face: 2,
-                suit: 'clubs',
-                faceUp: true
-            },
-            {
-                face: 7,
-                suit: 'clubs',
-                faceUp: true
-            }
-        ],
-        type: 'foundation',
-        suit: 'clubs'
-    },
-    diamonds: {
-        cards: [{
-            face: 1,
-            suit: 'diamonds',
-            faceUp: true
-        },
-        {
-            face: 5,
-            suit: 'diamonds',
-            faceUp: true
-        }],
-        type: "foundation",
-        suit: "diamonds"
-    },
-    hearts: {
-        cards: [
-            // {
-            //     face: 1,
-            //     suit: 'hearts',
-            //     faceUp: true
-            // }
-        ],
-        type: "foundation",
-        suit: "hearts"
-    },
-    spades: {
-        cards: [
-            {
-                face: 3,
-                suit: 'spades',
-                faceUp: true
-            },
-            {
-                face: 4,
-                suit: 'spades',
-                faceUp: true
-            }
-        ],
-        type: "foundation",
-        suit: "spades"
-    }
-};

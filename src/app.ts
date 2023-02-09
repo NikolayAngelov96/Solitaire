@@ -2,7 +2,6 @@ import * as PIXI from 'pixi.js';
 import { Assets } from "./CardFactory";
 import { GameManager } from "./GameManager";
 import { LoadScreen } from "./components/LoadScreen";
-import { EndScreen } from "./components/EndScreen";
 
 const app = new PIXI.Application({
     width: 1140,
@@ -30,5 +29,4 @@ PIXI.Assets.loadBundle('images', (p) => loadScreen.progress(p))
 function init(assets: Assets) {
     const gameManager = new GameManager(app, assets);
 
-    // const endScreen = new EndScreen(app, cardFactory, board, false);
 }

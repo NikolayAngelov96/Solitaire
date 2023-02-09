@@ -32,7 +32,6 @@ export class Board extends Container {
         this.addGameTitle();
 
         this.gameManager.app.stage.addChild(this);
-        window['board'] = this;
     }
 
     private addDeckArea() {

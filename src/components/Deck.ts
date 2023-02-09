@@ -24,8 +24,6 @@ export class Deck extends FlipArea {
                 this.board.gameManager.connection.send('move', { action: 'flip', source: 'stock' });
             }
         });
-
-        window['deck'] = this;
     }
 
     public fill() {
