@@ -2,7 +2,7 @@ import { Container, Text } from "pixi.js";
 import { Column } from "./Column";
 import { Foundation } from "./Foundation";
 import { GameManager } from "../GameManager";
-import { CARD_SIZE, Suits, SuitsKey } from '../Constants';
+import { CARD_SIZE, COLORS, Suits, SuitsKey } from '../Constants';
 import { Deck } from "./Deck";
 import { CardFactory } from "../CardFactory";
 import { Card } from "./Card";
@@ -146,16 +146,13 @@ export class Board extends Container {
     }
 
     private addButtons() {
-        const cardsDesignBtn = new Button('Cards Design', 367, 22, 120, 25, 0x17a2b8);
-        cardsDesignBtn.attachEventListener('pointerdown', this.gameManager.designPicker.bind(this.gameManager));
-
-        const hintBtn = new Button('Hint', 250, 22, 85, 25, 0x17a2b8);
-        hintBtn.attachEventListener('pointerdown', () => alert('This is very usefull hint'));
-
-        const disconnectBtn = new Button('Disconnect', 150, 22, 85, 25, 0x28a745);
+        const disconnectBtn = new Button('Disconnect', 150, 22, 85, 25, COLORS.greenBtn);
         disconnectBtn.attachEventListener('pointerdown', () => this.gameManager.restart());
 
-        this.addChild(disconnectBtn, hintBtn, cardsDesignBtn);
+        const cardsDesignBtn = new Button('Cards Design', 270, 22, 120, 25, COLORS.blueBtn);
+        cardsDesignBtn.attachEventListener('pointerdown', this.gameManager.designPicker.bind(this.gameManager));
+
+        this.addChild(disconnectBtn, cardsDesignBtn);
     }
 
     public addPlayerNickname(nickname: string) {
