@@ -27,6 +27,7 @@ export class Card extends PIXI.Container {
     private flipTween: gsap.core.Tween;
     public _slot: Slot;
     public sourceIndex: number;
+    public inMotion = false;
 
     constructor(
         private cardFrontsTextures: CardFrontsTextures,
@@ -192,6 +193,7 @@ export class Card extends PIXI.Container {
     }
 
     public goTo(newSlot: Slot, flip = false, onCompleteCallBack?: () => void) {
+        this.inMotion = true;
         this.goTopLayer();
         const destinationPosition = newSlot.destinationGlobalPosition;
 
@@ -221,6 +223,7 @@ export class Card extends PIXI.Container {
     }
 
     public goBack() {
+        this.inMotion = true;
         this.goTopLayer();
 
         gsap.to(this, {
@@ -251,6 +254,7 @@ export class Card extends PIXI.Container {
         }
 
         this.slot.destination.addChild(this);
+        this.inMotion = false;
     }
 
     public goTopLayer() {

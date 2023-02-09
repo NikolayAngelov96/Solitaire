@@ -45,7 +45,12 @@ export class GameManager {
         this.board = new Board(this, this.cardFactory);
         this.app.stage.addChild(this.dealLayer);
 
-        background.on('pointerup', () => this.draggingCard?.goBack());
+        background.on('pointerup', () => {
+            if (this.draggingCard && this.draggingCard.inMotion == false) {
+                this.draggingCard.goBack();
+            }
+        });
+
         this.connectionDialogue();
     }
 
