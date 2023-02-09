@@ -18,13 +18,6 @@ export class Column extends CardArea {
         return position;
     }
 
-    public validateCard<T extends Card>(card: T) {
-        // Validate from the backend if the card can go in the column
-
-        // Temporary solution
-        return (this.cardsCount == 0 && card.power == 12 && card.faceUp || card.faceUp && card.color !== (this.destination as T).color && card.power == (this.destination as T).power - 1);
-    }
-
     public flipLastCard() {
         if (this.destination instanceof Card && this.destination.faceUp == false) {
             this.destination.flip();

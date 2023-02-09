@@ -61,6 +61,4 @@ export abstract class CardArea extends Container {
 
         return count;
     }
-
-    abstract validateCard(card: Card): boolean;
 }
