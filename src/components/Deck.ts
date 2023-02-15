@@ -70,6 +70,7 @@ export class Deck extends FlipArea {
         if (this.board.gameManager.cardsDealed && wasteCards.length > 0 && wasteCards.at(-1).faceUp) {
 
             wasteCards.reverse();
+            this.movingCard = true; // Prevents from clicking on cards during returning animation
 
             gsap.to(wasteCards, {
                 pixi: {
@@ -80,8 +81,6 @@ export class Deck extends FlipArea {
                 repeat: 1,
                 stagger: (i, target: Card) => {
                     target.flip();
-                    target.interactive = false; // Prevents from clicking on cards during returning animation
-
                     if (i == wasteCards.length - 1) { // If last card, switch returning flag
                         setTimeout(() => target.goTo(this, false, () => this.movingCard = false), 900 + i * 15);
                     } else {
